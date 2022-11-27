@@ -17,12 +17,16 @@ board field seems weird. Hence, it has been RENAMED!!!
 
 
 class ChessGame: public Subject {
-    // std::vector< vector <Box *>> board; (waiting on Box to be implemented)
+    std::vector< vector <Box*>> * board; // pointer to a 2D array of Box pointers
     std::vector <Record>
     bool whiteKingChecked;
     bool blackKingChecked;
+    bool playerTurn; // true = white, false = black; using bool instead of str b/c it's probably just easier to use bool than a string for the playerTurn state
 
     public:
+        // to initialize the ChessGame
+        explicit ChessGame(std::vector< vector <Box*>> * board): board{board} {}
+
         // the function that sets the board in the right configuration?? not sure exactly what this function referred to
         void draw(); 
         // question: how are we going to check if there's stalemate again? is it when we find a possible AND legal move?
@@ -36,7 +40,18 @@ class ChessGame: public Subject {
         bool isBlackKingChecked() {
             return blackKingChecked;
         };
-}
+        
+        std::vector< vector <Box *>> *&getBoard() {
+            return board;
+        };
+
+        void set(std::string piece, std::string box, bool playerTurn); // WILL NEED THE PLAYER STATUS!!!!
+
+        void setTurn(bool playerTurn);
+
+        // bool pawnsInLimit(); --> Brought up by Shriya; this might be implemented later. For now, it's just been commented out.
+        
+};
 
 
 #endif
