@@ -1,7 +1,7 @@
 #include "piece.h"
 #include <algorithm>
 
-Piece::Piece(std::string name, std::vector<std::vector<Box *>> board, Box *box, bool whitePlayer):
+Piece::Piece(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer):
     name{name}, board{board}, box{box}, whitePlayer{whitePlayer}, captured{false} {};
 
 std::string Piece::getName() {

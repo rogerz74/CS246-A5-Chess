@@ -9,13 +9,13 @@ class Piece {
     bool whitePlayer;
     bool captured;
     Box *box;
-    std::vector<std::vector<Box *>> board;
+    std::vector<std::vector<Box *>> *board;
 
     protected:
-    virtual bool isLegal(Box *box) = 0;
+    virtual bool isLegal(Box *targetBox) = 0;
 
     public:
-        Piece(std::string name, std::vector<std::vector<Box *>> board, Box *box, bool whitePlayer);
+        Piece(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer);
         std::string getName();
         bool checkWhitePlayer();
         bool isCaptured();
