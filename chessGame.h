@@ -19,12 +19,23 @@ board field seems weird. Hence, it has been RENAMED!!!
 class ChessGame: public Subject {
     // std::vector< vector <Box *>> board; (waiting on Box to be implemented)
     std::vector <Record>
+    bool whiteKingChecked;
+    bool blackKingChecked;
 
     public:
         // the function that sets the board in the right configuration?? not sure exactly what this function referred to
         void draw(); 
         // question: how are we going to check if there's stalemate again? is it when we find a possible AND legal move?
-        bool isStalemate();
+        bool isStalemate(); 
+
+        // function that checks if the white king is checked;
+        bool isWhiteKingChecked() {
+            return whiteKingChecked;
+        }; 
+         // function that checks if the black king is checked;
+        bool isBlackKingChecked() {
+            return blackKingChecked;
+        };
 }
 
 

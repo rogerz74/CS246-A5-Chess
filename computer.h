@@ -10,12 +10,11 @@ class Computer: public Observer {
     public:
         Computer(ChessGame *chessGame, std::string name);
         void notify();
-        // we need to decide if we want these to simply be void functions or if we want to return something
-        // This levels thing may also need to move the main.cc file??
-        void level1(ChessGame *chessGame);
-        void level2(ChessGame *chessGame);
-        void level3(ChessGame *chessGame);
-        void level4(ChessGame *chessGame);
+        // this will return the winner of the game, ie. "Black", "White" or "Draw"
+        std::string level1(ChessGame *chessGame);
+        std::string level2(ChessGame *chessGame);
+        std::string level3(ChessGame *chessGame);
+        std::string level4(ChessGame *chessGame);
         ~Computer();
 };
 
