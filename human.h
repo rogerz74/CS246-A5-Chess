@@ -4,12 +4,12 @@
 #include "chessGame.h"
 
 class Human: public Observer {
-    ChessGame *chessGame;
+    ChessGame *subject;
     std::string name;
 
     public:
-        Human(ChessGame *chessGame, std::string name);
-        void notify();
+        Human(ChessGame *subject, std::string name);
+        void notify(); // will print out the board;
         ~Human();
 };
 
