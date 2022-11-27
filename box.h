@@ -1,7 +1,7 @@
 #ifndef _BOX_H_
 #define _BOX_H_
 
-class Piece;
+#include "piece.h"
 
 class Box {
     // For xCoord, we are going to use enums and assign each alphabet a value from 0-8 
@@ -10,6 +10,7 @@ class Box {
     // This will allow us to match the coordinates to the index of our board.
     int xCoord, yCoord;
     Piece *currentPiece;
+    bool blackTile();
 
     public:
         // If creating an empty box (with no piece) currentPiece = nullptr
@@ -18,8 +19,8 @@ class Box {
         int getY();
         Piece *getPiece();
         Piece *setPiece(Piece *currentPiece);
-        bool blackTile();
         bool isOccupied();
+        void print();
         ~Box();
 };
 

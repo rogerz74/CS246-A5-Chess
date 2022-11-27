@@ -1,4 +1,5 @@
 #include "box.h"
+#include <iostream>
 
 Box::Box(int xCoord, int yCoord, Piece *currentPiece): 
     xCoord{xCoord}, yCoord{yCoord}, currentPiece{currentPiece} {}
@@ -35,6 +36,16 @@ bool Box::isOccupied() {
         return false;
     }
     return true;
+}
+
+void Box::print() {
+    if (blackTile() && !isOccupied()) {
+        std::cout << "_";
+    } else if(!blackTile() && !isOccupied()) {
+        std::cout << " ";
+    } else {
+        std::cout << currentPiece->getName();
+    }
 }
 
 Box::~Box() {
