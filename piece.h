@@ -19,6 +19,7 @@ class Piece {
         std::string getName();
         bool checkWhitePlayer();
         bool isCaptured();
+        // if move is completed move will return 1
         int move(Box *targetBox);
         virtual std::vector<Box *> possibleMoves() = 0;
         ~Piece();
