@@ -1,5 +1,6 @@
 #ifndef _RECORD_H_
 #define _RECORD_H_
+#include "piece.h"
 
 // class Piece; (this will need to be added once Piece.h is finished)
 
@@ -8,7 +9,7 @@ class Record {
     int yOriginCoord;
     int xTargetCoord;
     int yTargetCoord;
-    // Piece* recordPiece;
+    Piece* recordPiece;
 
     public:
         int getXOrigin() {
@@ -23,12 +24,10 @@ class Record {
         int getYTarget() {
             return yTargetCoord;
         };
-        /*
         Piece* getPiece() {
             return recordPiece;
         }
-        */
-}
+};
 
 
 
