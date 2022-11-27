@@ -4,7 +4,7 @@
 #include "chessGame.h"
 
 class Computer: public Observer {
-    ChessGame *chessGame;
+    ChessGame *subject;
     std::string name;
 
     public:
