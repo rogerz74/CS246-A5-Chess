@@ -10,7 +10,7 @@ class Box {
     // This will allow us to match the coordinates to the index of our board.
     int xCoord, yCoord;
     Piece *currentPiece;
-    bool blackTile();
+    bool isBlackTile;
 
     public:
         // If creating an empty box (with no piece) currentPiece = nullptr

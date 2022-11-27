@@ -2,7 +2,17 @@
 #include <iostream>
 
 Box::Box(int xCoord, int yCoord, Piece *currentPiece): 
-    xCoord{xCoord}, yCoord{yCoord}, currentPiece{currentPiece} {}
+    xCoord{xCoord}, yCoord{yCoord}, currentPiece{currentPiece} {
+
+    int isXOdd = xCoord % 2;
+    int isYOdd = yCoord % 2;
+
+    if ((isXOdd && !isYOdd) | (!isXOdd && isYOdd)) {
+        isBlackTile = true;
+    } else {
+        isBlackTile =  false;
+    }
+}
 
 int Box::getX() { 
     return xCoord; 
@@ -20,17 +30,6 @@ Piece* Box::setPiece(Piece *currentPiece) {
     this->currentPiece = currentPiece;
 }
 
-bool Box::blackTile() {
-    int isXOdd = xCoord % 2;
-    int isYOdd = yCoord % 2;
-
-    if ((isXOdd && !isYOdd) | (!isXOdd && isYOdd)) {
-        return true;
-    }
-    
-    return false;
-}
-
 bool Box::isOccupied() { 
     if (currentPiece == nullptr) {
         return false;
@@ -39,9 +38,9 @@ bool Box::isOccupied() {
 }
 
 void Box::print() {
-    if (blackTile() && !isOccupied()) {
+    if (isBlackTile && !isOccupied()) {
         std::cout << "_";
-    } else if(!blackTile() && !isOccupied()) {
+    } else if(!isBlackTile && !isOccupied()) {
         std::cout << " ";
     } else {
         std::cout << currentPiece->getName();
