@@ -1,8 +1,10 @@
 #include "piece.h"
 #include <algorithm>
 
-Piece::Piece(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer):
-    name{name}, board{board}, box{box}, whitePlayer{whitePlayer}, captured{false} {};
+Piece::Piece(std::string name, std::vector<std::vector<Box *>> &board, Box *box, bool whitePlayer):
+    name{name}, board{board}, box{box}, whitePlayer{whitePlayer}, captured{false} {
+        updateLegalMoves();
+    };
 
 std::string Piece::getName() {
     return name;
@@ -17,8 +19,7 @@ bool Piece::isCaptured() {
 }
 
 int Piece::move(Box *targetBox) {
-    std::vector<Box *> pMoves = possibleMoves();
-    if (find(pMoves.begin(),pMoves.end(), targetBox) != pMoves.end() && isLegal(targetBox)) {
+    if (find(legalMoves.begin(),legalMoves.end(), targetBox) != legalMoves.end()) {
         if (targetBox->getPiece() != nullptr) {
         targetBox->getPiece()->captured = true;
         }
@@ -26,6 +27,7 @@ int Piece::move(Box *targetBox) {
         targetBox->setPiece(box->getPiece());
         box->setPiece(nullptr);
         box = targetBox;
+        updateLegalMoves();
         return 1;
     }
 
