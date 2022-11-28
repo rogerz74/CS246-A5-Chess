@@ -17,44 +17,44 @@ void Bishop::updateLegalMoves() {
             // if piece on box is capturable add to possible moves
             if ((checkWhitePlayer() && !board[x - i][y + i]->getPiece()->checkWhitePlayer()) |
                 (!checkWhitePlayer() && board[x - i][y + i]->getPiece()->checkWhitePlayer())) {
-                legalMoves.emplace_back(board[x - i][y + i]);
+                legalMoves.push_back(board[x - i][y + i]);
             }
             break;
         }
-        legalMoves.emplace_back(board[x - i][y + i]);
+        legalMoves.push_back(board[x - i][y + i]);
     }
 
     for (int i = 1; x + i  < 8 && y - i >= 0; ++i) {
         if (board[x + i][y - i]->isOccupied()) {
             if ((checkWhitePlayer() && !board[x + i][y - i]->getPiece()->checkWhitePlayer()) |
                 (!checkWhitePlayer() && board[x + i][y - i]->getPiece()->checkWhitePlayer())) {
-                legalMoves.emplace_back(board[x + i][y - i]);
+                legalMoves.push_back(board[x + i][y - i]);
             }
             break;
         }
-        legalMoves.emplace_back(board[x + i][y - i]);
+        legalMoves.push_back(board[x + i][y - i]);
     }
 
     for (int i = 1; x - i  >= 0 && y - i >= 0; ++i) {
         if (board[x - i][y - i]->isOccupied()) {
             if ((checkWhitePlayer() && !board[x - i][y - i]->getPiece()->checkWhitePlayer()) |
                 (!checkWhitePlayer() && board[x - i][y - i]->getPiece()->checkWhitePlayer())) {
-                legalMoves.emplace_back(board[x - i][y - i]);
+                legalMoves.push_back(board[x - i][y - i]);
             }
             break;
         }
-        legalMoves.emplace_back(board[x - i][y - i]);
+        legalMoves.push_back(board[x - i][y - i]);
     }
 
     for (int i = 1; x + i  < 8 && y + i < 8; ++i) {
         if (board[x + i][y + i]->isOccupied()) {
             if ((checkWhitePlayer() && !board[x + i][y + i]->getPiece()->checkWhitePlayer()) |
                 (!checkWhitePlayer() && board[x + i][y + i]->getPiece()->checkWhitePlayer())) {
-                legalMoves.emplace_back(board[x + i][y + i]);
+                legalMoves.push_back(board[x + i][y + i]);
             }
             break;
         }
-        legalMoves.emplace_back(board[x + i][y + i]);
+        legalMoves.push_back(board[x + i][y + i]);
     }
 
     this->legalMoves = legalMoves;
