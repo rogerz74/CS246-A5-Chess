@@ -14,6 +14,14 @@
 // a better understanding on how we want to create these functions.
 
 
- void ChessGame::setTurn(bool playerTurn) {
+void ChessGame::setTurn(bool playerTurn) {
     this.playerTurn = playerTurn; // true = white, false = black !!
 }
+
+bool ChessGame::getPlayerTurn() {
+    return playerTurn;
+};
+
+void ChessGame::switchTurn() {
+    playerTurn = !playerTurn;
+};
