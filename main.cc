@@ -1,3 +1,7 @@
+#include <string>
+#include <iostream>
+#include <vector>
+
 #include "chessGame.h"
 #include "subject.h"
 #include "observer.h"
@@ -11,49 +15,97 @@
 #include "pawn.h"
 #include "queen.h"
 #include "rook.h"
-#include <iostream>
-#include <string>
 
-using namespace std;
+#include "setup.h"
+#include "gamerun.h"
+#include "humanHuman.h"
 
-// a helper function that manages the initial setup and the pieces will need to created here.
-// the return type of this function will probably need to indicate which color won the game
 
-// a helper function to convert the letter to a number; I tried using enums but converting a string to an enum is difficult
-int strToCoord(char c) {
-    if (c == 'a') {
-        return 0;
-    } else if (c == 'b') {
-        return 1;
-    } else if (c == 'c') {
-        return 2;
-    } else if (c == 'd') {
-        return 3;
-    } else if (c == 'e') {
-        return 4;
-    } else if (c == 'f') {
-        return 5;
-    } else if (c == 'g') {
-        return 6;
-    } else {
-        return 7;
-    }
-}
+struct scoreBoard;
+void gameInstance();
 
 int main() {
-
-    // this part will contain the loop that allows for multiple games of
-    // chess to be run and tracked.
-
+    scoreBoard tracker{0,0};
     while (true) {
-        int blackWins = 0;
-        int whiteWins = 0;
-
-        // run the helper function here
-
-        // cout the number of wins here
+        gameInstance();
     }
-    
+    tracker.print();
+}
 
 
+struct scoreBoard {
+    float whitePoints;
+    float blackPoints;
+    void print();
+}
+
+void scoreBoard::print() {
+    std::cout << "Final Score:" << std::endl;
+    std::cout << "White: " << scoreBoard.whitePoints << std::endl;
+    std::cout << "Black: " << scoreBoard.blackPoints << std::endl;
+}
+
+
+
+void gameInstance() {
+
+    //iterate over vector of vectors and build base board (emptyBoard) - possibility of keeping in main
+    std::vector<std::vector<Box *>> emptyBoard;
+    for (int row = 0; row < 8; ++row) {
+        std::vector<Box *> boardRow;
+        for (int col = 0; col < 8; ++col) { 
+            Box box{row, col, nullptr};
+            boardRow.push_back(&box); 
+        } 
+        ChessBoard.push_back(boardRow);
+    } 
+
+    std::vector<std::vector<Box *>> ChessBoard = emptyBoard;    //initialized to EmptyBoard
+    std::vector<std::vector<Box *>> defaultBoard = emptyBoard;    //initialized to EmptyBoard
+
+    ChessGame game{ChessBoard};        //constructor takes in reference now
+    std::vector<Piece *> whitePieces;
+    std::vector<Piece *> blackPieces;
+
+    bool setupFlag = 0;         //changed to 1 if "setup" command executed (must be successful, else cannot leave mode)
+    bool gameRunFlag = 0;       //changed to 1 if "game" command executed and when gameRun finishes
+    std::string comm = "";
+    while (!(gameRunFlag) && (cin >> comm)) {
+        if (comm == "setup") {
+            game.setBoard(emptyBoard);     //create method to take in reference to the board and change board in class
+            userSetup(&game, whitePieces, blackPieces);     //takes references to the vectors and changes them
+            setupFlag = 1;
+        } else if (comm == "game") {
+            std::string wPlayer = "";
+            std::string bPlayer = "";
+            std::cin >> wPlayer >> bPlayer;
+
+            //later, constructPlayer(player) will be defined to construct human/l1/l2/l3/l4
+            //Human for now, till level subclasses are created and defined
+            Human whitePlayer{&game, "human"};
+            Human blackPlayer{&game, "human"};
+
+            /*  --ALGORTHM YET TO BE DEFINED IN SETUP--
+            if (setupFlag == 0) {
+                game.setBoard(defaultBoard);
+            }
+            defaultSetup(&game, whitePieces, blackPieces);
+            */
+
+            int whoWon = gameRun(&whitePlayer, &blackPlayer, &game);
+            if (whoWon == 1) {
+                tracker.whitePoints += 1;
+            } else if (whoWon = -1) {
+                tracker.blackPoints += 1;
+            } else if (whoWon == 0) {
+                tracker.whitePoints += 0.5;
+                tracker.blackPoints += 0.5;
+            } else {
+                std::cout << "Game left unfinished!" << std::endl;
+            }
+            gameRunFlag = 1;
+        } else {
+            std::cout << "Invalid command! Please try again!" << std::endl;
+        }
+    }
 }
