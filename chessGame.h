@@ -5,6 +5,8 @@
 #include "subject.h"
 #include <vector>
 #include "record.h"
+#include "box.h"
+#include "piece.h"
 
 /*
 
@@ -17,12 +19,12 @@ board field seems weird. Hence, it has been RENAMED!!!
 
 
 class ChessGame: public Subject {
-    std::vector< vector <Box*>> * board; // pointer to a 2D array of Box pointers
+    std::vector< vector <Box*>> board; // a 2D array of Box pointers
     std::vector <Record> history;
-    bool whiteKingChecked;
-    bool blackKingChecked;
-    bool blackKingPresent;
-    bool whiteKingPresent;
+    bool whiteKingChecked = false;
+    bool blackKingChecked = false;
+    bool blackKingPresent = false;
+    bool whiteKingPresent = false;
     bool playerTurn; // true = white, false = black; using bool instead of str b/c it's probably just easier to use bool than a string for the playerTurn state
 
     public:
@@ -52,7 +54,7 @@ class ChessGame: public Subject {
             return blackKingPresent;
         };
         
-        std::vector< vector <Box *>> *&getBoard() {
+        std::vector< vector <Box *>> &getBoard() {
             return board;
         };
 
@@ -61,6 +63,10 @@ class ChessGame: public Subject {
         void switchTurn();
 
         bool getPlayerTurn();
+
+        void updateKingPresence();
+
+        void checkingForKingCheck();
 
         
 };
