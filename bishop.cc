@@ -4,7 +4,7 @@ Bishop::Bishop(std::string name, std::vector<std::vector<Box *>> &board, Box *bo
     Piece{name, board, box, whitePlayer} {}
 
 bool Bishop::isLegal(Box *targetBox) {
-    if ((checkWhitePlayer() && !(targetBox->getPiece()->checkWhitePlayer())) |
+    if ((checkWhitePlayer() && !(targetBox->getPiece()->checkWhitePlayer())) ||
         (!checkWhitePlayer() && targetBox->getPiece()->checkWhitePlayer())) {
 
         return true;
