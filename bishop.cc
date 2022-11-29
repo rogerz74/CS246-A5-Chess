@@ -17,6 +17,7 @@ void Bishop::updateLegalMoves() {
             // if piece on box is capturable add to possible moves
             if ((checkWhitePlayer() && !(board[x - i][y + i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x - i][y + i]->getPiece()->checkWhitePlayer())) {
+
                 legalMoves.push_back(board[x - i][y + i]);
             }
             break;
@@ -28,6 +29,7 @@ void Bishop::updateLegalMoves() {
         if (board[x + i][y - i]->isOccupied()) {
             if ((checkWhitePlayer() && !(board[x + i][y - i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x + i][y - i]->getPiece()->checkWhitePlayer())) {
+
                 legalMoves.push_back(board[x + i][y - i]);
             }
             break;
@@ -39,6 +41,7 @@ void Bishop::updateLegalMoves() {
         if (board[x - i][y - i]->isOccupied()) {
             if ((checkWhitePlayer() && !(board[x - i][y - i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x - i][y - i]->getPiece()->checkWhitePlayer())) {
+
                 legalMoves.push_back(board[x - i][y - i]);
             }
             break;
@@ -50,6 +53,7 @@ void Bishop::updateLegalMoves() {
         if (board[x + i][y + i]->isOccupied()) {
             if ((checkWhitePlayer() && !(board[x + i][y + i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x + i][y + i]->getPiece()->checkWhitePlayer())) {
+                    
                 legalMoves.push_back(board[x + i][y + i]);
             }
             break;
