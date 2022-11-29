@@ -9,7 +9,7 @@ IMPORTANT: The implementation for the 4 levels function is missing right now. Th
 
 */
 
-Computer::Computer(ChessGame *subject, std::string name): subject{subject}, name{name} {
+Computer::Computer(ChessGame *subject, std::string name, vector<Piece*> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
     subject->attach(this);
 }
 
