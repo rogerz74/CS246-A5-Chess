@@ -4,9 +4,9 @@ Knight::Knight(std::string name, std::vector<std::vector<Box *>> &board, Box *bo
     Piece{name, board, box, whitePlayer} {}
 
 bool Knight::isLegal(Box *targetBox) {
-    if (!(targetBox->isOccupied()) | 
+    if (!(targetBox->isOccupied()) || 
         (targetBox->isOccupied() && 
-        (checkWhitePlayer() && !(targetBox->getPiece()->checkWhitePlayer())) |
+        (checkWhitePlayer() && !(targetBox->getPiece()->checkWhitePlayer())) ||
         (!checkWhitePlayer() && targetBox->getPiece()->checkWhitePlayer()))) {
 
         return true;
