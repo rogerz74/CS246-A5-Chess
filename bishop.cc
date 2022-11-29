@@ -15,7 +15,7 @@ void Bishop::updateLegalMoves() {
     for (int i = 1; x - i >= 0 && y + i < 8; ++i) {
         if (board[x - i][y + i]->isOccupied()) {
             // if piece on box is capturable add to possible moves
-            if ((checkWhitePlayer() && !board[x - i][y + i]->getPiece()->checkWhitePlayer()) |
+            if ((checkWhitePlayer() && !(board[x - i][y + i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x - i][y + i]->getPiece()->checkWhitePlayer())) {
                 legalMoves.push_back(board[x - i][y + i]);
             }
@@ -26,7 +26,7 @@ void Bishop::updateLegalMoves() {
 
     for (int i = 1; x + i  < 8 && y - i >= 0; ++i) {
         if (board[x + i][y - i]->isOccupied()) {
-            if ((checkWhitePlayer() && !board[x + i][y - i]->getPiece()->checkWhitePlayer()) |
+            if ((checkWhitePlayer() && !(board[x + i][y - i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x + i][y - i]->getPiece()->checkWhitePlayer())) {
                 legalMoves.push_back(board[x + i][y - i]);
             }
@@ -37,7 +37,7 @@ void Bishop::updateLegalMoves() {
 
     for (int i = 1; x - i  >= 0 && y - i >= 0; ++i) {
         if (board[x - i][y - i]->isOccupied()) {
-            if ((checkWhitePlayer() && !board[x - i][y - i]->getPiece()->checkWhitePlayer()) |
+            if ((checkWhitePlayer() && !(board[x - i][y - i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x - i][y - i]->getPiece()->checkWhitePlayer())) {
                 legalMoves.push_back(board[x - i][y - i]);
             }
@@ -48,7 +48,7 @@ void Bishop::updateLegalMoves() {
 
     for (int i = 1; x + i  < 8 && y + i < 8; ++i) {
         if (board[x + i][y + i]->isOccupied()) {
-            if ((checkWhitePlayer() && !board[x + i][y + i]->getPiece()->checkWhitePlayer()) |
+            if ((checkWhitePlayer() && !(board[x + i][y + i]->getPiece()->checkWhitePlayer())) |
                 (!checkWhitePlayer() && board[x + i][y + i]->getPiece()->checkWhitePlayer())) {
                 legalMoves.push_back(board[x + i][y + i]);
             }
