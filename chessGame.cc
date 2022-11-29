@@ -17,6 +17,9 @@
 // The void draw() function and the isStalemate() function is missing. These will be implemented when we have
 // a better understanding on how we want to create these functions.
 
+void ChessGame::setBoard(std::vector< vector <Box*>> & targetBoard) {
+    board = targetBoard;
+}
 
 void ChessGame::setTurn(bool playerTurn) {
     this.playerTurn = playerTurn; // true = white, false = black !!
