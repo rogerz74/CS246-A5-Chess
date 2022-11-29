@@ -54,7 +54,7 @@ class ChessGame: public Subject {
             return blackKingPresent;
         };
         
-        std::vector< vector <Box *>> &getBoard() {
+        std::vector< vector <Box *>> getBoard() {
             return board;
         };
 
