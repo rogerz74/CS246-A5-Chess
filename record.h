@@ -2,8 +2,6 @@
 #define _RECORD_H_
 #include "piece.h"
 
-// class Piece; (this will need to be added once Piece.h is finished)
-
 class Record {
     int xOriginCoord;
     int yOriginCoord;
