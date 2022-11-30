@@ -69,14 +69,13 @@ void ChessGame::checkingForKingCheck() {
 
     whiteKingChecked = false;
     blackKingChecked = false;
-    for (int a = 0; a < 8 && 
-         (whiteKingChecked != true && blackKingChecked != true); a++) {
-        for (int b = 0; b < 8 && (whiteKingChecked != true && blackKingChecked != true); b++) {
+    for (int a = 0; a < 8 && !(whiteKingChecked == true && blackKingChecked == true); a++) {
+        for (int b = 0; b < 8 && !(whiteKingChecked == true && blackKingChecked == true); b++) {
             // getting size of legalMoves
             int moveSize = static_cast<int>((*(*(board + a) + b))->getPiece()->getLegalMoves()->size());
 
             // checking the legal moves and seeing if they lead to a check
-            for (int c = 0; c < moveSize && (whiteKingChecked != true && blackKingChecked != true); c++) {
+            for (int c = 0; c < moveSize && !(whiteKingChecked == true && blackKingChecked == true); c++) {
                 // if blackKing is in check by a white piece
                 if (blackKingX != -1 &&
                     blackKingY != -1 &&
