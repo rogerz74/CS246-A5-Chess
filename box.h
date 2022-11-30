@@ -1,7 +1,7 @@
 #ifndef _BOX_H_
 #define _BOX_H_
 
-#include "piece.h"
+class Piece;
 
 class Box {
     // For xCoord, we are going to use enums and assign each alphabet a value from 0-8 

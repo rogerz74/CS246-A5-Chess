@@ -10,7 +10,7 @@ class Computer: public Observer {
     std::vector<Piece*> * pieceArray; //vector array of pieces for the computer
 
     public:
-        Computer(ChessGame *chessGame, std::string name, vector<Piece*> * pieceArray);
+        Computer(ChessGame *chessGame, std::string name, std::vector <Piece*> * pieceArray);
         void notify();
         // this will return the winner of the game, ie. "Black", "White" or "Draw"
         std::string level1(ChessGame *chessGame);
