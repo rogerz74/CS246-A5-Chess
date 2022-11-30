@@ -5,12 +5,12 @@ OBJECTS = main.o chessGame.o subject.o observer.o human.o computer.o box.o piece
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${EXEC}: ${OBJECTS}
-	${CXX} ${CXXFLAGS} ${OBJECTS} -o ${EXEC}
+		${CXX} ${CXXFLAGS} ${OBJECTS} -o ${EXEC}
 
 -include ${DEPENDS}
 
 .PHONY: clean
 
 clean:
-	rm ${OBJECTS} ${EXEC} ${DEPENDS}
+		rm ${OBJECTS} ${EXEC} ${DEPENDS}
 
