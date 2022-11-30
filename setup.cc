@@ -1,11 +1,16 @@
 #include "setup.h"
 using namespace std;
 
-//Assumes return type of ChessGame's getBoard() method has been changed to <vector<vector<Box *>> &.
+/*
+TO DO:
+- Making required changes after box & piece ctors change.
+*/
+
+//Note: return type of ChessGame's getBoard() method is <vector<vector<Box *>> *.
 string lowercase(string s);
 int strToCoord(char c);
 
-void userSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<Piece *> &bPieces) {       //void because it makes changes to the ChessGame itself
+void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &bPieces) {       //void because it makes changes to the ChessGame itself
     bool condFlag = 0;
 
     string command = "";
@@ -18,8 +23,7 @@ void userSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<
         if (command == "+") {
             cin >> piece >> place;
             char row = place[1];
-            if (((piece == "p") && (row == '1' || row == '8')) 
-                || ((piece == "P") && (row == '1' || row == '8'))) {
+            if ((piece == "p" || piece == "P") && (row == '1' || row == '8')) {
                 cout << "Cannot place pawns on first or last row of the board." << endl;
             } else if ((piece == "K") && (setupGame->isWhiteKingPresent())) {
                 cout << "White King already placed!" << endl;
@@ -30,14 +34,12 @@ void userSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<
                 if (islower(piece[0])) {
                     wp = 0;
                 }
-                Piece p{piece, setupGame->getBoard(), setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])], wp};
-                setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])]->setPiece(&p);
-
-                //should update board's fields __KingPresent & __KingChecked but fields are private, and latter cannot 
-                //be done in setup - maybe create ChessGame method kingStatus(), which updates with *every* piece placement/removal.
-
+                Piece p{piece, setupGame->getBoard(), *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])], wp};
+                *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->setPiece(&p);
+                setupGame->updateKingPresence();
+                setupGame->checkingForKingCheck();
                 if (wp) {
-                    wPieces.push_back(&p);   //adding the adress of p to the vector
+                    wPieces.push_back(&p);   //adding the address of p to the vector
                 } else {
                     bPieces.push_back(&p);
                 }
@@ -46,16 +48,19 @@ void userSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<
         
         else if (command == "-") {
             cin >> place;
-            Piece * p = setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])]->getPiece();
-            if (p->checkWhitePlayer()) {
-                wPieces.erase(std::remove(wPieces.begin(), wPieces.end(), p), wPieces.end());
+            if (*(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->isOccupied()) {
+                Piece * p = *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->getPiece();
+                if (p->checkWhitePlayer()) {
+                    wPieces.erase(remove(wPieces.begin(), wPieces.end(), p), wPieces.end());
+                } else {
+                    bPieces.erase(remove(bPieces.begin(), bPieces.end(), p), bPieces.end());
+                }
+                *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->setPiece(nullptr);
+                setupGame->updateKingPresence();
+                setupGame->checkingForKingCheck();
             } else {
-                bPieces.erase(std::remove(bPieces.begin(), bPieces.end(), p), bPieces.end());
-            }
-            setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])]->setPiece(nullptr);
-
-            //kingStatus() will be executed here again to check if king was removed, or a piece that protected
-            //any of the kings from a check was removed.
+                cout << "There is no piece on the chosen tile! Try again!" << endl;
+            } 
         } 
         
         else if (command == "=") {
@@ -95,18 +100,29 @@ void userSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<
 }
 
 
-/*  --IGNORE: IN PROGRESS - CREATES defaultBoard--
-void defaultSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<Piece *> &bPieces) {
+
+void defaultSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &bPieces) {
     vector<string> row1{"R", "N", "B", "Q", "K", "B", "N", "R"};
-    vector<string> row2(8, "P");
     
-    for (auto piece : row1) {
-        Piece p{piece, setupGame->getBoard(), setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])], wp};
+    for (int i = 0; i < 8; i++) {
+        Piece wOther{row1[i], setupGame->getBoard(), *(setupGame->getBoard())[7][i], 1};
+        *(setupGame->getBoard())[7][i]->setPiece(&wOther);
+        wPieces.push_back(&wOther);
+
+        Piece wPawn{"P", setupGame->getBoard(), *(setupGame->getBoard())[6][i], 1};
+        *(setupGame->getBoard())[6][i]->setPiece(&wPawn);
+        wPieces.push_back(&wPawn);
+
+        Piece bOther{lowercase(row1[i]), setupGame->getBoard(), *(setupGame->getBoard())[0][i], 0};
+        *(setupGame->getBoard())[0][i]->setPiece(&bOther);
+        bPieces.push_back(&bOther);
+
+        Piece bPawn{"p", setupGame->getBoard(), *(setupGame->getBoard())[1][i], 0};
+        *(setupGame->getBoard())[1][i]->setPiece(&bPawn);
+        bPieces.push_back(&bPawn);
     }
-    Piece p{piece, setupGame->getBoard(), setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])], wp};
-    setupGame->getBoard()[strToCoord(place[1])][strToCoord(place[0])]->setPiece(&p);
 }
-*/
+
 
 
 string lowercase(string s) {
