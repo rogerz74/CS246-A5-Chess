@@ -20,6 +20,10 @@
 #include "gamerun.h"
 #include "humanHuman.h"
 
+/*
+TO DO:
+- constructPlayer()
+*/
 
 struct scoreBoard;
 void gameInstance();
@@ -46,24 +50,27 @@ void scoreBoard::print() {
 }
 
 
-
-void gameInstance() {
-
-    //iterate over vector of vectors and build base board (emptyBoard) - possibility of keeping in main
-    std::vector<std::vector<Box *>> emptyBoard;
+void buildBoard(std::vector<std::vector<Box *>> &board) {
     for (int row = 0; row < 8; ++row) {
         std::vector<Box *> boardRow;
         for (int col = 0; col < 8; ++col) { 
             Box box{row, col, nullptr};
             boardRow.push_back(&box); 
         } 
-        ChessBoard.push_back(boardRow);
+        board.push_back(boardRow);
     } 
+}
 
-    std::vector<std::vector<Box *>> ChessBoard = emptyBoard;    //initialized to EmptyBoard
-    std::vector<std::vector<Box *>> defaultBoard = emptyBoard;    //initialized to EmptyBoard
 
-    ChessGame game{ChessBoard};        //constructor takes in reference now
+void gameInstance() {
+
+    //iterate over vector of vectors and build base board - possibility of keeping in main
+    std::vector<std::vector<Box *>> ChessBoard;
+    buildBoard(ChessBoard);
+    std::vector<std::vector<Box *>> emptyBoard;
+    buildBoard(emptyBoard);
+
+    ChessGame game{&ChessBoard};        //constructor takes in ptr to board
     std::vector<Piece *> whitePieces;
     std::vector<Piece *> blackPieces;
 
@@ -72,7 +79,11 @@ void gameInstance() {
     std::string comm = "";
     while (!(gameRunFlag) && (cin >> comm)) {
         if (comm == "setup") {
-            game.setBoard(emptyBoard);     //create method to take in reference to the board and change board in class
+            if (setupFlag) {
+                ChessBoard.clear();
+                buildBoard(ChessBoard);
+                game.setBoard(&ChessBoard);    //create method to take in pointer to the board and change board in class
+            }
             userSetup(&game, whitePieces, blackPieces);     //takes references to the vectors and changes them
             setupFlag = 1;
         } else if (comm == "game") {
@@ -82,15 +93,13 @@ void gameInstance() {
 
             //later, constructPlayer(player) will be defined to construct human/l1/l2/l3/l4
             //Human for now, till level subclasses are created and defined
-            Human whitePlayer{&game, "human"};
-            Human blackPlayer{&game, "human"};
+            Human whitePlayer{&game, "human", &whitePieces};
+            Human blackPlayer{&game, "human", &blackPieces};
 
-            /*  --ALGORTHM YET TO BE DEFINED IN SETUP--
-            if (setupFlag == 0) {
-                game.setBoard(defaultBoard);
+            if (!(setupFlag)) {
+                game.setBoard(&emptyBoard);
+                defaultSetup(&game, whitePieces, blackPieces);
             }
-            defaultSetup(&game, whitePieces, blackPieces);
-            */
 
             int whoWon = gameRun(&whitePlayer, &blackPlayer, &game);
             if (whoWon == 1) {
