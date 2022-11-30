@@ -8,7 +8,7 @@ class Queen: public Piece {
     bool isLegal(Box *targetBox);
 
     public:
-        Queen(std::string name, std::vector<std::vector<Box *>> &board, Box *box, bool whitePlayer);
+        Queen(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer);
         void updateLegalMoves();
 };
 
