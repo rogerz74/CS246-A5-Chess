@@ -11,6 +11,6 @@
 #include "piece.h"
 
 void userSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<Piece *> &bPieces);
-//void defaultSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<Piece *> &bPieces);
+void defaultSetup(ChessGame *setupGame, std::vector<Piece *> &wPieces, std::vector<Piece *> &bPieces);
 
 #endif
