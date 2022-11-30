@@ -34,6 +34,10 @@ int Piece::move(Box *targetBox) {
     return 0;
 }
 
+std::vector<Box*> getLegalMoves() {
+    return legalMoves;
+};
+
 Piece::~Piece() {
     delete box;
 }

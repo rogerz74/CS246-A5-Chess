@@ -23,6 +23,7 @@ class Piece {
         // if move is completed move will return 1
         int move(Box *targetBox);
         virtual void updateLegalMoves() = 0;
+        std::vector<Box*> getLegalMoves();
         ~Piece();
 };
 
