@@ -11,12 +11,12 @@ class Piece {
 
     protected:
     Box *box;
-    std::vector<std::vector<Box *>> &board;
+    std::vector<std::vector<Box *>> *board;
     std::vector<Box*> legalMoves;
     virtual bool isLegal(Box *targetBox) = 0;
 
     public:
-        Piece(std::string name, std::vector<std::vector<Box *>> &board, Box *box, bool whitePlayer);
+        Piece(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer);
         std::string getName();
         bool checkWhitePlayer();
         bool isCaptured();

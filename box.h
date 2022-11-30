@@ -18,7 +18,7 @@ class Box {
         int getX();
         int getY();
         Piece *getPiece();
-        Piece *setPiece(Piece *currentPiece);
+        void setPiece(Piece *currentPiece);
         bool isOccupied();
         void print();
         ~Box();

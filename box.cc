@@ -26,7 +26,7 @@ Piece* Box::getPiece() {
     return currentPiece;
 }
 
-Piece* Box::setPiece(Piece *currentPiece) {
+void Box::setPiece(Piece *currentPiece) {
     this->currentPiece = currentPiece;
 }
 

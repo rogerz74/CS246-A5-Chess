@@ -8,7 +8,7 @@ class Knight: public Piece {
     bool isLegal(Box *targetBox);
     
     public:
-        Knight(std::string name, std::vector<std::vector<Box *>> &board, Box *box, bool whitePlayer);
+        Knight(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer);
         void updateLegalMoves();
 };
 

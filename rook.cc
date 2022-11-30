@@ -1,9 +1,9 @@
-#include "queen.h"
+#include "rook.h"
 
-Queen::Queen(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer):
+Rook::Rook(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer):
     Piece{name, board, box, whitePlayer} {}
 
-bool Queen::isLegal(Box *targetBox) {
+bool Rook::isLegal(Box *targetBox) {
     if ((checkWhitePlayer() && !(targetBox->getPiece()->checkWhitePlayer())) ||
         (!checkWhitePlayer() && targetBox->getPiece()->checkWhitePlayer())) {
 
@@ -12,7 +12,7 @@ bool Queen::isLegal(Box *targetBox) {
     return false;
 }
 
-void Queen::updateLegalMoves() {
+void Rook::updateLegalMoves() {
     std::vector<Box*> legalMoves;
 
     int x = box->getX();
@@ -60,46 +60,6 @@ void Queen::updateLegalMoves() {
             break;
         }
         legalMoves.push_back((*board)[x][i]);
-    }
-
-    for (int i = 1; x - i >= 0 && y + i < 8; ++i) {
-        if ((*board)[x - i][y + i]->isOccupied()) {
-            if(isLegal((*board)[x - i][y + i])) {
-                legalMoves.push_back((*board)[x - i][y + i]);
-            }
-            break;
-        }
-        legalMoves.push_back((*board)[x - i][y + i]);
-    }
-
-    for (int i = 1; x + i < 8 && y + i < 8; ++i) {
-        if ((*board)[x + i][y + i]->isOccupied()) {
-            if(isLegal((*board)[x + i][y + i])) {
-                legalMoves.push_back((*board)[x + i][y + i]);
-            }
-            break;
-        }
-        legalMoves.push_back((*board)[x + i][y + i]);
-    }
-
-    for (int i = 1; x + i < 8 && y - i >= 0; ++i) {
-        if ((*board)[x + i][y - i]->isOccupied()) {
-            if(isLegal((*board)[x + i][y - i])) {
-                legalMoves.push_back((*board)[x + i][y - i]);
-            }
-            break;
-        }
-        legalMoves.push_back((*board)[x + i][y - i]);
-    }
-
-    for (int i = 1; x - i >= 0 && y - i >= 0; ++i) {
-        if ((*board)[x - i][y - i]->isOccupied()) {
-            if(isLegal((*board)[x - i][y - i])) {
-                legalMoves.push_back((*board)[x - i][y - i]);
-            }
-            break;
-        }
-        legalMoves.push_back((*board)[x - i][y - i]);
     }
 
     this->legalMoves = legalMoves;

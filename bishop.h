@@ -8,7 +8,7 @@ class Bishop: public Piece {
     bool isLegal(Box *targetBox);
 
     public:
-        Bishop(std::string name, std::vector<std::vector<Box *>> &board, Box *box, bool whitePlayer);
+        Bishop(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer);
         void updateLegalMoves();
 
 };
