@@ -45,14 +45,7 @@ int main() {
     // this part will contain the loop that allows for multiple games of
     // chess to be run and tracked.
 
-    while (true) {
-        int blackWins = 0;
-        int whiteWins = 0;
 
-        // run the helper function here
-
-        // cout the number of wins here
-    }
     
 
 
