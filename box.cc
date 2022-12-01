@@ -1,5 +1,4 @@
 #include "box.h"
-#include <iostream>
 
 Box::Box(const int & xCoord, const int & yCoord): 
     xCoord{xCoord}, yCoord{yCoord} {

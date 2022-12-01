@@ -18,7 +18,7 @@
 // a better understanding on how we want to create these functions.
 
 void ChessGame::setBoard(std::vector< std::vector <Piece*>> & targetBoard) {
-    board = &targetBoard;
+    board = targetBoard;
 }
 
 void ChessGame::setTurn(bool playerTurn) {

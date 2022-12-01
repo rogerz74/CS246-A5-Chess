@@ -3,7 +3,7 @@
 #include <iostream>
 #include "box.h"
 
-Piece::Piece(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, const int& xCoord, const int& yCoord):
+Piece::Piece(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, const int xCoord, const int yCoord):
     name{name}, board{board}, whitePlayer{whitePlayer}, xCoord{xCoord}, yCoord{yCoord} {};
 
 int Piece::getX() {
