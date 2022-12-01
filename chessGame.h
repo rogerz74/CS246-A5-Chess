@@ -31,7 +31,7 @@ class ChessGame: public Subject {
         // to initialize the ChessGame
         explicit ChessGame(std::vector< std::vector <Piece*>> * board): board{board} {};
 
-        void setBoard(std::vector< std::vector <Piece*>> & targetBoard); // if we want to change the board
+        void setBoard(std::vector< std::vector <Piece*>> * targetBoard); // if we want to change the board
 
         // the function that sets the board in the right configuration?? not sure exactly what this function referred to
         void draw(); 

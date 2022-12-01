@@ -17,7 +17,7 @@
 // The void draw() function and the isStalemate() function is missing. These will be implemented when we have
 // a better understanding on how we want to create these functions.
 
-void ChessGame::setBoard(std::vector< std::vector <Piece*>> & targetBoard) {
+void ChessGame::setBoard(std::vector< std::vector <Piece*>> * targetBoard) {
     board = targetBoard;
 }
 
