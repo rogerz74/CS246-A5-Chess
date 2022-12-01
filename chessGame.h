@@ -19,7 +19,7 @@ board field seems weird. Hence, it has been RENAMED!!!
 
 
 class ChessGame: public Subject {
-    std::vector< std::vector < Box* >> * board; // a 2D array of Box pointers
+    std::vector< std::vector < Piece* >> * board; // a 2D array of piece pointers
     std::vector <Record> history;
     bool whiteKingChecked = false;
     bool blackKingChecked = false;
@@ -29,9 +29,9 @@ class ChessGame: public Subject {
 
     public:
         // to initialize the ChessGame
-        explicit ChessGame(std::vector< std::vector <Box*>> * board): board{board} {};
+        explicit ChessGame(std::vector< std::vector <Piece*>> * board): board{board} {};
 
-        void setBoard(std::vector< std::vector <Box*>> & targetBoard); // if we want to change the board
+        void setBoard(std::vector< std::vector <Piece*>> * targetBoard); // if we want to change the board
 
         // the function that sets the board in the right configuration?? not sure exactly what this function referred to
         void draw(); 
@@ -56,7 +56,7 @@ class ChessGame: public Subject {
             return blackKingPresent;
         };
         
-        std::vector< std::vector <Box *>> *& getBoard() {
+        std::vector< std::vector <Piece *>> *& getBoard() {
             return board;
         };
 

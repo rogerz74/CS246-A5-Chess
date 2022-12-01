@@ -1,52 +1,22 @@
 #include "box.h"
-#include <iostream>
 
-Box::Box(int xCoord, int yCoord, Piece *currentPiece): 
-    xCoord{xCoord}, yCoord{yCoord}, currentPiece{currentPiece} {
-
-    int isXOdd = xCoord % 2;
-    int isYOdd = yCoord % 2;
-
-    if ((isXOdd && !isYOdd) | (!isXOdd && isYOdd)) {
-        isBlackTile = true;
-    } else {
-        isBlackTile =  false;
-    }
+Box::Box(const int & xCoord, const int & yCoord): 
+    xCoord{xCoord}, yCoord{yCoord} {
 }
 
-int Box::getX() { 
+int Box::getX() const{ 
     return xCoord; 
 }
 
-int Box::getY() {
+int Box::getY() const{
     return yCoord;
 }
 
-Piece* Box::getPiece() {
-    return currentPiece;
-}
-
-void Box::setPiece(Piece *currentPiece) {
-    this->currentPiece = currentPiece;
-}
-
-bool Box::isOccupied() { 
-    if (currentPiece == nullptr) {
-        return false;
+bool Box::operator== (const Box & b1) const {
+    if (b1.getX() == xCoord && b1.getY() == yCoord) {
+        return true;
     }
-    return true;
+    return false;
 }
 
-void Box::print() {
-    if (isBlackTile && !isOccupied()) {
-        std::cout << "_";
-    } else if(!isBlackTile && !isOccupied()) {
-        std::cout << " ";
-    } else {
-        std::cout << currentPiece->getName();
-    }
-}
-
-Box::~Box() {
-    delete currentPiece;
-}
+Box::~Box() {}
