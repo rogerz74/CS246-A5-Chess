@@ -6,24 +6,37 @@
 
 class Piece {
     std::string name;
+    std::vector<std::vector<Piece *>> *board;
     bool whitePlayer;
-    bool captured;
+    int xCoord;
+    int yCoord;
+
+    std::vector<Box> * legalMovesArr;
 
     protected:
-    Box *box;
-    std::vector<std::vector<Box *>> *board;
-    std::vector<Box*> legalMoves;
-    virtual bool isLegal(Box *targetBox) = 0;
+    virtual bool isLegal(Box &targetBox) = 0;
 
     public:
-        Piece(std::string name, std::vector<std::vector<Box *>> *board, Box *box, bool whitePlayer);
+        Piece(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, const int& xCoord, const int& yCoord);
+
+        int getX();
+        int getY();
+
         std::string getName();
         bool checkWhitePlayer();
-        bool isCaptured();
         // if move is completed move will return 1
-        int move(Box *targetBox);
+        int move(Piece *currentTile, Piece *targetTile, int newX, int newY);
+        void print();
+
+        std::vector<Box> *& getLegalMoves() {
+            return legalMovesArr;
+        };
+
+        std::vector<std::vector<Piece *>> *& getBoard() {
+            return board;
+        };
         virtual void updateLegalMoves() = 0;
-        std::vector<Box*> getLegalMoves();
+        
         ~Piece();
 };
 
