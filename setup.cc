@@ -6,7 +6,7 @@ TO DO:
 - Making required changes after box & piece ctors change.
 */
 
-//Note: return type of ChessGame's getBoard() method is <vector<vector<Box *>> *.
+//Note: return type of ChessGame's getBoard() method is <vector<vector<Piece *>> *.
 string lowercase(string s);
 int strToCoord(char c);
 
@@ -34,8 +34,8 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                 if (islower(piece[0])) {
                     wp = 0;
                 }
-                Piece p{piece, setupGame->getBoard(), *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])], wp};
-                *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->setPiece(&p);
+                Piece p{piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};  //where am i supposed to construct box?
+                (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = &p;     //can i do this or do i need a set function?
                 setupGame->updateKingPresence();
                 setupGame->checkingForKingCheck();
                 if (wp) {
@@ -48,14 +48,13 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
         
         else if (command == "-") {
             cin >> place;
-            if (*(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->isOccupied()) {
-                Piece * p = *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->getPiece();
+            if ((*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] != nullptr) {
                 if (p->checkWhitePlayer()) {
-                    wPieces.erase(remove(wPieces.begin(), wPieces.end(), p), wPieces.end());
+                    wPieces.erase(remove(wPieces.begin(), wPieces.end(), (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])]), wPieces.end());
                 } else {
-                    bPieces.erase(remove(bPieces.begin(), bPieces.end(), p), bPieces.end());
+                    bPieces.erase(remove(bPieces.begin(), bPieces.end(), (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])]), bPieces.end());
                 }
-                *(setupGame->getBoard())[strToCoord(place[1])][strToCoord(place[0])]->setPiece(nullptr);
+                (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = nullptr;
                 setupGame->updateKingPresence();
                 setupGame->checkingForKingCheck();
             } else {
@@ -67,9 +66,9 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
             cin >> turn;
             turn = lowercase(turn);
             if (turn == "white") {
-                setupGame->setTurn(true);
+                setupGame->setTurn(1);
             } else if (turn == "black") {
-                setupGame->setTurn(false);
+                setupGame->setTurn(0);
             } else {
                 cout << "Invalid color!" << endl;
             }
@@ -105,20 +104,20 @@ void defaultSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *
     vector<string> row1{"R", "N", "B", "Q", "K", "B", "N", "R"};
     
     for (int i = 0; i < 8; i++) {
-        Piece wOther{row1[i], setupGame->getBoard(), *(setupGame->getBoard())[7][i], 1};
-        *(setupGame->getBoard())[7][i]->setPiece(&wOther);
+        Piece wOther{row1[i], setupGame->getBoard(), 1, 7, i};
+        (*(setupGame->getBoard()))[7][i] = &wOther;
         wPieces.push_back(&wOther);
 
-        Piece wPawn{"P", setupGame->getBoard(), *(setupGame->getBoard())[6][i], 1};
-        *(setupGame->getBoard())[6][i]->setPiece(&wPawn);
+        Piece wPawn{"P", setupGame->getBoard(), 1, 6, i};
+        (*(setupGame->getBoard()))[6][i] = &wPawn;
         wPieces.push_back(&wPawn);
 
-        Piece bOther{lowercase(row1[i]), setupGame->getBoard(), *(setupGame->getBoard())[0][i], 0};
-        *(setupGame->getBoard())[0][i]->setPiece(&bOther);
+        Piece bOther{lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
+        (*(setupGame->getBoard()))[0][i] = &bOther;
         bPieces.push_back(&bOther);
 
-        Piece bPawn{"p", setupGame->getBoard(), *(setupGame->getBoard())[1][i], 0};
-        *(setupGame->getBoard())[1][i]->setPiece(&bPawn);
+        Piece bPawn{"p", setupGame->getBoard(), 0, 1, i};
+        (*(setupGame->getBoard()))[1][i] = &bPawn;
         bPieces.push_back(&bPawn);
     }
 }
