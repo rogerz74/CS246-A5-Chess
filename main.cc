@@ -18,7 +18,6 @@
 
 #include "setup.h"
 #include "gamerun.h"
-#include "humanHuman.h"
 
 /*
 TO DO:
@@ -50,12 +49,11 @@ void scoreBoard::print() {
 }
 
 
-void buildBoard(std::vector<std::vector<Box *>> &board) {
+void buildBoard(std::vector<std::vector<Piece *>> &board) {
     for (int row = 0; row < 8; ++row) {
-        std::vector<Box *> boardRow;
+        std::vector<Piece *> boardRow;
         for (int col = 0; col < 8; ++col) { 
-            Box box{row, col, nullptr};
-            boardRow.push_back(&box); 
+            boardRow.push_back(nullptr);        //initializing all places to nullptrs
         } 
         board.push_back(boardRow);
     } 
@@ -65,9 +63,9 @@ void buildBoard(std::vector<std::vector<Box *>> &board) {
 void gameInstance() {
 
     //iterate over vector of vectors and build base board - possibility of keeping in main
-    std::vector<std::vector<Box *>> ChessBoard;
+    std::vector<std::vector<Piece *>> ChessBoard;
     buildBoard(ChessBoard);
-    std::vector<std::vector<Box *>> emptyBoard;
+    std::vector<std::vector<Piece *>> emptyBoard;
     buildBoard(emptyBoard);
 
     ChessGame game{&ChessBoard};        //constructor takes in ptr to board
@@ -93,8 +91,8 @@ void gameInstance() {
 
             //later, constructPlayer(player) will be defined to construct human/l1/l2/l3/l4
             //Human for now, till level subclasses are created and defined
-            Human whitePlayer{&game, "human", &whitePieces};
-            Human blackPlayer{&game, "human", &blackPieces};
+            Human whitePlayer{&game, "human"};  //+ &whitePieces for computer
+            Human blackPlayer{&game, "human"};  //+ &blackPieces for computer
 
             if (!(setupFlag)) {
                 game.setBoard(&emptyBoard);
