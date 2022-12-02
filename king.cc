@@ -25,7 +25,6 @@ void King::updateLegalMoves() {
     int x = this->getX();
     int y = this->getY();
 
-
     // castling
     // checks if king is white, on it's first move, rook is at it's necessary position,and on it's first move
     if (checkWhitePlayer() && isFirstMove && 
@@ -63,10 +62,15 @@ void King::updateLegalMoves() {
                     
                         // check final position is check
                         if (!checkGame1.isWhiteKingChecked()) {
+                            // put board back into original state
+                            (*(this->getBoard()))[x][y - 2] = nullptr;
+                            (*(this->getBoard()))[x][y] = this;
+
                             // add castling move to King
                             Box castlingKingMove(x, y - 2);
                             legalMoves.push_back(castlingKingMove);
                             moveStates.push_back(2);
+
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
                             (*((*(this->getBoard()))[7][0])->getLegalMoves()).push_back(castlingRookMove);
@@ -114,10 +118,15 @@ void King::updateLegalMoves() {
                     
                         // check final position is check
                         if (!checkGame2.isWhiteKingChecked()) {
+                            // put board back into original state
+                            (*(this->getBoard()))[x][y + 2] = nullptr;
+                            (*(this->getBoard()))[x][y] = this;
+
                             // add castling move to King
                             Box castlingKingMove(x, y + 2);
                             legalMoves.push_back(castlingKingMove);
                             moveStates.push_back(2);
+
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
                             (*((*(this->getBoard()))[7][7])->getLegalMoves()).push_back(castlingRookMove);
@@ -165,10 +174,15 @@ void King::updateLegalMoves() {
                     
                         // check final position is check
                         if (!checkGame3.isBlackKingChecked()) {
+                            // put board back into original state
+                            (*(this->getBoard()))[x][y - 2] = nullptr;
+                            (*(this->getBoard()))[x][y] = this;
+
                             // add castling move to King
                             Box castlingKingMove(x, y - 2);
                             legalMoves.push_back(castlingKingMove);
                             moveStates.push_back(2);
+
                             // add castling move to Rook
                             Box castlingRookMove(x, y - 1);
                             (*((*(this->getBoard()))[0][0])->getLegalMoves()).push_back(castlingRookMove);
@@ -216,10 +230,15 @@ void King::updateLegalMoves() {
                     
                         // check final position is check
                         if (!checkGame4.isBlackKingChecked()) {
+                            // put board back into original state
+                            (*(this->getBoard()))[x][y + 2] = nullptr;
+                            (*(this->getBoard()))[x][y] = this;
+
                             // add castling move to King
                             Box castlingKingMove(x, y + 2);
                             legalMoves.push_back(castlingKingMove);
                             moveStates.push_back(2);
+
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
                             (*((*(this->getBoard()))[0][7])->getLegalMoves()).push_back(castlingRookMove);
