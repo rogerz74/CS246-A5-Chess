@@ -2,9 +2,7 @@
 #define _KING_H_
 
 #include "piece.h"
-
 #include "chessGame.h"
-//class ChessGame;
 
 class King: public Piece {
     bool isFirstMove;
