@@ -6,8 +6,7 @@ Knight::Knight(std::string name, std::vector<std::vector<Piece *>> *board, bool 
 bool Knight::isLegal(Box &targetBox) {
 
     // if WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
-    if (!((*(this->getBoard()))[targetBox.getX()][targetBox.getY()]) || 
-        (((*(this->getBoard()))[targetBox.getX()][targetBox.getY()]) && 
+    if ((((*(this->getBoard()))[targetBox.getX()][targetBox.getY()]) && 
         ((checkWhitePlayer() && !(((*(this->getBoard()))[targetBox.getX()][targetBox.getY()])->checkWhitePlayer())) ||
          (!checkWhitePlayer() && (((*(this->getBoard()))[targetBox.getX()][targetBox.getY()])->checkWhitePlayer())) ) )) {
         return true;
