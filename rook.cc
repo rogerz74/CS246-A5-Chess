@@ -1,7 +1,7 @@
 #include "rook.h"
 
-Rook::Rook(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord, bool isFirstMove):
-    Piece{name, board, whitePlayer, xCoord, yCoord}, isFirstMove{isFirstMove} {}
+Rook::Rook(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord):
+    Piece{name, board, whitePlayer, xCoord, yCoord}, isFirstMove{true} {}
 
 bool Rook::getIsFirstMove() {
     return isFirstMove;

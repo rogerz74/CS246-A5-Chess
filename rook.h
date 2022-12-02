@@ -9,7 +9,7 @@ class Rook: public Piece {
     bool isLegal(Box &targetBox) override;
 
     public:
-        Rook(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord, bool isFirstMove);
+        Rook(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord);
         bool getIsFirstMove() override;
         void updateLegalMoves() override;
 
