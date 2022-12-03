@@ -8,11 +8,13 @@ TO DO:
 */
 
 int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
-    int turn = gameBoard->getplayerTurn();
+    int turn = gameBoard->getPlayerTurn();
     int toReturn = INT_MAX;
     string comm = "";
     string a = "";
     string b = "";
+
+    //implement error checking so INT_MAX returned if game unfinished
 
     while (toReturn == INT_MAX) {
         if (turn == 1) {
@@ -26,7 +28,7 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
                 toReturn = 1;
             } else {
                 gameBoard->switchTurn();
-                turn = gameBoard->getplayerTurn();
+                turn = gameBoard->getPlayerTurn();
             }
         } else {
             cout << "Black's Turn: ";
@@ -39,7 +41,7 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
                 toReturn = -1;
             } else {
                 gameBoard->switchTurn();
-                turn = gameBoard->getplayerTurn();
+                turn = gameBoard->getPlayerTurn();
             }
         }
     }
