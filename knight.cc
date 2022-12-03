@@ -23,98 +23,89 @@ void Knight::updateLegalMoves() {
 
     if ((x + 2 < 8) && (y + 1 < 8)) {
         Box move1(x + 2, y + 1);
-        if (isLegal(move1) || !((*(this->getBoard()))[move1.getX()][move1.getY()])) {
+        if (isLegal(move1)) {
             legalMoves.push_back(move1);
-
-            if (isLegal(move1)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move1.getX()][move1.getY()])) {
+            legalMoves.push_back(move1);
+            moveStates.push_back(0);
         }
     }
 
     if ((x - 2 >= 0) && ( y - 1 >= 0)) {
         Box move2(x - 2, y - 1);
-        if (isLegal(move2) || !((*(this->getBoard()))[move2.getX()][move2.getY()])) {
+        if (isLegal(move2)) {
             legalMoves.push_back(move2);
-            if (isLegal(move2)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if(!((*(this->getBoard()))[move2.getX()][move2.getY()])) {
+            legalMoves.push_back(move2);
+            moveStates.push_back(0);
         }
     }
 
     if ((x + 2 < 8) && ( y - 1 >= 0)) {
         Box move3(x + 2, y - 1);
-        if (isLegal(move3) || !((*(this->getBoard()))[move3.getX()][move3.getY()])) {
+        if (isLegal(move3)) {
             legalMoves.push_back(move3);
-            if (isLegal(move3)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move3.getX()][move3.getY()])) {
+            legalMoves.push_back(move3);
+            moveStates.push_back(0);
         }
     }
 
     if ((x - 2 >= 0) && (y + 1 < 8)) {
         Box move4(x - 2, y + 1);
-        if (isLegal(move4) || !((*(this->getBoard()))[move4.getX()][move4.getY()])) {
+        if (isLegal(move4)) {
             legalMoves.push_back(move4);
-            if (isLegal(move4)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move4.getX()][move4.getY()])) {
+            legalMoves.push_back(move4);
+            moveStates.push_back(0);
         }
     }
 
     if ((x + 1 < 8) && (y + 2 < 8)) {
         Box move5(x + 1, y + 2);
-        if (isLegal(move5) || !((*(this->getBoard()))[move5.getX()][move5.getY()])) {
+        if (isLegal(move5)) {
             legalMoves.push_back(move5);
-            if (isLegal(move5)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move5.getX()][move5.getY()])) {
+            legalMoves.push_back(move5);
+            moveStates.push_back(0);
         }
     }
 
     if ((x - 1 >= 0) && (y - 2 >= 0)) {
         Box move6(x - 1, y - 2);
-        if (isLegal(move6) || !((*(this->getBoard()))[move6.getX()][move6.getY()])) {
+        if (isLegal(move6)) {
             legalMoves.push_back(move6);
-            if (isLegal(move6)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move6.getX()][move6.getY()])) {
+            legalMoves.push_back(move6);
+            moveStates.push_back(0);
         }
     }
 
     if ((x + 1 < 8) && (y - 2 >= 0)) {
         Box move7(x + 1, y - 2);
-        if (isLegal(move7) || !((*(this->getBoard()))[move7.getX()][move7.getY()])) {
+        if (isLegal(move7)) {
             legalMoves.push_back(move7);
-            if (isLegal(move7)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move7.getX()][move7.getY()])) {
+            legalMoves.push_back(move7);
+            moveStates.push_back(0);
         }
     }
 
     if ((x - 1 >= 0) && (y + 2 < 8)) {
         Box move8(x - 1, y + 2);
-        if (isLegal(move8) || !((*(this->getBoard()))[move8.getX()][move8.getY()])) {
+        if (isLegal(move8)) {
             legalMoves.push_back(move8);
-            if (isLegal(move8)) {
-                moveStates.push_back(1);
-            } else {
-                moveStates.push_back(0);
-            }
+            moveStates.push_back(1);
+        } else if (!((*(this->getBoard()))[move8.getX()][move8.getY()])) {
+            legalMoves.push_back(move8);
+            moveStates.push_back(0);
         }
     }
 
