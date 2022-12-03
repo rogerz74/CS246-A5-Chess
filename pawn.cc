@@ -1,4 +1,5 @@
 #include "pawn.h"
+#include <algorithm>
 
 Pawn::Pawn(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord):
     Piece{name, board,whitePlayer, xCoord, yCoord} {}
@@ -52,6 +53,22 @@ void Pawn::updateLegalMoves() {
             moveStates.push_back(1);
         }
     }
+
+    /* 
+        Check if there was an en passant (capture) move added by different pawn (not attacking pawn).
+        This is needed as we call updateLegalMoves() before every move attempted (check move() for more details).
+        Thus, in order to not loose the en passant move added by a different pawn we must push it again to new 
+        legalMoves array currently being constructed.
+    */
+
+    auto enPassant = std::find((this->getMoveStates())->begin(), (this->getMoveStates())->end(), -1);
+    if (enPassant != (this->getMoveStates())->end()) {
+        // en passant move (-1) was found in PREVIOUS legalMovesArr and legalMoveStates
+        int index = enPassant - (this->getMoveStates())->begin();
+        // add en passant move to CURRENT legalMovesArr - legalMoves - and CURRENT legalMoveStates - moveStates
+        legalMoves.push_back((*((this->getLegalMoves())->begin() + index)));
+        moveStates.push_back(-1);
+   }
 
     // First move (2 spaces forward)
     if (checkWhitePlayer() && (x == 6) && !((*(this->getBoard()))[x - 2][y])) {
