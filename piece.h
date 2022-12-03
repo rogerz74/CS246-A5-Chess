@@ -12,7 +12,7 @@ class Piece {
     int xCoord;
     int yCoord;
 
-    std::map<Box, int> *legalMovesArr;
+    std::map<Box, int> *legalMovesMap;
 
     protected:
     virtual bool isLegal(Box &targetBox) = 0;
@@ -31,7 +31,7 @@ class Piece {
         void print();
 
         std::map<Box, int> *getLegalMoves() {
-            return legalMovesArr;
+            return legalMovesMap;
         };
 
         /*std::vector<int> *& getMoveStates() {
