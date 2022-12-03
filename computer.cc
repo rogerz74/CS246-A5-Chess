@@ -1,6 +1,7 @@
 #include <iostream>
 #include "computer.h"
 #include "chessGame.h"
+#include "piece.h"
 
 
 /*
@@ -33,4 +34,3 @@ void Computer::notify() {
     std::cout << "  abcdefgh" << std::endl; // printing the bottom a-h column value
 
 }
-
