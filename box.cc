@@ -19,4 +19,11 @@ bool Box::operator== (const Box & b1) const {
     return false;
 }
 
+ bool Box::operator< (const Box & b1) const {
+    if (xCoord < b1.getX()) {
+        return true;
+    }
+    return false;
+ }
+
 Box::~Box() {}
