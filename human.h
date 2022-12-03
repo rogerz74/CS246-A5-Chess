@@ -9,6 +9,7 @@ class Human: public Observer {
 
     public:
         Human(ChessGame *subject, std::string name);
+        bool pickMove();
         void notify(); // will print out the board;
         ~Human();
 };
