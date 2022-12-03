@@ -3,13 +3,8 @@
 #include "chessGame.h"
 #include "piece.h"
 
-/*
 
-IMPORTANT: The implementation for the 4 levels function is missing right now. That will be added once we have all the other components working properly.
-
-*/
-
-Computer::Computer(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
+Computer::Computer(ChessGame *subject, std::string name, std::vector<Piece> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
     subject->attach(this);
 }
 
