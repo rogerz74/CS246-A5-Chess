@@ -8,7 +8,7 @@ class Pawn: public Piece {
 
     public:
         Pawn(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord);
-        void updateLegalMoves() override;
+        std::map<Box, int> updateLegalMoves() override;
 };
 
 #endif

@@ -14,9 +14,8 @@ bool Pawn::isLegal(Box &targetBox) {
     return false;
 }
 
-void Pawn::updateLegalMoves() {
-    std::vector<Box> legalMoves;
-    std::vector<int> moveStates;
+std::map<Box, int> Pawn::updateLegalMoves() {
+    std::map<Box, int> legalMoves;
 
     int x = this->getX();
     int y = this->getY();
@@ -25,32 +24,28 @@ void Pawn::updateLegalMoves() {
     if (checkWhitePlayer() && (x - 1 >= 0) && (y - 1 >= 0)) {
         Box captureMove1(x - 1, y - 1);
         if (isLegal(captureMove1)) {
-            legalMoves.push_back(captureMove1);
-            moveStates.push_back(1);
+            legalMoves[captureMove1] = 1;
         }
     }
     
     if (checkWhitePlayer() && (x - 1 >= 0) && (y + 1 < 8)) {
         Box captureMove2(x - 1, y + 1);
         if (isLegal(captureMove2)) {
-            legalMoves.push_back(captureMove2);
-            moveStates.push_back(1);
+            legalMoves[captureMove2] = 1;
         }
     }
 
     if (!checkWhitePlayer() && (x + 1 < 8) && (y - 1 >= 0)) {
         Box captureMove3(x + 1, y - 1);
         if (isLegal(captureMove3)) {
-            legalMoves.push_back(captureMove3);
-            moveStates.push_back(1);
+            legalMoves[captureMove3] = 1;
         }
     }
 
     if (!checkWhitePlayer() && (x + 1 < 8) && (y + 1 < 8)) {
         Box captureMove4(x + 1, y + 1);
         if (isLegal(captureMove4)) {
-            legalMoves.push_back(captureMove4);
-            moveStates.push_back(1);
+            legalMoves[captureMove4] = 1;
         }
     }
 
@@ -61,69 +56,60 @@ void Pawn::updateLegalMoves() {
         legalMoves array currently being constructed.
     */
 
-    auto enPassant = std::find((this->getMoveStates())->begin(), (this->getMoveStates())->end(), -1);
-    if (enPassant != (this->getMoveStates())->end()) {
+    for (auto &pair: (*(this->getLegalMoves()))) {
         // en passant move (-1) was found in PREVIOUS legalMovesArr and legalMoveStates
-        int index = enPassant - (this->getMoveStates())->begin();
-        // add en passant move to CURRENT legalMovesArr - legalMoves - and CURRENT legalMoveStates - moveStates
-        legalMoves.push_back((*((this->getLegalMoves())->begin() + index)));
-        moveStates.push_back(-1);
-   }
+        if (pair.second == -1)  {
+            // add en passant move to CURRENT legalMovesArr
+            legalMoves[pair.first] = pair.second;
+        }
+    }
 
     // First move (2 spaces forward)
     if (checkWhitePlayer() && (x == 6) && !((*(this->getBoard()))[x - 2][y])) {
         Box initialMove1(x - 2, y);
-        legalMoves.push_back(initialMove1);
-        moveStates.push_back(0);
+        legalMoves[initialMove1] = 0;
 
         // En passant (Note that we need to delete the newly added move to the opposing pawn 
-        // if it is not used immediately!)
+        // if it is not used immediately! - will be done in move())
         if ((y - 1 >= 0) && ((*(this->getBoard()))[x - 2][y - 1])->getName() == "p") {
             Box opponentPawnMove1(x - 1, y);
-            ((*(this->getBoard()))[x - 2][y - 1])->getLegalMoves()->push_back(opponentPawnMove1);
-            ((*(this->getBoard()))[x - 2][y - 1])->getMoveStates()->push_back(-1);
+            legalMoves[initialMove1] = 0;
+            (*(((*(this->getBoard()))[x - 2][y - 1])->getLegalMoves()))[opponentPawnMove1] = -1;
         }
 
         if ((y + 1 < 8) && ((*(this->getBoard()))[x - 2][y + 1])->getName() == "p") {
             Box opponentPawnMove2(x - 1, y);
-            ((*(this->getBoard()))[x - 2][y + 1])->getLegalMoves()->push_back(opponentPawnMove2);
-            ((*(this->getBoard()))[x - 2][y + 1])->getMoveStates()->push_back(-1);
+            (*(((*(this->getBoard()))[x - 2][y + 1])->getLegalMoves()))[opponentPawnMove2] = -1;
         }
     }
 
     if (!checkWhitePlayer() && (x == 1) && !((*(this->getBoard()))[x - 2][y])) {
         Box initialMove2(x + 2, y);
-        legalMoves.push_back(initialMove2);
-        moveStates.push_back(0);
+        legalMoves[initialMove2] = 0;
 
         // En passant (Note that we need to delete the newly added move to the opposing pawn 
         // if it is not used immediately!)
         if ((y - 1 >= 0) && ((*(this->getBoard()))[x + 2][y - 1])->getName() == "P") {
             Box opponentPawnMove1(x + 1, y);
-            ((*(this->getBoard()))[x + 2][y - 1])->getLegalMoves()->push_back(opponentPawnMove1);
-            ((*(this->getBoard()))[x + 2][y - 1])->getMoveStates()->push_back(-1);
+            (*(((*(this->getBoard()))[x + 2][y - 1])->getLegalMoves()))[opponentPawnMove1] = -1;
         }
 
         if ((y + 1 < 8) && ((*(this->getBoard()))[x + 2][y + 1])->getName() == "p") {
             Box opponentPawnMove2(x + 1, y);
-            ((*(this->getBoard()))[x + 2][y + 1])->getLegalMoves()->push_back(opponentPawnMove2);
-            ((*(this->getBoard()))[x + 2][y + 1])->getMoveStates()->push_back(-1);
+            (*(((*(this->getBoard()))[x + 2][y + 1])->getLegalMoves()))[opponentPawnMove2] = -1;
         }
     }
 
     // Regular one space forward
     if (checkWhitePlayer() && (x - 1 >= 0) && !((*(this->getBoard()))[x - 1][y])) {
         Box move1(x - 1, y);
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        legalMoves[move1] = 0;
     }
 
     if (!checkWhitePlayer() && (x + 1 < 8) && !((*(this->getBoard()))[x - 1][y])) {
         Box move2(x + 1, y);
-        legalMoves.push_back(move2);
-        moveStates.push_back(0);
+        legalMoves[move2] = 0;
     }
 
-    this->getLegalMoves() = &legalMoves;
-    this->getMoveStates() = &moveStates;
+    return legalMoves;
 }

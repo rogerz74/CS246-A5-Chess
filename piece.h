@@ -2,6 +2,7 @@
 #define _PIECE_H_
 #include <string>
 #include <vector>
+#include <map>
 #include "box.h"
 
 class Piece {
@@ -11,8 +12,7 @@ class Piece {
     int xCoord;
     int yCoord;
 
-    std::vector<Box> * legalMovesArr;
-    std::vector<int> * legalMoveStates;
+    std::map<Box, int> *legalMovesArr;
 
     protected:
     virtual bool isLegal(Box &targetBox) = 0;
@@ -30,18 +30,18 @@ class Piece {
         int move(Piece *currentTile, Piece *targetTile, int newX, int newY);
         void print();
 
-        std::vector<Box> *& getLegalMoves() {
+        std::map<Box, int> *getLegalMoves() {
             return legalMovesArr;
         };
 
-        std::vector<int> *& getMoveStates() {
+        /*std::vector<int> *& getMoveStates() {
             return legalMoveStates;
-        };
+        };*/
 
         std::vector<std::vector<Piece *>> *& getBoard() {
             return board;
         };
-        virtual void updateLegalMoves() = 0;
+        virtual std::map<Box, int> updateLegalMoves() = 0;
         
         ~Piece();
 };

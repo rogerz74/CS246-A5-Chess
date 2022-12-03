@@ -12,9 +12,8 @@ bool Queen::isLegal(Box &targetBox) {
     return false;
 }
 
-void Queen::updateLegalMoves() {
-    std::vector<Box> legalMoves;
-    std::vector<int> moveStates;
+std::map<Box, int> Queen::updateLegalMoves() {
+    std::map<Box, int> legalMoves;
 
     int x = this->getX();
     int y = this->getY();
@@ -30,14 +29,13 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[i][y]) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
+
         // location is empty
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        legalMoves[move1] = 0;
     }
 
     for (int i = x + 1; i < 8; ++i) {
@@ -45,13 +43,12 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[i][y]) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        
+        legalMoves[move1] = 0;
     }
 
     for (int i = y + 1; i < 8; ++i) {
@@ -59,13 +56,12 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[x][i]) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        
+        legalMoves[move1] = 0;
     }
 
     for (int i = y - 1; i >= 0; --i) {
@@ -73,13 +69,12 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[x][i]) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        
+        legalMoves[move1] = 0;
     }
 
     // diagonal movements
@@ -89,13 +84,11 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x - i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        legalMoves[move1] = 0;
     }
 
     for (int i = 1; x + i  < 8 && y - i >= 0; ++i) {
@@ -103,13 +96,11 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x + i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        legalMoves[move1] = 0;
     }
 
     for (int i = 1; x - i  >= 0 && y - i >= 0; ++i) {
@@ -117,13 +108,11 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x - i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        legalMoves[move1] = 0;
     }
 
     for (int i = 1; x + i  < 8 && y + i < 8; ++i) {
@@ -131,15 +120,12 @@ void Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x + i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
-                moveStates.push_back(1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
-        moveStates.push_back(0);
+        legalMoves[move1] = 0;
     }
 
-    this->getLegalMoves() = &legalMoves;
-    this->getMoveStates() = &moveStates;
+    return legalMoves;
 }
