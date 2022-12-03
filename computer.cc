@@ -46,4 +46,3 @@ void Computer::notify() {
     std::cout << "  abcdefgh" << std::endl; // printing the bottom a-h column value
 
 }
-
