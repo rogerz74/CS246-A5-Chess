@@ -5,7 +5,6 @@
 #include "chessGame.h"
 #include "subject.h"
 #include "observer.h"
-#include "human.h"
 #include "computer.h"
 #include "box.h"
 #include "piece.h"
@@ -18,11 +17,12 @@
 
 #include "setup.h"
 #include "gamerun.h"
+#include "human.h"
+#include "level1.h"
+#include "level2.h"
+#include "level3.h"
 
-/*
-TO DO:
-- constructPlayer()
-*/
+
 
 struct scoreBoard;
 void gameInstance();
@@ -34,6 +34,7 @@ int main() {
     }
     tracker.print();
 }
+
 
 
 struct scoreBoard {
@@ -60,6 +61,26 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
 }
 
 
+Observer constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece> *pieceSet) {
+    if (player == "human") {
+        Human humanPlayer{theGame, "human"};
+        return humanPlayer;
+    } else if (player == "computer[1]") {
+        Level1 level1Player{theGame, "level1", pieceSet};
+        return level1Player;
+    } else if (player == "computer[2]") {
+        Level2 level2Player{theGame, "level2", pieceSet};
+        return level2Player;
+    } else if (player == "computer[3]") {
+        Level3 level3Player{theGame, "level3", pieceSet};
+        return level3Player;
+    } else {
+        std::cout << "Invalid Player Given!" << std::endl;      //make it ask again?
+        return nullptr;
+    }
+}
+
+
 void gameInstance() {
 
     //iterate over vector of vectors and build base board - possibility of keeping in main
@@ -69,8 +90,8 @@ void gameInstance() {
     buildBoard(emptyBoard);
 
     ChessGame game{&ChessBoard};        //constructor takes in ptr to board
-    std::vector<Piece *> whitePieces;
-    std::vector<Piece *> blackPieces;
+    std::vector<Piece> whitePieces;     //whitePieces & blackPieces have pieces now, instead of pointers to pieces
+    std::vector<Piece> blackPieces;
 
     bool setupFlag = 0;         //changed to 1 if "setup" command executed (must be successful, else cannot leave mode)
     bool gameRunFlag = 0;       //changed to 1 if "game" command executed and when gameRun finishes
@@ -89,15 +110,13 @@ void gameInstance() {
             std::string bPlayer = "";
             std::cin >> wPlayer >> bPlayer;
 
-            //later, constructPlayer(player) will be defined to construct human/l1/l2/l3/l4
-            //Human for now, till level subclasses are created and defined
-            Human whitePlayer{&game, "human"};  //+ &whitePieces for computer
-            Human blackPlayer{&game, "human"};  //+ &blackPieces for computer
-
             if (!(setupFlag)) {
                 game.setBoard(&emptyBoard);
                 defaultSetup(&game, whitePieces, blackPieces);
             }
+
+            Observer whitePlayer = constructPlayer(&game, wPlayer, &whitePieces);
+            Observer blackPlayer = constructPlayer(&game, bPlayer, &blackPieces);
 
             int whoWon = gameRun(&whitePlayer, &blackPlayer, &game);
             if (whoWon == 1) {
@@ -108,7 +127,7 @@ void gameInstance() {
                 tracker.whitePoints += 0.5;
                 tracker.blackPoints += 0.5;
             } else {
-                std::cout << "Game left unfinished!" << std::endl;
+                std::cout << "Game left unfinished!" << std::endl;      //can be accounted for later
             }
             gameRunFlag = 1;
         } else {
