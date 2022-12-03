@@ -7,6 +7,10 @@ bool Rook::getIsFirstMove() {
     return isFirstMove;
 }
 
+void Rook::updateIsFirstMove() {
+    isFirstMove = false;
+}
+
 bool Rook::isLegal(Box &targetBox) {
     // if WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
     if (((checkWhitePlayer() && !(((*(this->getBoard()))[targetBox.getX()][targetBox.getY()])->checkWhitePlayer())) ||
