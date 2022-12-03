@@ -5,7 +5,7 @@ Bishop::Bishop(std::string name, std::vector<std::vector<Piece *>> *board, bool 
 
 bool Bishop::isLegal(Box &targetBox) {
 
-    // if location is EMPTY OR WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
+    // if WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
     if (((checkWhitePlayer() && !(((*(this->getBoard()))[targetBox.getX()][targetBox.getY()])->checkWhitePlayer())) ||
          (!checkWhitePlayer() && (((*(this->getBoard()))[targetBox.getX()][targetBox.getY()])->checkWhitePlayer())) )) {
         return true;
@@ -13,8 +13,8 @@ bool Bishop::isLegal(Box &targetBox) {
     return false;
 }
 
-void Bishop::updateLegalMoves() {
-    std::vector<Box> legalMoves;
+std::map<Box, int> Bishop::updateLegalMoves() {
+    std::map<Box, int> legalMoves;
 
     int x = this->getX();
     int y = this->getY();
@@ -23,15 +23,18 @@ void Bishop::updateLegalMoves() {
     // this is also why we need separate loops for each direction
 
     for (int i = 1; x - i >= 0 && y + i < 8; ++i) {
-        // if there exists a piece on box (break) and it is capturable add to possible moves
+
         Box move1(x - i, y + i);
+        // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x - i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
+
+        // location is empty
+        legalMoves[move1] = 0;
     }
 
     for (int i = 1; x + i  < 8 && y - i >= 0; ++i) {
@@ -39,11 +42,12 @@ void Bishop::updateLegalMoves() {
         Box move1(x + i, y - i);
         if (((*(this->getBoard()))[x + i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
+
+        legalMoves[move1] = 0;
     }
 
     for (int i = 1; x - i  >= 0 && y - i >= 0; ++i) {
@@ -51,11 +55,12 @@ void Bishop::updateLegalMoves() {
         Box move1(x - i, y - i);
         if (((*(this->getBoard()))[x - i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
+        
+        legalMoves[move1] = 0;
     }
 
     for (int i = 1; x + i  < 8 && y + i < 8; ++i) {
@@ -63,12 +68,13 @@ void Bishop::updateLegalMoves() {
         Box move1(x + i, y + i);
         if (((*(this->getBoard()))[x + i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves.push_back(move1);
+                legalMoves[move1] = 1;
             }
             break;
         }
-        legalMoves.push_back(move1);
+        
+        legalMoves[move1] = 0;
     }
 
-    this->getLegalMoves() = &legalMoves;
+    return legalMoves;
 }

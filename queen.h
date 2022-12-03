@@ -5,11 +5,11 @@
 
 class Queen: public Piece {
     // isLegal() checks if move is capturable (opposite colour)
-    bool isLegal(Box targetBox) override;
+    bool isLegal(Box &targetBox) override;
 
     public:
         Queen(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord);
-        void updateLegalMoves() override;
+        std::map<Box, int> updateLegalMoves() override;
 };
 
 #endif
