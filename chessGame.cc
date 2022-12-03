@@ -27,11 +27,11 @@ void ChessGame::setTurn(bool playerTurn) {
 
 bool ChessGame::getPlayerTurn() {
     return playerTurn;
-};
+}
 
 void ChessGame::switchTurn() {
     playerTurn = !playerTurn;
-};
+}
 
 void ChessGame::updateKingPresence() {
     blackKingPresent = false;
@@ -47,7 +47,7 @@ void ChessGame::updateKingPresence() {
             }
         }
     }
-};
+}
 
 void ChessGame::checkingForKingCheck() {
 
@@ -78,31 +78,26 @@ void ChessGame::checkingForKingCheck() {
 
             // if the tile is occupied with a piece
             if ((*board)[a][b]) {
-                // getting size of legalMoves
-                int moveSize = static_cast<int>((*board)[a][b]->getLegalMoves()->size());
 
                 // checking the legal moves and seeing if they lead to a check
-                for (int c = 0; c < moveSize && !(whiteKingChecked && blackKingChecked); c++) {
+                for (auto &pair: (*((*board)[a][b]->getLegalMoves()))) {
+                    // first check to make sure white and black king are not checked
+                    if (whiteKingChecked || blackKingChecked) {
+                        break;
+                    }
                     // if blackKing is in check by a white piece
-                    if (blackKingX != -1 &&
-                        blackKingY != -1 &&
-                        ((*(*board)[a][b]->getLegalMoves())[c]).getX() == blackKingX &&
-                        ((*(*board)[a][b]->getLegalMoves())[c]).getY() == blackKingY &&
+                    if (blackKingX != -1 && blackKingY != -1 &&
+                        (pair.first).getX() == blackKingX && (pair.first).getY() == blackKingY &&
                         ((*board)[a][b])->checkWhitePlayer()) {
                             blackKingChecked = true;
-
                     // if whiteKing is in check by a black piece
-                    } else if (whiteKingX != -1 &&
-                                whiteKingY != -1 &&
-                                ((*(*board)[a][b]->getLegalMoves())[c]).getX() == whiteKingX &&
-                                ((*(*board)[a][b]->getLegalMoves())[c]).getY() == whiteKingY &&
+                    } else if (whiteKingX != -1 && whiteKingY != -1 &&
+                                (pair.first).getX() == whiteKingX && (pair.first).getY() == whiteKingY &&
                                 !(((*board)[a][b])->checkWhitePlayer())) {
-                            whiteKingChecked = true;
+                                    whiteKingChecked = true;
                     }
-
-
                 }
             }
         }
     }
-};
+}
