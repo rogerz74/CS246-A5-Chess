@@ -250,11 +250,7 @@ void King::updateLegalMoves() {
     }
 
     // regular moves in 8 directions
-
-
     
-
-
     if (x - 1 >= 0) {
         Box move1(x - 1, y);
         if (isLegal(move1)) {
