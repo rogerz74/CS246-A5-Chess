@@ -4,7 +4,7 @@
 #include "piece.h"
 
 
-Computer::Computer(ChessGame *subject, std::string name, std::vector<Piece> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
+Computer::Computer(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
     subject->attach(this);
 }
 
