@@ -10,6 +10,32 @@ Human::~Human() {
     subject->detach(this);
 }
 
+
+bool Human::pickMove() {
+    bool resignStatus = 0;
+    while ((resignStatus != 1) && (std::cin >> comm)) {
+        if (comm == "move") {
+            std::cin >> a >> b;
+            std::cout << std::endl;
+            int aX = strToCoord(a[1]);
+            int aY = strToCoord(a[0]);
+            int bX = strToCoord(b[1]);
+            int bY = strToCoord(b[0]);
+            success = (*(gameBoard->getBoard()))[aX][aY]->move((*(gameBoard->getBoard()))[aX][aY], 
+                        (*(gameBoard->getBoard()))[bX][bY], bX, bY);
+            if (success != 1) {
+                std::cout << "Invalid move! Please try again: ";
+            } 
+        } else if (comm == "resign") {
+            resignStatus = 1;
+        } else {
+            std::cout << "Invalid command! Please try again: ";
+        }
+    }
+    return resignStatus;
+}
+
+
 void Human::notify() {
 
     for (int a = 0; a < 8; a++) {
