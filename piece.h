@@ -26,6 +26,7 @@ class Piece {
         std::string getName();
         bool checkWhitePlayer();
         virtual bool getIsFirstMove() = 0;
+        virtual void updateIsFirstMove() = 0;
         // if move is completed move will return 1
         int move(Piece *currentTile, Piece *targetTile, int newX, int newY);
         void print();
