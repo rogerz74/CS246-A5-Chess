@@ -3,6 +3,12 @@
 Queen::Queen(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord):
     Piece{name, board, whitePlayer, xCoord, yCoord} {}
 
+bool Queen::getIsFirstMove() {
+    return false;
+}
+
+void Queen::updateIsFirstMove() {}
+
 bool Queen::isLegal(Box &targetBox) {
     // if WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
     if (((checkWhitePlayer() && !(((*(this->getBoard()))[targetBox.getX()][targetBox.getY()])->checkWhitePlayer())) ||
