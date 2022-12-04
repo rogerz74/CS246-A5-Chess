@@ -7,7 +7,7 @@
 class Computer: public Observer {
     ChessGame *subject;
     std::string name; // this is can acc probably be a str being either "Black" or "White"
-    std::vector<Piece> * pieceArray; //vector array of pieces for the computer
+    std::vector<Piece*> * pieceArray; //vector array of pieces for the computer
 
     public:
         Computer(ChessGame *chessGame, std::string name, std::vector <Piece*> * pieceArray);
