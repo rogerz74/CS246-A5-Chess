@@ -5,14 +5,15 @@
 
 class Rook: public Piece {
     bool isFirstMove;
-    // isLegal() checks if move is capturable (opposite colour)
-    bool isLegal(Box &targetBox) override;
 
     public:
         Rook(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord);
+        // isLegal() checks if move is capturable (opposite colour)
+        bool isLegal(Box &targetBox) override;
         bool getIsFirstMove() override;
-        void updateIsFirstMove();
+        void updateIsFirstMove() override;
         std::map<Box, int> updateLegalMoves() override;
+        ~Rook() {};
 
 };
 
