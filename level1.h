@@ -2,11 +2,16 @@
 #define _LEVEL1_H_
 
 #include <string>
-#include <iostream>
 #include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <iterator>
 #include "chessGame.h"
 #include "observer.h"
 #include "computer.h"
+#include "box.h"
 #include "piece.h"
 
 class Level1: public Computer {
