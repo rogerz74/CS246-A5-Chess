@@ -4,11 +4,14 @@
 #include "piece.h"
 
 class Pawn: public Piece {
-    bool isLegal(Box &targetBox) override;
 
     public:
         Pawn(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord);
+        bool getIsFirstMove() override;
+        void updateIsFirstMove() override;
+        bool isLegal(Box &targetBox) override;
         std::map<Box, int> updateLegalMoves() override;
+        ~Pawn() {};
 };
 
 #endif
