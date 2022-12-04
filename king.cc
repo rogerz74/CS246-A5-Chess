@@ -8,6 +8,10 @@ bool King::getIsFirstMove() {
     return isFirstMove;
 }
 
+void King::updateIsFirstMove() {
+    isFirstMove = false;
+}
+
 bool King::isLegal(Box &targetBox) {
     // checks if targetBox is occupied and Piece is of opposite colour (in order to capture)
     if ((((*(this->getBoard()))[targetBox.getX()][targetBox.getY()]) && 

@@ -11,6 +11,7 @@ class King: public Piece {
     public:
         King(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord);
         bool getIsFirstMove() override;
+        void updateIsFirstMove() override;
         std::map<Box, int> updateLegalMoves() override;
 };
 

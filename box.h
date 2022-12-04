@@ -16,6 +16,7 @@ class Box {
         int getY() const;
 
         bool operator== (const Box & b1) const;
+        bool operator< (const Box & b1) const;
 
         virtual ~Box();
 };
