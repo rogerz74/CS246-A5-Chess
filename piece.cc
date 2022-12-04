@@ -60,20 +60,16 @@ int Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
                 for (auto &pair: (*((*board)[7][0]->getLegalMoves()))) {
                     if (pair.second == 2) {
                         std::swap((*board)[7][0], (*board)[pair.first.getX()][pair.first.getY()]);
-                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = 7;
-                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = 0;
-                        (*board)[7][0]->xCoord = pair.first.getX();
-                        (*board)[7][0]->yCoord = pair.first.getY();
+                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
+                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = pair.first.getY();
                     }
                 }
             } else {
                 for (auto &pair: (*((*board)[7][7]->getLegalMoves()))) {
                     if (pair.second == 2) {
                         std::swap((*board)[7][7], (*board)[pair.first.getX()][pair.first.getY()]);
-                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = 7;
-                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = 7;
-                        (*board)[7][7]->xCoord = pair.first.getX();
-                        (*board)[7][7]->yCoord = pair.first.getY();
+                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
+                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = pair.first.getY();
                     }
                 }
             }
@@ -84,20 +80,16 @@ int Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
                 for (auto &pair: (*((*board)[0][0]->getLegalMoves()))) {
                     if (pair.second == 2) {
                         std::swap((*board)[0][0], (*board)[pair.first.getX()][pair.first.getY()]);
-                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = 0;
-                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = 0;
-                        (*board)[0][0]->xCoord = pair.first.getX();
-                        (*board)[0][0]->yCoord = pair.first.getY();
+                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
+                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = pair.first.getY();
                     }
                 }
             } else {
                 for (auto &pair: (*((*board)[0][7]->getLegalMoves()))) {
                     if (pair.second == 2) {
                         std::swap((*board)[0][7], (*board)[pair.first.getX()][pair.first.getY()]);
-                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = 0;
-                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = 7;
-                        (*board)[0][7]->xCoord = pair.first.getX();
-                        (*board)[0][7]->yCoord = pair.first.getY();
+                        (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
+                        (*board)[pair.first.getX()][pair.first.getY()]->yCoord = pair.first.getY();
                     }
                 }
             }
