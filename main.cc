@@ -18,35 +18,22 @@
 #include "setup.h"
 #include "gamerun.h"
 #include "human.h"
-#include "level1.h"
-#include "level2.h"
-#include "level3.h"
+//#include "level1.h"
+//#include "level2.h"
+//#include "level3.h"
 
-
-
-struct scoreBoard;
-void gameInstance();
-
-int main() {
-    scoreBoard tracker{0,0};
-    while (true) {
-        gameInstance();
-    }
-    tracker.print();
-}
-
-
+using namespace std;
 
 struct scoreBoard {
     float whitePoints;
     float blackPoints;
     void print();
-}
+};
 
 void scoreBoard::print() {
     std::cout << "Final Score:" << std::endl;
-    std::cout << "White: " << scoreBoard.whitePoints << std::endl;
-    std::cout << "Black: " << scoreBoard.blackPoints << std::endl;
+    std::cout << "White: " << whitePoints << std::endl;
+    std::cout << "Black: " << blackPoints << std::endl;
 }
 
 
@@ -61,27 +48,42 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
 }
 
 
-Observer constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece> *pieceSet) {
+Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *pieceSet) {
+
+    /* 
+    This line is to be deleted once levels 1,2,3 are working. The only reason this line 
+    exists is b/c u can't have an used parameter in a function. It gives u compilation errors
+    */
+    if (((*pieceSet)[0])->getX()) {
+
+    };
+
     if (player == "human") {
         Human humanPlayer{theGame, "human"};
-        return humanPlayer;
-    } else if (player == "computer[1]") {
+        Human * observerPtr = &humanPlayer;
+        return observerPtr; 
+    } 
+    /* OMITTED INFO FOR THE SACK OF COMPILING
+    else if (player == "computer[1]") {
         Level1 level1Player{theGame, "level1", pieceSet};
-        return level1Player;
+        Human * observerPtr = &level1Player;
+        return observerPtr;
     } else if (player == "computer[2]") {
         Level2 level2Player{theGame, "level2", pieceSet};
-        return level2Player;
+        Human * observerPtr = &level2Player;
+        return observerPtr;
     } else if (player == "computer[3]") {
         Level3 level3Player{theGame, "level3", pieceSet};
-        return level3Player;
-    } else {
+        Human * observerPtr = &level3Player;
+        return observerPtr;
+    } */else {
         std::cout << "Invalid Player Given!" << std::endl;      //make it ask again?
         return nullptr;
     }
 }
 
 
-void gameInstance() {
+void gameInstance(scoreBoard & tracker) {
 
     //iterate over vector of vectors and build base board - possibility of keeping in main
     std::vector<std::vector<Piece *>> ChessBoard;
@@ -90,8 +92,8 @@ void gameInstance() {
     buildBoard(emptyBoard);
 
     ChessGame game{&ChessBoard};        //constructor takes in ptr to board
-    std::vector<Piece> whitePieces;     //whitePieces & blackPieces have pieces now, instead of pointers to pieces
-    std::vector<Piece> blackPieces;
+    std::vector<Piece *> whitePieces;     //changing this back to pointer to pieces b/c using just pieces will cause compilation issues in setup.cc
+    std::vector<Piece *> blackPieces;
 
     bool setupFlag = 0;         //changed to 1 if "setup" command executed (must be successful, else cannot leave mode)
     bool gameRunFlag = 0;       //changed to 1 if "game" command executed and when gameRun finishes
@@ -115,13 +117,13 @@ void gameInstance() {
                 defaultSetup(&game, whitePieces, blackPieces);
             }
 
-            Observer whitePlayer = constructPlayer(&game, wPlayer, &whitePieces);
-            Observer blackPlayer = constructPlayer(&game, bPlayer, &blackPieces);
+            Observer * whitePlayer = constructPlayer(&game, wPlayer, &whitePieces);
+            Observer * blackPlayer = constructPlayer(&game, bPlayer, &blackPieces);
 
-            int whoWon = gameRun(&whitePlayer, &blackPlayer, &game);
+            int whoWon = gameRun(whitePlayer, blackPlayer, &game);
             if (whoWon == 1) {
                 tracker.whitePoints += 1;
-            } else if (whoWon = -1) {
+            } else if (whoWon == -1) {
                 tracker.blackPoints += 1;
             } else if (whoWon == 0) {
                 tracker.whitePoints += 0.5;
@@ -134,4 +136,25 @@ void gameInstance() {
             std::cout << "Invalid command! Please try again!" << std::endl;
         }
     }
+
+    // these 2 loops free up all the heap-allocate memory for the piece vectors
+    for (std::size_t i = 0; i < whitePieces.size(); ++i) {
+        Piece * tmp = whitePieces[i];
+        delete tmp;
+    }  
+
+    for (std::size_t i = 0; i < blackPieces.size(); ++i) {
+        Piece * tmp = blackPieces[i];
+        delete tmp;
+    }  
+
+
+}
+
+int main() {
+    scoreBoard tracker{0,0};
+    while (true) {
+        gameInstance(tracker);
+    }
+    tracker.print();
 }
