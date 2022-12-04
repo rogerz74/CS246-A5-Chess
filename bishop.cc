@@ -3,6 +3,12 @@
 Bishop::Bishop(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord):
     Piece{name, board, whitePlayer, xCoord, yCoord} {}
 
+bool Bishop::getIsFirstMove() {
+    return false;
+}
+
+void Bishop::updateIsFirstMove() {}
+
 bool Bishop::isLegal(Box &targetBox) {
 
     // if WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
