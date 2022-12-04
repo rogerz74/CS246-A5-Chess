@@ -13,6 +13,7 @@ class King: public Piece {
         bool getIsFirstMove() override;
         void updateIsFirstMove() override;
         std::map<Box, int> updateLegalMoves() override;
+        ~King() {};
 };
 
 #endif
