@@ -44,7 +44,6 @@ int Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
 
     const Box targetBox(newX, newY);
 
-    auto findMove = (*legalMovesMap).find(targetBox);
     if (legalMovesMap->find(targetBox) != legalMovesMap->end()) {
         if (targetTile) { // if there is a piece on it
             targetTile = nullptr;
@@ -126,7 +125,8 @@ int Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
                 targetTile->updateIsFirstMove();
         }
 
-        legalMovesMap = &updateLegalMoves();
+        std::map<Box, int> tempLegalMovesMap2 = updateLegalMoves();
+        legalMovesMap = &tempLegalMovesMap2;
         return 1;
     }
 
