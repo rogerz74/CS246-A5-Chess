@@ -1,12 +1,6 @@
 #include "gamerun.h"
 using namespace std;
 
-/*
-TO DO:
-- Add pickMove() method to Human
-- Create Levelx subclasses for Computer, each with a pickMove() method
-*/
-
 int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
     int turn = gameBoard->getPlayerTurn();
     int toReturn = INT_MAX;
@@ -15,35 +9,46 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
     string b = "";
 
     //implement error checking so INT_MAX returned if game unfinished
-
+    //for status, resigned = -1, stalemate = 0, all good = 1
     while (toReturn == INT_MAX) {
         if (turn == 1) {
             cout << "White's Turn: ";
-            bool resignStatus = white->pickMove();       //so pickMove() will have bool return type
-            if (resignStatus == 1) {                    //never executed with compcomp
-                toReturn = -1;
-            } else if (gameBoard->isStalemate() == 1) {
-                toReturn = 0;
-            } else if (gameBoard->isBlackKingChecked() == 1) {
-                toReturn = 1;
-            } else {
+            int status = white->pickMove();       //so pickMove() will have bool return type
+            if (status == -1) {                    //never executed with compcomp
+                toReturn = -1;                     //i.e. Black wins
+            } else if (status == 0) {     //isStalemate() is not a thing anymore
+                if (gameBoard->isWhiteKingChecked() == 1) {
+                    toReturn = -1;              //no legal moves remaining + checked
+                    cout << "No move available due to Checkmate!" << endl;
+                } else {
+                    toReturn = 0;               //no legal moves remaining
+                    cout << "No move available due to Stalemate!" << endl;
+                }
+            } else {                            //status is just 1
+                white->notify();
                 gameBoard->switchTurn();
                 turn = gameBoard->getPlayerTurn();
             }
         } else {
             cout << "Black's Turn: ";
-            bool resignStatus  = black->pickMove();
-            if (resignStatus == 1) {
-                toReturn = 1;
-            } else if (gameBoard->isStalemate == 1) {
-                 toReturn = 0;
-            } else if (gameBoard->isWhiteKingChecked() == 1) {
-                toReturn = -1;
+            int status  = black->pickMove();
+            if (status == -1) {                 //if black resigns
+                toReturn = 1;                   //White wins
+            } else if (status == 0) {           //no legal moves left
+                 if (gameBoard->isBlackKingChecked() == 1) {
+                    toReturn = 1;               //checkmate
+                    cout << "No move available due to Checkmate!" << endl;
+                } else {
+                    toReturn = 0;               //stalemate
+                    cout << "No move available due to Stalemate!" << endl;
+                }
             } else {
+                black->notify();
                 gameBoard->switchTurn();
                 turn = gameBoard->getPlayerTurn();
             }
         }
+
     }
     return toReturn;
 }
