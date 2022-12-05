@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "human.h"
 #include "chessGame.h"
 #include "pawn.h"
@@ -8,7 +9,7 @@
 #include "knight.h"
 #include "bishop.h"
 
-Human::Human(ChessGame *subject, std::string name): subject{subject}, name{name} {
+Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
     subject->attach(this);
 }
 
@@ -119,7 +120,31 @@ bool Human::pickMove() {
             } else {
                 // check if move given by user is in filteredMap
                 if (filteredMap.find((*(subject->getBoard()))[bX][bY]) != filteredMap.end()) {
+                    // move
                     (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
+
+                    // check for pawn promotion
+                    if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                        (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                            Piece *currPiece = ((*(subject->getBoard()))[aX][aY]);
+                        Piece *pawnPromoPiece;
+                        if (currPiece->getName() == "P" && currPiece->getX() == 0) {
+                            pawnPromoPiece = new Queen {"Q", subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
+
+                        }  else {
+                            pawnPromoPiece = new Queen {"q", subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
+                        }
+
+                        // add queen to vector and board
+                        pieceArray->push_back(pawnPromoPiece);
+                        (*(subject->getBoard()))[currPiece->getX()][currPiece->getY()] = pawnPromoPiece;
+
+                        // look for pawn and delete it
+                        pieceArray->erase(find(pieceArray->begin(), pieceArray->end(), currPiece));
+
+                        delete currPiece;
+                    }
+                    
                     return 1;
                 } else {
                     std::cout << "Invalid move! Please try again: ";
