@@ -28,6 +28,6 @@ class Level2: public Computer {
 
     public:
         Level2(ChessGame *subject, std::string name, std::vector<Piece *> *pieceArray, std::vector<Piece *> *opponentArray);
-        bool pickMove();    
+        int pickMove();    
 };
 #endif
