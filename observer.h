@@ -6,6 +6,8 @@ class Subject;
 class Observer {
  public:
   virtual void notify() = 0; //virtual void function
+  virtual int pickMove() = 0;
+  void promotePawn(ChessGame *subject,std::vector<Piece*> * pieceArray, Piece * p);
   virtual ~Observer() = default;
 };
 

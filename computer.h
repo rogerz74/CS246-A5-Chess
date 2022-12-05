@@ -13,8 +13,7 @@ class Computer: public Observer {
     public:
         Computer(ChessGame *chessGame, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray);
         void notify();
-        virtual bool pickMove() = 0;
-        void promotePawn(Piece * p);
+        virtual int pickMove() = 0;
         ~Computer();
 };
 
