@@ -175,5 +175,6 @@ bool Level3::pickMove() {
         // stalemate or checkmate
         return 0;
     }
-    
+
+    return 1;
 }
