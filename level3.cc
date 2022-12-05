@@ -67,21 +67,21 @@ bool Level3::pickMove() {
                 (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = nullptr;
                 subject->checkingForKingCheck();
 
-                // if my king is not in check after potential move is made -> add to newMap
+                // if my king is not in check after potential move is made -> add to respective maps
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap[&(*(pieces[i]))] = move.first;
+                            filteredMap[pieces[i]] = move.first;
                         }else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                filteredMap2[&(*(pieces[i]))] = move.first;
+                                filteredMap2[pieces[i]] = move.first;
                         } else {
-                            regularMap[&(*(pieces[i]))] = move.first;
+                            regularMap[pieces[i]] = move.first;
                         }
                 }
 
@@ -100,15 +100,15 @@ bool Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap[&(*(pieces[i]))] = move.first;
+                            filteredMap[pieces[i]] = move.first;
                         } else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                 filteredMap2[&(*(pieces[i]))] = move.first;
+                                 filteredMap2[pieces[i]] = move.first;
                         } else {
-                            regularMap[&(*(pieces[i]))] = move.first;
+                            regularMap[pieces[i]] = move.first;
                         }
                 }
                 
