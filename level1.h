@@ -9,10 +9,10 @@
 #include <random>
 #include <iterator>
 #include "chessGame.h"
-#include "observer.h"
+//#include "observer.h"
 #include "computer.h"
-#include "box.h"
-#include "piece.h"
+//#include "box.h"
+//#include "piece.h"
 #include "pawn.h"
 #include "rook.h"
 #include "queen.h"
