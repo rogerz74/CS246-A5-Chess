@@ -83,5 +83,14 @@ int Level1::pickMove() {
     int bY = b.getY();
 
     p->move(p, (*(gameBoard->getBoard()))[bX][bY], bX, bY);
+
+    // check for pawn promotion
+    int aX = p->getX();
+    int aY = p->getY();
+    if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+        (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+        promotePawn(subject, pieceArray, ((*(subject->getBoard()))[aX][aY]));
+    }
+
     return 1;
 }
