@@ -126,7 +126,6 @@ bool Level3::pickMove() {
 
 
     // Will now pick a move
-    // int size = filteredMap.size();
 
     if (filteredMap.size() > 0) {
         // randomly pick a move that avoids capture
@@ -142,6 +141,10 @@ bool Level3::pickMove() {
 
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
+        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
+            promotePawn(p);
+        }
+
     } else if (filteredMap2.size() > 0) {
         // there are no moves to avoid caputre so we randomly pick a capture or check
         std::random_device dev;
@@ -155,6 +158,10 @@ bool Level3::pickMove() {
         int bY = b.getY();
 
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+
+        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
+            promotePawn(p);
+        }
         
     } else if (regularMap.size() > 0) {
         // there are no moves to avoid caputre, capture, or check - so we randomly pick a regular move
@@ -169,7 +176,11 @@ bool Level3::pickMove() {
         int bY = b.getY();
 
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
-        
+
+        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
+            promotePawn(p);
+        }
+
     } else {
         // no legal moves
         // stalemate or checkmate
