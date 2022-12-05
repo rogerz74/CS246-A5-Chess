@@ -48,22 +48,21 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
 }
 
 
-Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *pieceSet) {
-
+Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *pieceSet, std::vector<Piece *> *oppPiecesArr) {
 
     if (player == "human") {
         Human * humanPlayer = new Human {theGame, "human"};
         return humanPlayer; 
     } else if (player == "computer[1]") {
-        Level1 level1Player = new level1Player {theGame, "level1", pieceSet};
+        Level1 level1Player = new level1Player {theGame, "level1", pieceSet, oppPiecesArr};
         Human * observerPtr = &level1Player;
         return observerPtr;
     } else if (player == "computer[2]") {
-        Level2 level2Player = new Level2 {theGame, "level2", pieceSet};
+        Level2 level2Player = new Level2 {theGame, "level2", pieceSet, oppPiecesArr};
         Human * observerPtr = &level2Player;
         return observerPtr;
     } else if (player == "computer[3]") {
-        Level3 level3Player = new Level3 {theGame, "level3", pieceSet};
+        Level3 level3Player = new Level3 {theGame, "level3", pieceSet, oppPiecesArr};
         Human * observerPtr = &level3Player;
         return observerPtr;
     }else {
@@ -109,9 +108,9 @@ void gameInstance(scoreBoard & tracker) {
                 defaultSetup(&game, whitePieces, blackPieces);
             }
 
-            Observer * whitePlayer = constructPlayer(&game, wPlayer, &whitePieces);
+            Observer * whitePlayer = constructPlayer(&game, wPlayer, &whitePieces, &blackPieces);
             observerArr.emplace_back(whitePlayer);
-            Observer * blackPlayer = constructPlayer(&game, bPlayer, &blackPieces);
+            Observer * blackPlayer = constructPlayer(&game, bPlayer, &blackPieces, &whitePieces);
             observerArr.emplace_back(blackPlayer);
 
             int whoWon = gameRun(whitePlayer, blackPlayer, &game);
