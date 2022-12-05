@@ -4,6 +4,12 @@
 Pawn::Pawn(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord):
     Piece{name, board,whitePlayer, xCoord, yCoord} {}
 
+bool Pawn::getIsFirstMove() {
+    return false;
+}
+
+void Pawn::updateIsFirstMove() {}
+
 bool Pawn::isLegal(Box &targetBox) {
     // checks if targetBox is occupied and Piece is of opposite colour (in order to capture)
     if ((((*(this->getBoard()))[targetBox.getX()][targetBox.getY()]) && 

@@ -14,19 +14,19 @@ class Piece {
 
     std::map<Box, int> *legalMovesMap;
 
-    protected:
-    virtual bool isLegal(Box &targetBox) = 0;
-
     public:
         Piece(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, const int xCoord, const int yCoord);
 
         int getX();
         int getY();
 
-        std::string getName();
-        bool checkWhitePlayer();
+        virtual bool isLegal(Box &targetBox) = 0;
+
         virtual bool getIsFirstMove() = 0;
         virtual void updateIsFirstMove() = 0;
+
+        std::string getName();
+        bool checkWhitePlayer();
         // if move is completed move will return 1
         int move(Piece *currentTile, Piece *targetTile, int newX, int newY);
         void print();
@@ -44,7 +44,7 @@ class Piece {
         };
         virtual std::map<Box, int> updateLegalMoves() = 0;
         
-        ~Piece();
+        virtual ~Piece() {};
 };
 
 #endif

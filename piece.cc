@@ -125,4 +125,3 @@ int Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
     return 0;
 }
 
-Piece::~Piece() {}

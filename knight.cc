@@ -3,6 +3,12 @@
 Knight::Knight(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, int xCoord, int yCoord):
     Piece{name, board, whitePlayer, xCoord, yCoord} {}
 
+bool Knight::getIsFirstMove() {
+    return false;
+}
+
+void Knight::updateIsFirstMove() {}
+
 bool Knight::isLegal(Box &targetBox) {
 
     // if WHITE CAPTURE BLACK OR BLACK CAPTURE WHITE
