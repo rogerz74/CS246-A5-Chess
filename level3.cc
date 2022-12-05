@@ -1,20 +1,9 @@
 #include "level3.h"
-#include "pawn.h"
-#include "rook.h"
-#include "queen.h"
-#include "king.h"
-#include "knight.h"
-#include "bishop.h"
 
 Level3::Level3(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *oppArray):
                 Computer{subject, name, pieceArray, oppArray} {}
 
-
-//create second map (filteredMap)
-//loop through whole of pieceArray with iterator p, loop through p->LegalMoves() with iterator i
-//if i.second == 1 then add p:Box to second map and then randomly select from map
-
-bool Level3::pickMove() {
+int Level3::pickMove() {
     int size = 0;
     std::cout << "Level 3 Computer makes its move." << std::endl;
     std::map<Piece *, Box> filteredMap; // moves that are purely legal (doesn't put my king in check) and avoid capture
@@ -73,15 +62,15 @@ bool Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap[pieces[i]] = move.first;
+                            filteredMap.insert({pieces[i], move.first});
                         }else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                filteredMap2[pieces[i]] = move.first;
+                                filteredMap2.insert({pieces[i], move.first});
                         } else {
-                            regularMap[pieces[i]] = move.first;
+                            regularMap.insert({pieces[i], move.first});
                         }
                 }
 
@@ -100,15 +89,15 @@ bool Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap[pieces[i]] = move.first;
+                            filteredMap.insert({pieces[i], move.first});
                         } else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                 filteredMap2[pieces[i]] = move.first;
+                                 filteredMap2.insert({pieces[i], move.first});
                         } else {
-                            regularMap[pieces[i]] = move.first;
+                            regularMap.insert({pieces[i], move.first});
                         }
                 }
                 
@@ -126,7 +115,6 @@ bool Level3::pickMove() {
 
 
     // Will now pick a move
-    // int size = filteredMap.size();
 
     if (filteredMap.size() > 0) {
         // randomly pick a move that avoids capture
@@ -142,6 +130,10 @@ bool Level3::pickMove() {
 
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
+        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
+            promotePawn(p);
+        }
+
     } else if (filteredMap2.size() > 0) {
         // there are no moves to avoid caputre so we randomly pick a capture or check
         std::random_device dev;
@@ -155,6 +147,10 @@ bool Level3::pickMove() {
         int bY = b.getY();
 
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+
+        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
+            promotePawn(p);
+        }
         
     } else if (regularMap.size() > 0) {
         // there are no moves to avoid caputre, capture, or check - so we randomly pick a regular move
@@ -169,7 +165,11 @@ bool Level3::pickMove() {
         int bY = b.getY();
 
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
-        
+
+        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
+            promotePawn(p);
+        }
+
     } else {
         // no legal moves
         // stalemate or checkmate

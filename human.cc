@@ -1,8 +1,16 @@
 #include <iostream>
+#include <algorithm>
+#include <string>
 #include "human.h"
 #include "chessGame.h"
+#include "pawn.h"
+#include "rook.h"
+#include "queen.h"
+#include "king.h"
+#include "knight.h"
+#include "bishop.h"
 
-Human::Human(ChessGame *subject, std::string name): subject{subject}, name{name} {
+Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
     subject->attach(this);
 }
 
@@ -31,31 +39,152 @@ int stringToCoord(char c) {
     }
 }
 
-bool Human::pickMove() {
-    bool resignStatus = 0;
+bool Human::promotePawn(Piece * p, std::string promoName) {
+
+    Piece *pawnPromoPiece;
+    if (p->getName() == "P") {
+        if (promoName == "R") {
+            pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};  
+        } else if (promoName == "Q") {
+            pawnPromoPiece = new Queen {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+        } else if (promoName == "N") {
+            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};               
+        } else if (promoName == "B") {
+            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};          
+        } else {
+            return 0;
+        }
+    } else {
+        if (promoName == "r") {
+            pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};  
+        } else if (promoName == "q") {
+            pawnPromoPiece = new Queen {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+        } else if (promoName == "n") {
+            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};               
+        } else if (promoName == "b") {
+            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};          
+        } else {
+            return 0;
+        }
+    }
+
+    // add promotion piece to vector and board
+    pieceArray->emplace_back(pawnPromoPiece);
+    (*(subject->getBoard()))[p->getX()][p->getY()] = pawnPromoPiece;
+
+    // look for pawn and delete it
+    pieceArray->erase(find(pieceArray->begin(), pieceArray->end(), p));
+
+    delete p;
+    return 1;
+}
+
+int Human::pickMove() {
     std::string comm;
-    while ((resignStatus != 1) && (std::cin >> comm)) {
+    while (std::cin >> comm) {
         if (comm == "move") {
             std::string a;
             std::string b;
-            std::cin >> a >> b;
+            std::string promotionP;
+            std::cin >> a >> b >> promotionP;
             std::cout << std::endl;
             int aX = stringToCoord(a[1]);
             int aY = stringToCoord(a[0]);
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
-            int success = (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], 
-                        (*(subject->getBoard()))[bX][bY], bX, bY);
-            if (success != 1) {
-                std::cout << "Invalid move! Please try again: ";
-            } 
+            std::map<Piece *, Box> filteredMap;
+            std::map<Box, int> currLegalMoves = (*((*(subject->getBoard()))[aX][aY])->getLegalMoves());
+        
+            // loop through the piece's legal moves
+            for (auto &move: currLegalMoves) { 
+                // if move does not put player's King in check, add to filteredMap
+                // temp so we do not loose the current piece we are trying to move
+                Piece *currPiece = (*(subject->getBoard()))[aX][aY];
+                
+                // create temporary piece that will be moved around and then get deleted
+                Piece *tempPiece;
+                if (currPiece->getName() == "p" || currPiece->getName() == "P") {
+                    tempPiece = new Pawn {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
+                } else if (currPiece->getName() == "r" || currPiece->getName() == "R") {
+                    tempPiece = new Rook {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};  
+                } else if (currPiece->getName() == "q" || currPiece->getName() == "Q") {
+                    tempPiece = new Queen {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
+                } else if (currPiece->getName() == "k" || currPiece->getName() == "K") {
+                    tempPiece = new King {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};             
+                } else if (currPiece->getName() == "n" || currPiece->getName() == "N") {
+                    tempPiece = new Knight {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};               
+                } else {
+                    tempPiece = new Bishop {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};          
+                }
+
+                // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
+                if ((*(subject->getBoard()))[move.first.getX()][move.first.getY()]) {
+                    Piece *temp = (*(subject->getBoard()))[move.first.getX()][move.first.getY()];
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = tempPiece;
+                    (*(subject->getBoard()))[aX][aY] = nullptr;
+                    subject->checkingForKingCheck();
+
+                    // if my king is not in check after potential move is made -> add to filteredMap
+                    if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
+                        (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
+                            filteredMap[currPiece] = move.first;
+                    }
+
+                    // put board back into original state
+                    (*(subject->getBoard()))[aX][aY] = currPiece;
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = temp;
+
+                } else {
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = tempPiece;
+                    (*(subject->getBoard()))[aX][aY] = nullptr;
+                    subject->checkingForKingCheck();
+
+                    // if my king is not in check after potential move is made -> add to filteredMap
+                    if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
+                        (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
+                            filteredMap[currPiece] = move.first;
+                    }
+
+                    // put board back into original state
+                    (*(subject->getBoard()))[aX][aY] = currPiece;
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = nullptr;
+                }
+
+                // put back isBlackKingChecked() and isWhiteKingChecked() to original state
+                subject->checkingForKingCheck();
+
+                delete tempPiece;
+            }
+
+            // check if "stalemate"
+            if (filteredMap.size() == 0) {
+                return 0;
+            } else {
+                // check if move given by user is in filteredMap
+                if (filteredMap.find((*(subject->getBoard()))[bX][bY]) != filteredMap.end()) {
+                    // move
+                    (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
+
+                    // check for pawn promotion
+                    if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                        (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                            if (promotePawn((*(subject->getBoard()))[aX][aY], promotionP) == 0) {
+                                std::cout << "Invalid promotion piece! Please try again: "; 
+                            } else {
+                                return 1;
+                            }
+                    }
+                } else {
+                    std::cout << "Invalid move! Please try again: ";
+                }
+            }
+
         } else if (comm == "resign") {
-            resignStatus = 1;
+            return -1;
         } else {
             std::cout << "Invalid command! Please try again: ";
         }
     }
-    return resignStatus;
 }
 
 

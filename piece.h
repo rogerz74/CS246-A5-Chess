@@ -28,16 +28,12 @@ class Piece {
         std::string getName();
         bool checkWhitePlayer();
         // if move is completed move will return 1
-        int move(Piece *currentTile, Piece *targetTile, int newX, int newY);
+        void move(Piece *currentTile, Piece *targetTile, int newX, int newY);
         void print();
 
         std::map<Box, int> *getLegalMoves() {
             return legalMovesMap;
         };
-
-        /*std::vector<int> *& getMoveStates() {
-            return legalMoveStates;
-        };*/
 
         std::vector<std::vector<Piece *>> *& getBoard() {
             return board;

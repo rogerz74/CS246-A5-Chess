@@ -3,6 +3,8 @@
 #include "observer.h"
 #include "chessGame.h"
 #include "piece.h"
+#include "queen.h"
+#include <algorithm>
 
 class Computer: public Observer {
     ChessGame *subject;
@@ -13,7 +15,8 @@ class Computer: public Observer {
     public:
         Computer(ChessGame *chessGame, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray);
         void notify();
-        virtual bool pickMove() = 0;
+        virtual int pickMove() = 0;
+        void promotePawn(Piece * p);
         ~Computer();
 };
 
