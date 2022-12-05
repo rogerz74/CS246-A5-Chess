@@ -38,7 +38,7 @@ int stringToCoord(char c) {
     }
 }
 
-bool Human::pickMove() {
+int Human::pickMove() {
     std::string comm;
     while (std::cin >> comm) {
         if (comm == "move") {
