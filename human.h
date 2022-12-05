@@ -6,9 +6,10 @@
 class Human: public Observer {
     ChessGame *subject;
     std::string name;
+    std::vector<Piece*> * pieceArray; //vector array of pieces for Human
 
     public:
-        Human(ChessGame *subject, std::string name);
+        Human(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray);
         bool pickMove();
         void notify(); // will print out the board;
         ~Human();
