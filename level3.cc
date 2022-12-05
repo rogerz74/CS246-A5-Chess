@@ -62,15 +62,15 @@ int Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap[pieces[i]] = move.first;
+                            filteredMap.insert({pieces[i], move.first});
                         }else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                filteredMap2[pieces[i]] = move.first;
+                                filteredMap2.insert({pieces[i], move.first});
                         } else {
-                            regularMap[pieces[i]] = move.first;
+                            regularMap.insert({pieces[i], move.first});
                         }
                 }
 
@@ -89,15 +89,15 @@ int Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap[pieces[i]] = move.first;
+                            filteredMap.insert({pieces[i], move.first});
                         } else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                 filteredMap2[pieces[i]] = move.first;
+                                 filteredMap2.insert({pieces[i], move.first});
                         } else {
-                            regularMap[pieces[i]] = move.first;
+                            regularMap.insert({pieces[i], move.first});
                         }
                 }
                 
