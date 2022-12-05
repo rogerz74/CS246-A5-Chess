@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <string>
 #include "human.h"
 #include "chessGame.h"
 #include "pawn.h"
@@ -38,13 +39,54 @@ int stringToCoord(char c) {
     }
 }
 
+bool Human::promotePawn(Piece * p, std::string promoName) {
+
+    Piece *pawnPromoPiece;
+    if (p->getName() == "P") {
+        if (promoName == "R") {
+            pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};  
+        } else if (promoName == "Q") {
+            pawnPromoPiece = new Queen {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+        } else if (promoName == "N") {
+            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};               
+        } else if (promoName == "B") {
+            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};          
+        } else {
+            return 0;
+        }
+    } else {
+        if (promoName == "r") {
+            pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};  
+        } else if (promoName == "q") {
+            pawnPromoPiece = new Queen {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+        } else if (promoName == "n") {
+            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};               
+        } else if (promoName == "b") {
+            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};          
+        } else {
+            return 0;
+        }
+    }
+
+    // add promotion piece to vector and board
+    pieceArray->emplace_back(pawnPromoPiece);
+    (*(subject->getBoard()))[p->getX()][p->getY()] = pawnPromoPiece;
+
+    // look for pawn and delete it
+    pieceArray->erase(find(pieceArray->begin(), pieceArray->end(), p));
+
+    delete p;
+    return 1;
+}
+
 int Human::pickMove() {
     std::string comm;
     while (std::cin >> comm) {
         if (comm == "move") {
             std::string a;
             std::string b;
-            std::cin >> a >> b;
+            std::string promotionP;
+            std::cin >> a >> b >> promotionP;
             std::cout << std::endl;
             int aX = stringToCoord(a[1]);
             int aY = stringToCoord(a[0]);
@@ -126,10 +168,12 @@ int Human::pickMove() {
                     // check for pawn promotion
                     if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
                         (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
-                            promotePawn(subject, pieceArray, ((*(subject->getBoard()))[aX][aY]));
+                            if (promotePawn((*(subject->getBoard()))[aX][aY], promotionP) == 0) {
+                                std::cout << "Invalid promotion piece! Please try again: "; 
+                            } else {
+                                return 1;
+                            }
                     }
-                    
-                    return 1;
                 } else {
                     std::cout << "Invalid move! Please try again: ";
                 }

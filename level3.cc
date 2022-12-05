@@ -131,7 +131,7 @@ int Level3::pickMove() {
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
         if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(subject, pieceArray, p);
+            promotePawn(p);
         }
 
     } else if (filteredMap2.size() > 0) {
@@ -149,7 +149,7 @@ int Level3::pickMove() {
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
         if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(subject, pieceArray, p);
+            promotePawn(p);
         }
         
     } else if (regularMap.size() > 0) {
@@ -167,7 +167,7 @@ int Level3::pickMove() {
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
         if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(subject, pieceArray, p);
+            promotePawn(p);
         }
 
     } else {
