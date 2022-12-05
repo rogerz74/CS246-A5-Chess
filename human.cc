@@ -38,9 +38,8 @@ int stringToCoord(char c) {
 }
 
 bool Human::pickMove() {
-    bool resignStatus = 0;
     std::string comm;
-    while ((resignStatus != -1) && (std::cin >> comm)) {
+    while (std::cin >> comm) {
         if (comm == "move") {
             std::string a;
             std::string b;
@@ -128,12 +127,11 @@ bool Human::pickMove() {
             }
 
         } else if (comm == "resign") {
-            resignStatus = -1;
+            return -1;
         } else {
             std::cout << "Invalid command! Please try again: ";
         }
     }
-    return resignStatus;
 }
 
 
