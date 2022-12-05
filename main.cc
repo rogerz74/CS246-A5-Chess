@@ -20,7 +20,7 @@
 #include "human.h"
 //#include "level1.h"
 //#include "level2.h"
-//#include "level3.h"
+#include "level3.h"
 
 using namespace std;
 
@@ -54,16 +54,16 @@ Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<P
         Human * humanPlayer = new Human {theGame, "human"};
         return humanPlayer; 
     } else if (player == "computer[1]") {
-        Level1 level1Player = new level1Player {theGame, "level1", pieceSet, oppPiecesArr};
-        Human * observerPtr = &level1Player;
+        Level1 * level1Player = new level1Player {theGame, "level1", pieceSet, oppPiecesArr};
+        Computer * observerPtr = level1Player;
         return observerPtr;
     } else if (player == "computer[2]") {
-        Level2 level2Player = new Level2 {theGame, "level2", pieceSet, oppPiecesArr};
-        Human * observerPtr = &level2Player;
+        Level2 * level2Player = new Level2 {theGame, "level2", pieceSet, oppPiecesArr};
+        Computer * observerPtr = level2Player;
         return observerPtr;
     } else if (player == "computer[3]") {
-        Level3 level3Player = new Level3 {theGame, "level3", pieceSet, oppPiecesArr};
-        Human * observerPtr = &level3Player;
+        Level3 * level3Player = new Level3 {theGame, "level3", pieceSet, oppPiecesArr};
+        Computer * observerPtr = level3Player;
         return observerPtr;
     }else {
         std::cout << "Invalid Player Given!" << std::endl;      //make it ask again?
