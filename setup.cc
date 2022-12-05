@@ -1,4 +1,5 @@
 #include "setup.h"
+#include <algorithm>
 using namespace std;
 
 /*
@@ -7,10 +8,42 @@ TO DO:
 */
 
 //Note: return type of ChessGame's getBoard() method is <vector<vector<Piece *>> *.
-string lowercase(string s);
-int strToCoord(char c);
+string lowercase(string s) {
+    transform(s.begin(), s.end(), s.begin(), ::tolower);
+    return s;
+}
 
-void userSetup(ChessGame *setupGame, vector<Piece> &wPieces, vector<Piece> &bPieces) {       //void because it makes changes to the ChessGame itself
+int strToCoord(char c) {
+    if (c == 'a' || c == '8') {
+        return 0;
+    } else if (c == 'b' || c == '7') {
+        return 1;
+    } else if (c == 'c' || c == '6') {
+        return 2;
+    } else if (c == 'd' || c == '5') {
+        return 3;
+    } else if (c == 'e' || c == '4') {
+        return 4;
+    } else if (c == 'f' || c == '3') {
+        return 5;
+    } else if (c == 'g' || c == '2') {
+        return 6;
+    } else {
+        return 7;
+    }
+}
+
+void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &bPieces) {       //void because it makes changes to the ChessGame itself
+
+/*
+    std::string s = "test";
+    bool n = false;
+    Pawn * p = new Pawn {s, setupGame->getBoard(), n, 0, 0};
+    wPieces.emplace_back(p);   //adding p to the vector
+    bPieces.emplace_back(p);   //adding p to the vector
+    (*(setupGame->getBoard()))[0][0] = wPieces.back();
+*/
+
     bool condFlag = 0;
 
     string command = "";
@@ -34,13 +67,68 @@ void userSetup(ChessGame *setupGame, vector<Piece> &wPieces, vector<Piece> &bPie
                 if (islower(piece[0])) {
                     wp = 0;
                 }
-                Piece p{piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                if (wp) {
-                    wPieces.push_back(p);   //adding p to the vector
-                    (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = &wPieces.back();     //do i need a set function?
-                } else {
-                    bPieces.push_back(p);
-                    (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = &bPieces.back();
+
+                // setting up each individual piece
+                if (piece == "p" || piece == "P") {
+                    Pawn * p = new Pawn {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
+
+                    if (wp) {
+                        wPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
+                    } else {
+                        bPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
+                    } 
+                } else if (piece == "r" || piece == "R") {
+                    Rook * p = new Rook {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
+
+                    if (wp) {
+                        wPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
+                    } else {
+                        bPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
+                    }
+                } else if (piece == "q" || piece == "Q") {
+                    Queen * p = new Queen {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
+
+                    if (wp) {
+                        wPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
+                    } else {
+                        bPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
+                    } 
+                } else if (piece == "k" || piece == "K") {
+                    King * p = new King {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
+
+                    if (wp) {
+                        wPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
+                    } else {
+                        bPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
+                    }                     
+                } else if (piece == "n" || piece == "N") {
+                    Knight * p = new Knight {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
+
+                    if (wp) {
+                        wPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
+                    } else {
+                        bPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
+                    }                     
+                } else if (piece == "b" || piece == "B") {
+                    Bishop * p = new Bishop {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
+
+                    if (wp) {
+                        wPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
+                    } else {
+                        bPieces.emplace_back(p);   //adding p to the vector
+                        (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
+                    }                     
                 }
                 setupGame->updateKingPresence();
                 setupGame->checkingForKingCheck();
@@ -50,11 +138,20 @@ void userSetup(ChessGame *setupGame, vector<Piece> &wPieces, vector<Piece> &bPie
         else if (command == "-") {
             cin >> place;
             Piece * p = (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])];
-            if (p != nullptr) {
+            if (!p) {
                 if (p->checkWhitePlayer()) {
-                    wPieces.erase(remove(wPieces.begin(), wPieces.end(), *p), wPieces.end());
+                    auto it = find(wPieces.begin(), wPieces.end(), p);
+                    if (it != wPieces.end()) {
+                        int index = it - wPieces.begin();
+                        delete wPieces[index];
+                    }
+
                 } else {
-                    bPieces.erase(remove(bPieces.begin(), bPieces.end(), *p), bPieces.end());
+                    auto it = find(bPieces.begin(), bPieces.end(), p);
+                    if (it != bPieces.end()) {
+                        int index = it - bPieces.begin();
+                        delete bPieces[index];
+                    }
                 }
                 (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = nullptr;
                 setupGame->updateKingPresence();
@@ -102,51 +199,68 @@ void userSetup(ChessGame *setupGame, vector<Piece> &wPieces, vector<Piece> &bPie
 
 
 
-void defaultSetup(ChessGame *setupGame, vector<Piece> &wPieces, vector<Piece> &bPieces) {
+void defaultSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &bPieces) {
+
     vector<string> row1{"R", "N", "B", "Q", "K", "B", "N", "R"};
     
+    // setting up the pawns initially
     for (int i = 0; i < 8; i++) {
-        Piece wOther{row1[i], setupGame->getBoard(), 1, 7, i};
-        wPieces.push_back(wOther);
-        (*(setupGame->getBoard()))[7][i] = &wPieces.back();
 
-        Piece wPawn{"P", setupGame->getBoard(), 1, 6, i};
-        wPieces.push_back(wPawn);
-        (*(setupGame->getBoard()))[6][i] = &wPieces.back();
+        // setting up the PAWNS for both sides
+        Pawn * p1 = new Pawn {"P", setupGame->getBoard(), 1, 6, i};
+        wPieces.emplace_back(p1);
+        (*(setupGame->getBoard()))[6][i] = wPieces.back();
+        
+        Pawn * p2 = new Pawn {"p", setupGame->getBoard(), 0, 1, i};
+        bPieces.emplace_back(p2);
+        (*(setupGame->getBoard()))[1][i] = bPieces.back();
 
-        Piece bOther{lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
-        bPieces.push_back(bOther);
-        (*(setupGame->getBoard()))[0][i] = &bPieces.back();
+    
+        // setting up the other white pieces
+        if (row1[i] == "R") {
+            Rook * tmp = new Rook {row1[i], setupGame->getBoard(), 1, 7, i};
+            wPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[7][i] = wPieces.back();
+        } else if (row1[i] == "N") {
+            Knight * tmp = new Knight {row1[i], setupGame->getBoard(), 1, 7, i};
+            wPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[7][i] = wPieces.back();
+        } else if (row1[i] == "B") {
+            Bishop * tmp = new Bishop {row1[i], setupGame->getBoard(), 1, 7, i};
+            wPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[7][i] = wPieces.back();            
+        } else if (row1[i] == "Q") {
+            Queen * tmp = new Queen {row1[i], setupGame->getBoard(), 1, 7, i};
+            wPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[7][i] = wPieces.back();                  
+        } else if (row1[i] == "K") {
+            King * tmp = new King {row1[i], setupGame->getBoard(), 1, 7, i};
+            wPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[7][i] = wPieces.back();                  
+        }
 
-        Piece bPawn{"p", setupGame->getBoard(), 0, 1, i};
-        bPieces.push_back(bPawn);
-        (*(setupGame->getBoard()))[1][i] = &bPieces.back();
-    }
-}
+        //setting up the other black pieces
+        if (lowercase(row1[i]) == "r") {
+            Rook * tmp = new Rook {lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
+            bPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[0][i] = bPieces.back();            
+        } else if (lowercase(row1[i]) == "n") {
+            Knight * tmp = new Knight {lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
+            bPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[0][i] = bPieces.back();             
+        } else if (lowercase(row1[i]) == "b") {
+            Bishop * tmp = new Bishop {lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
+            bPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[0][i] = bPieces.back();               
+        } else if (lowercase(row1[i]) == "q") {
+            Queen * tmp = new Queen {lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
+            bPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[0][i] = bPieces.back();               
+        } else if (lowercase(row1[i]) == "k") {
+            King * tmp = new King {lowercase(row1[i]), setupGame->getBoard(), 0, 0, i};
+            bPieces.emplace_back(tmp);
+            (*(setupGame->getBoard()))[0][i] = bPieces.back();               
+        }
 
-
-
-string lowercase(string s) {
-    transform(s.begin(), s.end(), s.begin(), ::tolower);
-    return s;
-}
-
-int strToCoord(char c) {
-    if (c == 'a' || c == '8') {
-        return 0;
-    } else if (c == 'b' || c == '7') {
-        return 1;
-    } else if (c == 'c' || c == '6') {
-        return 2;
-    } else if (c == 'd' || c == '5') {
-        return 3;
-    } else if (c == 'e' || c == '4') {
-        return 4;
-    } else if (c == 'f' || c == '3') {
-        return 5;
-    } else if (c == 'g' || c == '2') {
-        return 6;
-    } else {
-        return 7;
     }
 }

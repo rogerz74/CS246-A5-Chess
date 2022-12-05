@@ -10,19 +10,42 @@ Human::~Human() {
     subject->detach(this);
 }
 
+// helper function
+int stringToCoord(char c) {
+    if (c == 'a' || c == '8') {
+        return 0;
+    } else if (c == 'b' || c == '7') {
+        return 1;
+    } else if (c == 'c' || c == '6') {
+        return 2;
+    } else if (c == 'd' || c == '5') {
+        return 3;
+    } else if (c == 'e' || c == '4') {
+        return 4;
+    } else if (c == 'f' || c == '3') {
+        return 5;
+    } else if (c == 'g' || c == '2') {
+        return 6;
+    } else {
+        return 7;
+    }
+}
 
 bool Human::pickMove() {
     bool resignStatus = 0;
+    std::string comm;
     while ((resignStatus != 1) && (std::cin >> comm)) {
         if (comm == "move") {
+            std::string a;
+            std::string b;
             std::cin >> a >> b;
             std::cout << std::endl;
-            int aX = strToCoord(a[1]);
-            int aY = strToCoord(a[0]);
-            int bX = strToCoord(b[1]);
-            int bY = strToCoord(b[0]);
-            success = (*(gameBoard->getBoard()))[aX][aY]->move((*(gameBoard->getBoard()))[aX][aY], 
-                        (*(gameBoard->getBoard()))[bX][bY], bX, bY);
+            int aX = stringToCoord(a[1]);
+            int aY = stringToCoord(a[0]);
+            int bX = stringToCoord(b[1]);
+            int bY = stringToCoord(b[0]);
+            int success = (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], 
+                        (*(subject->getBoard()))[bX][bY], bX, bY);
             if (success != 1) {
                 std::cout << "Invalid move! Please try again: ";
             } 
