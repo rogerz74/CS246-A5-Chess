@@ -3,7 +3,7 @@
 Level1::Level1(ChessGame *subject, std::string name, std::vector<Piece *> *pieceArray, std::vector<Piece *> *opponentArray):
                 Computer{subject, name, pieceArray, opponentArray} {}
 
-bool Level1::pickMove() {
+int Level1::pickMove() {
     std::cout << "Level 1 Computer makes its move." << std::endl;
     std::map<Piece *, Box> newMap;
     std::vector<Piece *> pieces = *pieceArray;
@@ -37,7 +37,7 @@ bool Level1::pickMove() {
                 // if my king is not in check after potential move is made -> add to newMap
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap[pieces[i]] = move.first;
+                    newMap.insert({pieces[i], move.first});
                 }
 
                 // put board back into original state
@@ -52,7 +52,7 @@ bool Level1::pickMove() {
                 // if my king is not in check after potential move is made
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap[pieces[i]] = move.first;
+                    newMap.insert({pieces[i], move.first});
                 }
 
                 // put board back into original state
@@ -62,7 +62,6 @@ bool Level1::pickMove() {
 
             // put back isBlackKingChecked() and isWhiteKingChecked() to original state
             subject->checkingForKingCheck();                    
-
             delete tempPiece;
         }
     }
