@@ -1,20 +1,9 @@
 #include "level3.h"
-#include "pawn.h"
-#include "rook.h"
-#include "queen.h"
-#include "king.h"
-#include "knight.h"
-#include "bishop.h"
 
 Level3::Level3(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *oppArray):
                 Computer{subject, name, pieceArray, oppArray} {}
 
-
-//create second map (filteredMap)
-//loop through whole of pieceArray with iterator p, loop through p->LegalMoves() with iterator i
-//if i.second == 1 then add p:Box to second map and then randomly select from map
-
-bool Level3::pickMove() {
+int Level3::pickMove() {
     int size = 0;
     std::cout << "Level 3 Computer makes its move." << std::endl;
     std::map<Piece *, Box> filteredMap; // moves that are purely legal (doesn't put my king in check) and avoid capture
@@ -142,7 +131,7 @@ bool Level3::pickMove() {
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
         if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(p);
+            promotePawn(subject, pieceArray, p);
         }
 
     } else if (filteredMap2.size() > 0) {
@@ -160,7 +149,7 @@ bool Level3::pickMove() {
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
         if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(p);
+            promotePawn(subject, pieceArray, p);
         }
         
     } else if (regularMap.size() > 0) {
@@ -178,7 +167,7 @@ bool Level3::pickMove() {
         p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
         if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(p);
+            promotePawn(subject, pieceArray, p);
         }
 
     } else {

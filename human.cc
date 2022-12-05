@@ -126,23 +126,7 @@ int Human::pickMove() {
                     // check for pawn promotion
                     if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
                         (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
-                            Piece *currPiece = ((*(subject->getBoard()))[aX][aY]);
-                        Piece *pawnPromoPiece;
-                        if (currPiece->getName() == "P" && currPiece->getX() == 0) {
-                            pawnPromoPiece = new Queen {"Q", subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
-
-                        }  else {
-                            pawnPromoPiece = new Queen {"q", subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
-                        }
-
-                        // add queen to vector and board
-                        pieceArray->push_back(pawnPromoPiece);
-                        (*(subject->getBoard()))[currPiece->getX()][currPiece->getY()] = pawnPromoPiece;
-
-                        // look for pawn and delete it
-                        pieceArray->erase(find(pieceArray->begin(), pieceArray->end(), currPiece));
-
-                        delete currPiece;
+                            promotePawn(subject, pieceArray, ((*(subject->getBoard()))[aX][aY]));
                     }
                     
                     return 1;
