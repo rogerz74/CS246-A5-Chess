@@ -13,7 +13,7 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
     while (toReturn == INT_MAX) {
         if (turn == 1) {
             cout << "White's Turn: ";
-            bool status = white->pickMove();       //so pickMove() will have bool return type
+            int status = white->pickMove();       //so pickMove() will have bool return type
             if (status == -1) {                    //never executed with compcomp
                 toReturn = -1;                     //i.e. Black wins
             } else if (status == 0) {     //isStalemate() is not a thing anymore
@@ -31,7 +31,7 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
             }
         } else {
             cout << "Black's Turn: ";
-            bool status  = black->pickMove();
+            int status  = black->pickMove();
             if (status == -1) {                 //if black resigns
                 toReturn = 1;                   //White wins
             } else if (status == 0) {           //no legal moves left
