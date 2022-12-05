@@ -16,11 +16,11 @@
 class Level3: public Computer {
     ChessGame *subject;
     std::string name;
-    std::vector<Piece> *pieceArray;
-    std::vector<Piece> *opponentArray;
+    std::vector<Piece*> *pieceArray;
+    std::vector<Piece*> *oppArray;
 
     public:
-        Level3(ChessGame *subject, std::string name, std::vector<Piece> *pieceArray, std::vector<Piece> *opponentArray);
+        Level3(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *oppArray);
         bool pickMove();    
 };
 

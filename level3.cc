@@ -22,7 +22,7 @@ bool Level3::pickMove() {
     std::map<Piece *, Box> regularMap; // moves that are purely legal (doesn't put my king in check) and are not special (just a move)
     std::vector<Box> toAvoid;
     std::vector<Piece*> pieces = *pieceArray;
-    std::vector<Piece*> opponentPieces = *opponentArray;
+    std::vector<Piece*> opponentPieces = *oppArray;
     int arraySize = pieces.size();
     int opponentArraySize = opponentPieces.size();
 
