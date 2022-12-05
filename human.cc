@@ -1,6 +1,12 @@
 #include <iostream>
 #include "human.h"
 #include "chessGame.h"
+#include "pawn.h"
+#include "rook.h"
+#include "queen.h"
+#include "king.h"
+#include "knight.h"
+#include "bishop.h"
 
 Human::Human(ChessGame *subject, std::string name): subject{subject}, name{name} {
     subject->attach(this);
@@ -34,7 +40,7 @@ int stringToCoord(char c) {
 bool Human::pickMove() {
     bool resignStatus = 0;
     std::string comm;
-    while ((resignStatus != 1) && (std::cin >> comm)) {
+    while ((resignStatus != -1) && (std::cin >> comm)) {
         if (comm == "move") {
             std::string a;
             std::string b;
@@ -44,13 +50,85 @@ bool Human::pickMove() {
             int aY = stringToCoord(a[0]);
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
-            int success = (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], 
-                        (*(subject->getBoard()))[bX][bY], bX, bY);
-            if (success != 1) {
-                std::cout << "Invalid move! Please try again: ";
-            } 
+            std::map<Piece *, Box> filteredMap;
+            std::map<Box, int> currLegalMoves = (*((*(subject->getBoard()))[aX][aY])->getLegalMoves());
+        
+            // loop through the piece's legal moves
+            for (auto &move: currLegalMoves) { 
+                // if move does not put player's King in check, add to filteredMap
+                // temp so we do not loose the current piece we are trying to move
+                Piece *currPiece = (*(subject->getBoard()))[aX][aY];
+                
+                // create temporary piece that will be moved around and then get deleted
+                Piece *tempPiece;
+                if (currPiece->getName() == "p" || currPiece->getName() == "P") {
+                    tempPiece = new Pawn {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
+                } else if (currPiece->getName() == "r" || currPiece->getName() == "R") {
+                    tempPiece = new Rook {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};  
+                } else if (currPiece->getName() == "q" || currPiece->getName() == "Q") {
+                    tempPiece = new Queen {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};
+                } else if (currPiece->getName() == "k" || currPiece->getName() == "K") {
+                    tempPiece = new King {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};             
+                } else if (currPiece->getName() == "n" || currPiece->getName() == "N") {
+                    tempPiece = new Knight {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};               
+                } else {
+                    tempPiece = new Bishop {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};          
+                }
+
+                // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
+                if ((*(subject->getBoard()))[move.first.getX()][move.first.getY()]) {
+                    Piece *temp = (*(subject->getBoard()))[move.first.getX()][move.first.getY()];
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = tempPiece;
+                    (*(subject->getBoard()))[aX][aY] = nullptr;
+                    subject->checkingForKingCheck();
+
+                    // if my king is not in check after potential move is made -> add to filteredMap
+                    if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
+                        (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
+                            filteredMap[currPiece] = move.first;
+                    }
+
+                    // put board back into original state
+                    (*(subject->getBoard()))[aX][aY] = currPiece;
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = temp;
+
+                } else {
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = tempPiece;
+                    (*(subject->getBoard()))[aX][aY] = nullptr;
+                    subject->checkingForKingCheck();
+
+                    // if my king is not in check after potential move is made -> add to filteredMap
+                    if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
+                        (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
+                            filteredMap[currPiece] = move.first;
+                    }
+
+                    // put board back into original state
+                    (*(subject->getBoard()))[aX][aY] = currPiece;
+                    (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = nullptr;
+                }
+
+                // put back isBlackKingChecked() and isWhiteKingChecked() to original state
+                subject->checkingForKingCheck();
+
+                delete tempPiece;
+            }
+
+            // check if "stalemate"
+            if (filteredMap.size() == 0) {
+                return 0;
+            } else {
+                // check if move given by user is in filteredMap
+                if (filteredMap.find((*(subject->getBoard()))[bX][bY]) != filteredMap.end()) {
+                    (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
+                    return 1;
+                } else {
+                    std::cout << "Invalid move! Please try again: ";
+                }
+            }
+
         } else if (comm == "resign") {
-            resignStatus = 1;
+            resignStatus = -1;
         } else {
             std::cout << "Invalid command! Please try again: ";
         }
