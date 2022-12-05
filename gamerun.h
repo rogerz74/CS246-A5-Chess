@@ -11,7 +11,7 @@
 #include "level1.h"
 #include "level2.h"
 #include "level3.h"
-#include <limits>
+#include <climits>
 
 int gameRun(Observer *white, Observer *black, ChessGame *gameBoard);
 
