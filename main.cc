@@ -75,11 +75,14 @@ Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<P
 void gameInstance(scoreBoard & tracker) {
 
     //iterate over vector of vectors and build base board - possibility of keeping in main
+
     std::vector<std::vector<Piece *>> ChessBoard;
     buildBoard(ChessBoard);
     std::vector<std::vector<Piece *>> emptyBoard;
     buildBoard(emptyBoard);
 
+    tracker.blackPoints += 0; //ignore this line
+    
     ChessGame game{&ChessBoard};        //constructor takes in ptr to board
     std::vector<Piece *> whitePieces;     //changing this back to pointer to pieces b/c using just pieces will cause compilation issues in setup.cc
     std::vector<Piece *> blackPieces;
@@ -96,7 +99,11 @@ void gameInstance(scoreBoard & tracker) {
                 buildBoard(ChessBoard);
                 game.setBoard(&ChessBoard);    //create method to take in pointer to the board and change board in class
             }
+            std::cout << "game is acc being set up here" << std::endl;
             userSetup(&game, whitePieces, blackPieces);     //takes references to the vectors and changes them
+
+            std::cout << "Game is finished Setup!!!" << std::endl;
+
             setupFlag = 1;
         } else if (comm == "game") {
             std::string wPlayer = "";
@@ -144,15 +151,14 @@ void gameInstance(scoreBoard & tracker) {
     for (std::size_t i = 0; i < observerArr.size(); ++i) {
         Observer * tmp = observerArr[i];
         delete tmp;
-    }  
-
+    }
 
 }
 
 int main() {
     scoreBoard tracker{0,0};
-    while (true) {
-        gameInstance(tracker);
-    }
+
+    // just running gameInstance Once FOR NOW
+    gameInstance(tracker);
     tracker.print();
 }

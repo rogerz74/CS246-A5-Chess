@@ -8,6 +8,8 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
     string a = "";
     string b = "";
 
+    white->notify();
+
     //implement error checking so INT_MAX returned if game unfinished
     //for status, resigned = -1, stalemate = 0, all good = 1
     while (toReturn == INT_MAX) {
@@ -29,7 +31,7 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
                 gameBoard->switchTurn();
                 turn = gameBoard->getPlayerTurn();
             } else {
-                return -9999; //return code for incomplete game
+                toReturn = -9999; //return code for incomplete game
             }
         } else {
             cout << "Black's Turn: ";
@@ -49,7 +51,7 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
                 gameBoard->switchTurn();
                 turn = gameBoard->getPlayerTurn();
             } else {
-                return -9999; //return code for incomplete game
+                toReturn = -9999; //return code for incomplete game
             }
         }
 

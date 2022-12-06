@@ -25,7 +25,7 @@ class ChessGame: public Subject {
     bool blackKingChecked = false;
     bool blackKingPresent = false;
     bool whiteKingPresent = false;
-    bool playerTurn; // true = white, false = black; using bool instead of str b/c it's probably just easier to use bool than a string for the playerTurn state
+    bool playerTurn = 1; // true = white, false = black; using bool instead of str b/c it's probably just easier to use bool than a string for the playerTurn state
 
     public:
         // to initialize the ChessGame

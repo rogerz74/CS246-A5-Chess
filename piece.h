@@ -12,7 +12,7 @@ class Piece {
     int xCoord;
     int yCoord;
 
-    std::map<Box, int> *legalMovesMap;
+    std::map<Box, int> legalMovesMap;
 
     public:
         Piece(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, const int xCoord, const int yCoord);
@@ -29,9 +29,12 @@ class Piece {
         bool checkWhitePlayer();
         // if move is completed move will return 1
         void move(Piece *currentTile, Piece *targetTile, int newX, int newY);
-        void print();
 
-        std::map<Box, int> *getLegalMoves() {
+        void setLegalMoves(std::map<Box, int> newMap) { //function to change legalMovesMap
+            legalMovesMap = newMap;
+        }
+
+        std::map<Box, int> getLegalMoves() {
             return legalMovesMap;
         };
 

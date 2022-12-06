@@ -17,7 +17,7 @@ int Level3::pickMove() {
 
     // looping through all of opponent's pieces
     for (int i = 0; i < opponentArraySize; ++i) {
-        std::map<Box, int> opponentsLegalMoves = (*(*(opponentPieces[i])).getLegalMoves());
+        std::map<Box, int> opponentsLegalMoves = ((*(opponentPieces[i])).getLegalMoves());
         
         // loop through the piece's legal moves
         for (auto &move: opponentsLegalMoves) { 
@@ -30,7 +30,7 @@ int Level3::pickMove() {
 
     // checking is a move puts my king in check
     for (int i = 0; i < arraySize; ++i) {
-        std::map<Box, int> potentialMoves = (*((*(pieces[i])).getLegalMoves()));
+        std::map<Box, int> potentialMoves = (((*(pieces[i])).getLegalMoves()));
         for (auto &move: potentialMoves) { 
 
             // create temporary pieces that will be moved around and then deleted
@@ -48,6 +48,7 @@ int Level3::pickMove() {
             } else {
                 tempPiece = new Bishop {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};          
             }
+            tempPiece->setLegalMoves(tempPiece->updateLegalMoves());
 
             // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
             if ((*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]) {

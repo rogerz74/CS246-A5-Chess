@@ -35,13 +35,13 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[i][y]) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
 
         // location is empty
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = x + 1; i < 8; ++i) {
@@ -49,12 +49,12 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[i][y]) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
         
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = y + 1; i < 8; ++i) {
@@ -62,12 +62,12 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[x][i]) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
         
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = y - 1; i >= 0; --i) {
@@ -75,12 +75,12 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if ((*(this->getBoard()))[x][i]) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
         
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     // diagonal movements
@@ -90,11 +90,11 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x - i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = 1; x + i  < 8 && y - i >= 0; ++i) {
@@ -102,11 +102,11 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x + i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = 1; x - i  >= 0 && y - i >= 0; ++i) {
@@ -114,11 +114,11 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x - i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = 1; x + i  < 8 && y + i < 8; ++i) {
@@ -126,11 +126,11 @@ std::map<Box, int> Queen::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x + i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     return legalMoves;

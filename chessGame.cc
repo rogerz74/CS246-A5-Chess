@@ -71,6 +71,8 @@ void ChessGame::checkingForKingCheck() {
         }
     }
 
+    std::cout << "position of kings successfully found!!" << std::endl;
+
     whiteKingChecked = false;
     blackKingChecked = false;
     for (int a = 0; a < 8 && !(whiteKingChecked && blackKingChecked); a++) {
@@ -78,9 +80,8 @@ void ChessGame::checkingForKingCheck() {
 
             // if the tile is occupied with a piece
             if ((*board)[a][b]) {
-
                 // checking the legal moves and seeing if they lead to a check
-                for (auto &pair: (*((*board)[a][b]->getLegalMoves()))) {
+                for (auto &pair: (((*board)[a][b]->getLegalMoves()))) {
                     // first check to make sure white and black king are not checked
                     if (whiteKingChecked || blackKingChecked) {
                         break;
@@ -97,6 +98,7 @@ void ChessGame::checkingForKingCheck() {
                                     whiteKingChecked = true;
                     }
                 }
+                std::cout << "finished iterating through legalMoves" << std::endl;
             }
         }
     }

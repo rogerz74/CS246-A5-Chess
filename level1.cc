@@ -10,7 +10,7 @@ int Level1::pickMove() {
     int arraySize = pieces.size();
 
     for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-        std::map<Box, int> lm = *((pieces[i])->getLegalMoves());
+        std::map<Box, int> lm = ((pieces[i])->getLegalMoves());
         for (auto &move: lm) {                     //looping through all legal moves
             Piece *tempPiece;
             if ((pieces[i])->getName() == "p" || (pieces[i])->getName() == "P") {
@@ -26,6 +26,7 @@ int Level1::pickMove() {
             } else {
                 tempPiece = new Bishop {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
             }
+            tempPiece->setLegalMoves(tempPiece->updateLegalMoves());
 
             // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
             if ((*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]) {       //move is an iterator
