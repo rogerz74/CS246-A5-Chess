@@ -12,7 +12,7 @@ int Level2::pickMove() {
     int arraySize = pieces.size();
 
     for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-        std::map<Box, int> lm = *((pieces[i])->getlegalMoves());
+        std::map<Box, int> lm = *((pieces[i])->getLegalMoves());
 
         for (auto &move: lm) {                     //looping through all legal moves
 
@@ -98,28 +98,28 @@ int Level2::pickMove() {
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, newSize-1); //picks random index in newMap
-        std::map<Piece *, Box> iterator item = newMap.begin();                //iterator points to {Piece*:Box}
+        std::map<Piece *, Box>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
         std::advance( item, randompick(rng) );
         
         p = item->first;
         Box b = item->second;
         int bX = b.getX();
         int bY = b.getY();
-        p->move(p, (*(gameBoard->getBoard()))[bX][bY], bX, bY);
+        p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
     } else {                                                //selecting random element from filteredMap
 
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, filterSize-1); //picks random index in filteredMap
-        std::map<Piece *, Box> iterator item = filteredMap.begin();                //iterator points to {Piece*:Box}
+        std::map<Piece *, Box>::iterator item = filteredMap.begin();                //iterator points to {Piece*:Box}
         std::advance( item, randompick(rng) );
         
         p = item->first;
         Box b = item->second;   
         int bX = b.getX();
         int bY = b.getY();
-        p->move(p, (*(gameBoard->getBoard()))[bX][bY], bX, bY);
+        p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
     }
     
@@ -128,7 +128,7 @@ int Level2::pickMove() {
     int aY = p->getY();
     if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
         (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
-        promotePawn(subject, pieceArray, ((*(subject->getBoard()))[aX][aY]));
+        promotePawn(((*(subject->getBoard()))[aX][aY]));
     }
     return 1;
 }
