@@ -54,7 +54,7 @@ Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<P
         Human * humanPlayer = new Human {theGame, "human", pieceSet};
         return humanPlayer; 
     } else if (player == "computer[1]") {
-        Level1 * level1Player = new level1Player {theGame, "level1", pieceSet, oppPiecesArr};
+        Level1 * level1Player = new Level1 {theGame, "level1", pieceSet, oppPiecesArr};
         Computer * observerPtr = level1Player;
         return observerPtr;
     } else if (player == "computer[2]") {
@@ -122,7 +122,7 @@ void gameInstance(scoreBoard & tracker) {
                 tracker.whitePoints += 0.5;
                 tracker.blackPoints += 0.5;
             } else {
-                std::cout << "Game left unfinished!" << std::endl;      //can be accounted for later
+                std::cout << "Game left unfinished!" << std::endl;      //if whoWon = -9999, then the game is incomplete
             }
             gameRunFlag = 1;
         } else {
