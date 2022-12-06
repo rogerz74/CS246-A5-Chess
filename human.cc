@@ -80,6 +80,7 @@ bool Human::promotePawn(Piece * p, std::string promoName) {
 }
 
 int Human::pickMove() {
+    
     std::string comm;
     while (std::cin >> comm) {
         if (comm == "move") {
@@ -127,7 +128,7 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            filteredMap[currPiece] = move.first;
+                            filteredMap.insert({currPiece, move.first});
                     }
 
                     // put board back into original state
@@ -142,7 +143,7 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            filteredMap[currPiece] = move.first;
+                            filteredMap.insert({currPiece, move.first});
                     }
 
                     // put board back into original state
@@ -185,6 +186,7 @@ int Human::pickMove() {
             std::cout << "Invalid command! Please try again: ";
         }
     }
+    return -9999; // return if user decides to Cmd D on their turn, resulting in an incomplete game
 }
 
 
