@@ -140,6 +140,8 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
             cin >> place;
             Piece * p = (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])];
             if (!p) {
+                cout << "There is no piece on the chosen tile! Try again!" << endl;
+            } else {
                 if (p->checkWhitePlayer()) {
                     auto it = find(wPieces.begin(), wPieces.end(), p);
                     if (it != wPieces.end()) {
@@ -157,8 +159,6 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                 (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = nullptr;
                 setupGame->updateKingPresence();
                 setupGame->checkingForKingCheck();
-            } else {
-                cout << "There is no piece on the chosen tile! Try again!" << endl;
             } 
         } 
         
