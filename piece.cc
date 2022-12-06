@@ -1,7 +1,6 @@
 #include "piece.h"
 #include <algorithm>
 #include <iostream>
-#include <cassert>
 #include "box.h"
 
 Piece::Piece(std::string name, std::vector<std::vector<Piece *>> *board, bool whitePlayer, const int xCoord, const int yCoord):
@@ -24,7 +23,7 @@ bool Piece::checkWhitePlayer() {
 }
 
 
-void Piece::move(Piece *&currentTile, Piece *&targetTile, int newX, int newY) {
+void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
 
     // currentTile = the location of the current piece
     // targetTile = the location of where the piece wants to move (nullptr if empty, Piece if occupied)
@@ -37,6 +36,9 @@ void Piece::move(Piece *&currentTile, Piece *&targetTile, int newX, int newY) {
 
     */
 
+    std::map<Box, int> tempLegalMovesMap = updateLegalMoves();
+    legalMovesMap = tempLegalMovesMap;
+
     const Box targetBox(newX, newY);
 
     if (targetTile) { // if there is a piece on it
@@ -44,10 +46,7 @@ void Piece::move(Piece *&currentTile, Piece *&targetTile, int newX, int newY) {
         std::swap(currentTile, targetTile); // b/c a piece is captured, that Piece * on the grid points to NULL and the actual gets deleted
 
     } else { // if the tile is empty
-        Piece * p1 = currentTile;
-
-        targetTile = p1;
-        currentTile = nullptr;
+        std::swap(currentTile, targetTile);
     }
 
     // check if move was a King castling move
