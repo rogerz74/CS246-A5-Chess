@@ -6,9 +6,9 @@ Level3::Level3(ChessGame *subject, std::string name, std::vector<Piece*> *pieceA
 int Level3::pickMove() {
     int size = 0;
     std::cout << "Level 3 Computer makes its move." << std::endl;
-    std::map<Piece *, Box> filteredMap; // moves that are purely legal (doesn't put my king in check) and avoid capture
-    std::map<Piece *, Box> filteredMap2; // moves that are purely legal (doesn't put my king in check) and capture or checks
-    std::map<Piece *, Box> regularMap; // moves that are purely legal (doesn't put my king in check) and are not special (just a move)
+    std::vector<std::pair<Piece *, Box>> filteredMap; // moves that are purely legal (doesn't put my king in check) and avoid capture
+    std::vector<std::pair<Piece *, Box>> filteredMap2; // moves that are purely legal (doesn't put my king in check) and capture or checks
+    std::vector<std::pair<Piece *, Box>> regularMap; // moves that are purely legal (doesn't put my king in check) and are not special (just a move)
     std::vector<Box> toAvoid;
     std::vector<Piece*> pieces = *pieceArray;
     std::vector<Piece*> opponentPieces = *oppArray;
@@ -63,15 +63,15 @@ int Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap.insert({pieces[i], move.first});
+                            filteredMap.emplace_back(pieces[i], move.first);
                         }else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                filteredMap2.insert({pieces[i], move.first});
+                                filteredMap2.emplace_back(pieces[i], move.first);
                         } else {
-                            regularMap.insert({pieces[i], move.first});
+                            regularMap.emplace_back(pieces[i], move.first);
                         }
                 }
 
@@ -90,15 +90,15 @@ int Level3::pickMove() {
 
                         if (find(toAvoid.begin(), toAvoid.end(), move.first) == toAvoid.end()) {
                             // move makes current piece captured
-                            filteredMap.insert({pieces[i], move.first});
+                            filteredMap.emplace_back(pieces[i], move.first);
                         } else if (move.second == 1 ||
                             ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                             (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                                 // move is a captures opposing piece or checks opposing king
                                 // need to put these in one check or else it may add the move twice
-                                 filteredMap2.insert({pieces[i], move.first});
+                                 filteredMap2.emplace_back(pieces[i], move.first);
                         } else {
-                            regularMap.insert({pieces[i], move.first});
+                            regularMap.emplace_back(pieces[i], move.first);
                         }
                 }
                 
