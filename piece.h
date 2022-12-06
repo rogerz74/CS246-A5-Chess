@@ -28,7 +28,7 @@ class Piece {
         std::string getName();
         bool checkWhitePlayer();
         // if move is completed move will return 1
-        void move(Piece *&currentTile, Piece *&targetTile, int newX, int newY);
+        void move(Piece *currentTile, Piece *targetTile, int newX, int newY);
 
         void setLegalMoves(std::map<Box, int> newMap) { //function to change legalMovesMap
             legalMovesMap = newMap;

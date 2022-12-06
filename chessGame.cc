@@ -71,6 +71,8 @@ void ChessGame::checkingForKingCheck() {
         }
     }
 
+    std::cout << "position of kings successfully found!!" << std::endl;
+
     whiteKingChecked = false;
     blackKingChecked = false;
     for (int a = 0; a < 8 && !(whiteKingChecked && blackKingChecked); a++) {
@@ -98,6 +100,7 @@ void ChessGame::checkingForKingCheck() {
                                     whiteKingChecked = true;
                     }
                 }
+                std::cout << "finished iterating through legalMoves" << std::endl;
             }
         }
     }
