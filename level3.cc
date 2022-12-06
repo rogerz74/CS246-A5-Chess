@@ -177,5 +177,17 @@ int Level3::pickMove() {
         return 0;
     }
 
+    //the color's own pieces
+    for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
+        (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
+    }
+
+    //opponent's pieces
+    std::vector<Piece *> oppPieces = *opponentArray;
+    int oppArraySize = oppPieces.size();
+    for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
+        (oppPieces[i])->setLegalMoves((oppPieces[i])->updateLegalMoves());
+    }
+
     return 1;
 }
