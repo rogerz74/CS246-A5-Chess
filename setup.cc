@@ -2,10 +2,6 @@
 #include <algorithm>
 using namespace std;
 
-/*
-TO DO:
-- Making required changes after box & piece ctors change.
-*/
 
 //Note: return type of ChessGame's getBoard() method is <vector<vector<Piece *>> *.
 string lowercase(string s) {
@@ -65,10 +61,10 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                 if (piece == "p" || piece == "P") {
                     std::cout << "adding pawn!!!!" << std::endl;
                     Pawn * p = new Pawn {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                    p->setLegalMoves(p->updateLegalMoves());
+                    //p->setLegalMoves(p->updateLegalMoves());
+
                     if (wp) {
                         wPieces.emplace_back(p);   //adding p to the vector
-
                         (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = wPieces.back();
                     } else {
                         bPieces.emplace_back(p);   //adding p to the vector
@@ -76,7 +72,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                     } 
                 } else if (piece == "r" || piece == "R") {
                     Rook * p = new Rook {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                    p->setLegalMoves(p->updateLegalMoves());
+                    //p->setLegalMoves(p->updateLegalMoves());
 
                     if (wp) {
                         wPieces.emplace_back(p);   //adding p to the vector
@@ -87,7 +83,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                     }
                 } else if (piece == "q" || piece == "Q") {
                     Queen * p = new Queen {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                    p->setLegalMoves(p->updateLegalMoves());
+                    //p->setLegalMoves(p->updateLegalMoves());
 
                     if (wp) {
                         wPieces.emplace_back(p);   //adding p to the vector
@@ -98,7 +94,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                     } 
                 } else if (piece == "k" || piece == "K") {
                     King * p = new King {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                    p->setLegalMoves(p->updateLegalMoves());
+                    //p->setLegalMoves(p->updateLegalMoves());
 
                     if (wp) {
                         wPieces.emplace_back(p);   //adding p to the vector
@@ -109,7 +105,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                     }                     
                 } else if (piece == "n" || piece == "N") {
                     Knight * p = new Knight {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                    p->setLegalMoves(p->updateLegalMoves());
+                    //p->setLegalMoves(p->updateLegalMoves());
 
                     if (wp) {
                         wPieces.emplace_back(p);   //adding p to the vector
@@ -120,7 +116,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                     }                     
                 } else if (piece == "b" || piece == "B") {
                     Bishop * p = new Bishop {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
-                    p->setLegalMoves(p->updateLegalMoves());
+                    //p->setLegalMoves(p->updateLegalMoves());
 
                     if (wp) {
                         wPieces.emplace_back(p);   //adding p to the vector
@@ -130,16 +126,27 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                         (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = bPieces.back();
                     }                     
                 }
+
+                int wSize = wPieces.size();
+                int bSize = bPieces.size();
+                //white pieces
+                for (int i = 0; i < wSize; i++) {       //looping through all the pieces
+                    (wPieces[i])->setLegalMoves((wPieces[i])->updateLegalMoves());
+                }
+                //black pieces
+                for (int j = 0; j < bSize; j++) {       //looping through all the pieces
+                    (bPieces[j])->setLegalMoves((bPieces[j])->updateLegalMoves());
+                }
+
                 setupGame->updateKingPresence();
                 setupGame->checkingForKingCheck();
-
             }
         } 
         
         else if (command == "-") {
             cin >> place;
             Piece * p = (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])];
-            if (!p) {
+            if (p) {
                 if (p->checkWhitePlayer()) {
                     auto it = find(wPieces.begin(), wPieces.end(), p);
                     if (it != wPieces.end()) {
@@ -155,8 +162,20 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
                     }
                 }
                 (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])] = nullptr;
+
+                int wSize = wPieces.size();
+                int bSize = bPieces.size();
+                //white pieces
+                for (int i = 0; i < wSize; i++) {       //looping through all the pieces
+                    (wPieces[i])->setLegalMoves((wPieces[i])->updateLegalMoves());
+                }
+                //black pieces
+                for (int j = 0; j < bSize; j++) {       //looping through all the pieces
+                    (bPieces[j])->setLegalMoves((bPieces[j])->updateLegalMoves());
+                }
                 setupGame->updateKingPresence();
                 setupGame->checkingForKingCheck();
+
             } else {
                 cout << "There is no piece on the chosen tile! Try again!" << endl;
             } 
@@ -203,6 +222,8 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
 void defaultSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &bPieces) {
 
     vector<string> row1{"R", "N", "B", "Q", "K", "B", "N", "R"};
+    int wSize = 16;
+    int bSize = 16;
     
     // setting up the pawns initially
     for (int i = 0; i < 8; i++) {
@@ -275,5 +296,13 @@ void defaultSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *
             (*(setupGame->getBoard()))[0][i] = bPieces.back();               
         }
 
+    }
+    //white pieces
+    for (int i = 0; i < wSize; i++) {       //looping through all the pieces
+        (wPieces[i])->setLegalMoves((wPieces[i])->updateLegalMoves());
+    }
+    //black pieces
+    for (int j = 0; j < bSize; j++) {       //looping through all the pieces
+        (bPieces[j])->setLegalMoves((bPieces[j])->updateLegalMoves());
     }
 }
