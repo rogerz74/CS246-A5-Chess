@@ -71,8 +71,6 @@ void ChessGame::checkingForKingCheck() {
         }
     }
 
-    std::cout << "position of kings successfully found!!" << std::endl;
-
     whiteKingChecked = false;
     blackKingChecked = false;
     for (int a = 0; a < 8 && !(whiteKingChecked && blackKingChecked); a++) {
@@ -86,7 +84,6 @@ void ChessGame::checkingForKingCheck() {
                     if (whiteKingChecked || blackKingChecked) {
                         break;
                     }
-                    std::cout << "legalMoves x: " << (pair.first).getX() << " AND y: " << (pair.first).getY() << std::endl;
                     // if blackKing is in check by a white piece
                     if (blackKingX != -1 && blackKingY != -1 &&
                         (pair.first).getX() == blackKingX && (pair.first).getY() == blackKingY &&
@@ -101,7 +98,6 @@ void ChessGame::checkingForKingCheck() {
                                     whiteKingChecked = true;
                     }
                 }
-                std::cout << "finished iterating through legalMoves" << std::endl;
             }
         }
     }

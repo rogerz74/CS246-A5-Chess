@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 #include <string>
 #include "human.h"
 #include "chessGame.h"
@@ -95,22 +96,36 @@ int Human::pickMove() {
             std::string a;
             std::string b;
             std::string promotionP;
-            std::cin >> a >> b;
+            std::string line;
 
-            if (!(std::cin >> promotionP)) {
-                promotionP = " ";
+            // cin input for a, b, and promotionP, if there is an input for prompotionP
+            while (std::getline(std::cin, line)) {
+
+                std::istringstream ss1{ line };
+                ss1 >> a;
+                ss1 >> b;
+                if (!(ss1 >> promotionP)) {
+                    promotionP = " ";
+                }
+                break;
             }
+
 
             std::cout << std::endl;
             int aX = stringToCoord(a[1]);
             int aY = stringToCoord(a[0]);
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
-            std::map<Piece *, Box> filteredMap;
+            std::map<Box, Piece *> filteredMap;
             std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->getLegalMoves());
         
+            std::cout << "size of legal moves for piece: " << currLegalMoves.size() <<std::endl;
+
             // loop through the piece's legal moves
             for (auto &move: currLegalMoves) { 
+
+                std::cout << "move XCoords (vertical) " << 8 - move.first.getX() <<std::endl;
+                std::cout << "move YCoords (horizontal) " << 1 + move.first.getY() <<std::endl;
                 // if move does not put player's King in check, add to filteredMap
                 // temp so we do not loose the current piece we are trying to move
                 Piece *currPiece = (*(subject->getBoard()))[aX][aY];
@@ -142,14 +157,16 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            filteredMap.insert({currPiece, move.first});
+                            filteredMap.insert({move.first, currPiece});
                     }
 
                     // put board back into original state
                     (*(subject->getBoard()))[aX][aY] = currPiece;
                     (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = temp;
 
-                } else {
+                } else { // move is NOT A CAPTURE
+
+                    std::cout << "move is not a capture" << std::endl;
                     (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = tempPiece;
                     (*(subject->getBoard()))[aX][aY] = nullptr;
                     subject->checkingForKingCheck();
@@ -157,7 +174,8 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            filteredMap.insert({currPiece, move.first});
+                            std::cout << "new move (not capture) is inserted!!" << std::endl;
+                            filteredMap.insert({move.first, currPiece});
                     }
 
                     // put board back into original state
@@ -176,18 +194,22 @@ int Human::pickMove() {
                 return 0;
             } else {
                 // check if move given by user is in filteredMap
-                if (filteredMap.find((*(subject->getBoard()))[bX][bY]) != filteredMap.end()) {
+                Box moveBox(bX, bY);
+                if (filteredMap.find(moveBox) != filteredMap.end()) { // need to find if the moveBox is possible or not
                     // move
                     (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
 
                     // check for pawn promotion
-                    if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
-                        (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                    if ((((*(subject->getBoard()))[bX][bY])->getName() == "P" && ((*(subject->getBoard()))[bX][bY])->getX() == 0) || 
+                        (((*(subject->getBoard()))[bX][bY])->getName() == "p" && ((*(subject->getBoard()))[bX][bY])->getX() == 7)) {
                             if (promotePawn((*(subject->getBoard()))[aX][aY], promotionP) == 0) {
                                 std::cout << "Invalid promotion piece! Please try again: "; 
                             } else {
                                 return 1;
                             }
+                    } else {
+                        std::cout << "1 returned for pickMove" << std::endl;
+                        return 1;
                     }
                 } else {
                     std::cout << "Invalid move! Please try again: ";
