@@ -97,7 +97,7 @@ int Level1::pickMove() {
     std::vector<Piece *> oppPieces = *opponentArray;
     int oppArraySize = oppPieces.size();
     for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
-        (oppPieces[i])->setLegalMoves((oppPieces[i])->updateLegalMoves());
+        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
     }
 
     // check for pawn promotion
