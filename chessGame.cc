@@ -71,6 +71,8 @@ void ChessGame::checkingForKingCheck() {
         }
     }
 
+    std::cout << "position of kings successfully found!!" << std::endl;
+
     whiteKingChecked = false;
     blackKingChecked = false;
     for (int a = 0; a < 8 && !(whiteKingChecked && blackKingChecked); a++) {
@@ -78,25 +80,28 @@ void ChessGame::checkingForKingCheck() {
 
             // if the tile is occupied with a piece
             if ((*board)[a][b]) {
-
                 // checking the legal moves and seeing if they lead to a check
-                for (auto &pair: (*((*board)[a][b]->getLegalMoves()))) {
+                for (auto &pair: (((*board)[a][b]->getLegalMoves()))) {
                     // first check to make sure white and black king are not checked
                     if (whiteKingChecked || blackKingChecked) {
                         break;
                     }
+                    std::cout << "legalMoves x: " << (pair.first).getX() << " AND y: " << (pair.first).getY() << std::endl;
                     // if blackKing is in check by a white piece
                     if (blackKingX != -1 && blackKingY != -1 &&
                         (pair.first).getX() == blackKingX && (pair.first).getY() == blackKingY &&
+                        ((pair.second) == 1 || (pair.second) == -1) && // must be a regular capture move or an en passant capture move
                         ((*board)[a][b])->checkWhitePlayer()) {
                             blackKingChecked = true;
                     // if whiteKing is in check by a black piece
                     } else if (whiteKingX != -1 && whiteKingY != -1 &&
                                 (pair.first).getX() == whiteKingX && (pair.first).getY() == whiteKingY &&
+                                ((pair.second) == 1 || (pair.second) == -1) && // must be a regular capture move or an en passant capture move
                                 !(((*board)[a][b])->checkWhitePlayer())) {
                                     whiteKingChecked = true;
                     }
                 }
+                std::cout << "finished iterating through legalMoves" << std::endl;
             }
         }
     }

@@ -30,7 +30,7 @@ std::map<Box, int> King::updateLegalMoves() {
 
     // castling
     // checks if king is white, on it's first move, rook is at it's necessary position,and on it's first move
-    if (checkWhitePlayer() && isFirstMove && 
+    if (checkWhitePlayer() && isFirstMove && ((*(this->getBoard()))[7][0]) &&
         ((*(this->getBoard()))[7][0])->getName() == "R" && ((*(this->getBoard()))[7][0])->getIsFirstMove()) {
             bool isPiece = false;
             // checks if there are Pieces between the King and Rook used
@@ -52,6 +52,7 @@ std::map<Box, int> King::updateLegalMoves() {
                 // check current position is check
                 if (!(checkGame1.isWhiteKingChecked())) {
                     King tempKing1("K", this->getBoard(), checkWhitePlayer(), x, y - 1);
+                    tempKing1.setLegalMoves(tempKing1.updateLegalMoves());
                     (*(this->getBoard()))[x][y - 1] = &tempKing1;
                     (*(this->getBoard()))[x][y] = nullptr;
                     checkGame1.checkingForKingCheck();
@@ -59,6 +60,7 @@ std::map<Box, int> King::updateLegalMoves() {
                     // check between position is check
                     if (!(checkGame1.isWhiteKingChecked())) {
                         King tempKing2("K", this->getBoard(), checkWhitePlayer(), x, y - 2);
+                        tempKing2.setLegalMoves(tempKing2.updateLegalMoves());
                         (*(this->getBoard()))[x][y - 2] = &tempKing2;
                         (*(this->getBoard()))[x][y - 1] = nullptr;
                         checkGame1.checkingForKingCheck();
@@ -71,11 +73,11 @@ std::map<Box, int> King::updateLegalMoves() {
 
                             // add castling move to King
                             Box castlingKingMove(x, y - 2);
-                            legalMoves[castlingKingMove] = 2;
+                            legalMoves.insert({castlingKingMove, 2});
 
                             // add castling move to Rook
                             Box castlingRookMove(x, y - 1);
-                            (*(((*(this->getBoard()))[7][0])->getLegalMoves()))[castlingRookMove] = 2;
+                            ((((*(this->getBoard()))[7][0])->getLegalMoves())).insert({castlingRookMove, 2});
                         }
                     }
                 }
@@ -84,7 +86,7 @@ std::map<Box, int> King::updateLegalMoves() {
 
     // castling
     // checks if king is white, on it's first move, rook is at it's necessary position,and on it's first move
-    if (checkWhitePlayer() && isFirstMove && 
+    if (checkWhitePlayer() && isFirstMove && ((*(this->getBoard()))[7][7]) &&
         ((*(this->getBoard()))[7][7])->getName() == "R" && ((*(this->getBoard()))[7][7])->getIsFirstMove()) {
             bool isPiece = false;
             // checks if there are Pieces between the King and Rook used
@@ -106,6 +108,7 @@ std::map<Box, int> King::updateLegalMoves() {
                 // check current position is check
                 if (!(checkGame2.isWhiteKingChecked())) {
                     King tempKing3("K", this->getBoard(), checkWhitePlayer(), x, y + 1);
+                    tempKing3.setLegalMoves(tempKing3.updateLegalMoves());
                     (*(this->getBoard()))[x][y + 1] = &tempKing3;
                     (*(this->getBoard()))[x][y] = nullptr;
                     checkGame2.checkingForKingCheck();
@@ -113,6 +116,7 @@ std::map<Box, int> King::updateLegalMoves() {
                     // check between position is check
                     if (!(checkGame2.isWhiteKingChecked())) {
                         King tempKing4("K", this->getBoard(), checkWhitePlayer(), x, y + 2);
+                        tempKing4.setLegalMoves(tempKing4.updateLegalMoves());
                         (*(this->getBoard()))[x][y + 2] = &tempKing4;
                         (*(this->getBoard()))[x][y + 1] = nullptr;
                         checkGame2.checkingForKingCheck();
@@ -125,11 +129,11 @@ std::map<Box, int> King::updateLegalMoves() {
 
                             // add castling move to King
                             Box castlingKingMove(x, y + 2);
-                            legalMoves[castlingKingMove] = 2;
+                            legalMoves.insert({castlingKingMove, 2});
 
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
-                            (*(((*(this->getBoard()))[7][7])->getLegalMoves()))[castlingRookMove] = 2;
+                            ((((*(this->getBoard()))[7][7])->getLegalMoves())).insert({castlingRookMove, 2});
                         }
                     }
                 }
@@ -138,7 +142,7 @@ std::map<Box, int> King::updateLegalMoves() {
 
     // castling black player
     // checks if king is black, on it's first move, rook is at it's necessary position,and on it's first move
-    if (!checkWhitePlayer() && isFirstMove && 
+    if (!checkWhitePlayer() && isFirstMove && ((*(this->getBoard()))[0][0]) &&
         ((*(this->getBoard()))[0][0])->getName() == "r" && ((*(this->getBoard()))[0][0])->getIsFirstMove()) {
             bool isPiece = false;
             // checks if there are Pieces between the King and Rook used
@@ -160,6 +164,7 @@ std::map<Box, int> King::updateLegalMoves() {
                 // check current position is check
                 if (!(checkGame3.isBlackKingChecked())) {
                     King tempKing5("k", this->getBoard(), checkWhitePlayer(), x, y - 1);
+                    tempKing5.setLegalMoves(tempKing5.updateLegalMoves());
                     (*(this->getBoard()))[x][y - 1] = &tempKing5;
                     (*(this->getBoard()))[x][y] = nullptr;
                     checkGame3.checkingForKingCheck();
@@ -167,6 +172,7 @@ std::map<Box, int> King::updateLegalMoves() {
                     // check between position is check
                     if (!(checkGame3.isBlackKingChecked())) {
                         King tempKing6("k", this->getBoard(), checkWhitePlayer(), x, y - 2);
+                        tempKing6.setLegalMoves(tempKing6.updateLegalMoves());
                         (*(this->getBoard()))[x][y - 2] = &tempKing6;
                         (*(this->getBoard()))[x][y - 1] = nullptr;
                         checkGame3.checkingForKingCheck();
@@ -179,11 +185,11 @@ std::map<Box, int> King::updateLegalMoves() {
 
                             // add castling move to King
                             Box castlingKingMove(x, y - 2);
-                            legalMoves[castlingKingMove] = 2;
+                            legalMoves.insert({castlingKingMove, 2});
 
                             // add castling move to Rook
                             Box castlingRookMove(x, y - 1);
-                            (*(((*(this->getBoard()))[0][0])->getLegalMoves()))[castlingRookMove] = 2;
+                            ((((*(this->getBoard()))[0][0])->getLegalMoves())).insert({castlingRookMove, 2});
                         }
                     }
                 }
@@ -192,7 +198,7 @@ std::map<Box, int> King::updateLegalMoves() {
 
     // castling black player
     // checks if king is black, on it's first move, rook is at it's necessary position,and on it's first move
-    if (!checkWhitePlayer() && isFirstMove && 
+    if (!checkWhitePlayer() && isFirstMove && ((*(this->getBoard()))[0][7]) &&
         ((*(this->getBoard()))[0][7])->getName() == "r" && ((*(this->getBoard()))[0][7])->getIsFirstMove()) {
             bool isPiece = false;
             // checks if there are Pieces between the King and Rook used
@@ -214,6 +220,7 @@ std::map<Box, int> King::updateLegalMoves() {
                 // check current position is check
                 if (!(checkGame4.isBlackKingChecked())) {
                     King tempKing7("k", this->getBoard(), checkWhitePlayer(), x, y + 1);
+                    tempKing7.setLegalMoves(tempKing7.updateLegalMoves());
                     (*(this->getBoard()))[x][y + 1] = &tempKing7;
                     (*(this->getBoard()))[x][y] = nullptr;
                     checkGame4.checkingForKingCheck();
@@ -221,6 +228,7 @@ std::map<Box, int> King::updateLegalMoves() {
                     // check between position is check
                     if (!(checkGame4.isBlackKingChecked())) {
                         King tempKing8("k", this->getBoard(), checkWhitePlayer(), x, y + 2);
+                        tempKing8.setLegalMoves(tempKing8.updateLegalMoves());
                         (*(this->getBoard()))[x][y + 2] = &tempKing8;
                         (*(this->getBoard()))[x][y + 1] = nullptr;
                         checkGame4.checkingForKingCheck();
@@ -233,11 +241,11 @@ std::map<Box, int> King::updateLegalMoves() {
 
                             // add castling move to King
                             Box castlingKingMove(x, y + 2);
-                            legalMoves[castlingKingMove] = 2;
+                            legalMoves.insert({castlingKingMove, 2});
 
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
-                            (*(((*(this->getBoard()))[0][7])->getLegalMoves()))[castlingRookMove] = 2;
+                            ((((*(this->getBoard()))[0][7])->getLegalMoves())).insert({castlingRookMove, 2});
                         }
                     }
                 }
@@ -249,72 +257,72 @@ std::map<Box, int> King::updateLegalMoves() {
     if (x - 1 >= 0) {
         Box move1(x - 1, y);
         if (isLegal(move1)) {
-            legalMoves[move1] = 1;
+            legalMoves.insert({move1, 1});
         } else if (!((*(this->getBoard()))[move1.getX()][move1.getY()])) {
-            legalMoves[move1] = 0;
+            legalMoves.insert({move1, 0});
         }
     }
 
     if (x + 1 < 8) {
         Box move2(x + 1, y);
         if (isLegal(move2)) {
-            legalMoves[move2] = 1;
+            legalMoves.insert({move2, 1});
         } else if (!((*(this->getBoard()))[move2.getX()][move2.getY()])) {
-            legalMoves[move2] = 0;
+            legalMoves.insert({move2, 0});
         }
     }
 
     if (y - 1 >= 0) {
         Box move3(x, y - 1);
         if (isLegal(move3)) {
-            legalMoves[move3] = 1;
+            legalMoves.insert({move3, 1});
         } else if (!((*(this->getBoard()))[move3.getX()][move3.getY()])) {
-            legalMoves[move3] = 0;
+            legalMoves.insert({move3, 0});
         }
     }
 
     if (y + 1 < 8) {
         Box move4(x, y + 1);
         if (isLegal(move4)) {
-            legalMoves[move4] = 1;
+            legalMoves.insert({move4, 1});
         } else if (!((*(this->getBoard()))[move4.getX()][move4.getY()])) {
-            legalMoves[move4] = 0;
+            legalMoves.insert({move4, 0});
         }
     }
 
     if ((x - 1 >= 0) && (y - 1 >= 0)) {
         Box move5(x - 1, y - 1);
         if (isLegal(move5)) {
-            legalMoves[move5] = 1;
+            legalMoves.insert({move5, 1});
         } else if (!((*(this->getBoard()))[move5.getX()][move5.getY()])) {
-            legalMoves[move5] = 0;
+            legalMoves.insert({move5, 0});
         }
     }
 
     if ((x + 1 < 8) && (y - 1 >= 0)) {
         Box move6(x + 1, y - 1);
         if (isLegal(move6)) {
-            legalMoves[move6] = 1;
+            legalMoves.insert({move6, 1});
         } else if (!((*(this->getBoard()))[move6.getX()][move6.getY()])) {
-            legalMoves[move6] = 0;
+            legalMoves.insert({move6, 0});
         }
     }
 
     if ((x - 1 >= 0) && (y + 1 < 8)) {
         Box move7(x - 1, y + 1);
         if (isLegal(move7)) {
-            legalMoves[move7] = 1;
+            legalMoves.insert({move7, 1});
         } else if (!((*(this->getBoard()))[move7.getX()][move7.getY()])) {
-            legalMoves[move7] = 0;
+            legalMoves.insert({move7, 0});
         }
     }
 
     if ((x + 1 < 8) && (y + 1 < 8)) {
         Box move8(x + 1, y + 1);
         if (isLegal(move8)) {
-            legalMoves[move8] = 1;
+            legalMoves.insert({move8, 1});
         } else if (!((*(this->getBoard()))[move8.getX()][move8.getY()])) {
-            legalMoves[move8] = 0;
+            legalMoves.insert({move8, 0});
         }
     }
 

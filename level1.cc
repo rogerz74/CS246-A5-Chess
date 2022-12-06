@@ -5,12 +5,12 @@ Level1::Level1(ChessGame *subject, std::string name, std::vector<Piece *> *piece
 
 int Level1::pickMove() {
     std::cout << "Level 1 Computer makes its move." << std::endl;
-    std::map<Piece *, Box> newMap;
+    std::vector<std::pair<Piece *, Box>> newMap;
     std::vector<Piece *> pieces = *pieceArray;
     int arraySize = pieces.size();
 
     for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-        std::map<Box, int> lm = *((pieces[i])->getlegalMoves());
+        std::map<Box, int> lm = ((pieces[i])->getLegalMoves());
         for (auto &move: lm) {                     //looping through all legal moves
             Piece *tempPiece;
             if ((pieces[i])->getName() == "p" || (pieces[i])->getName() == "P") {
@@ -26,6 +26,7 @@ int Level1::pickMove() {
             } else {
                 tempPiece = new Bishop {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
             }
+            tempPiece->setLegalMoves(tempPiece->updateLegalMoves());
 
             // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
             if ((*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]) {       //move is an iterator
@@ -37,7 +38,7 @@ int Level1::pickMove() {
                 // if my king is not in check after potential move is made -> add to newMap
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap.insert({pieces[i], move.first});
+                    newMap.emplace_back(pieces[i], move.first);
                 }
 
                 // put board back into original state
@@ -52,7 +53,7 @@ int Level1::pickMove() {
                 // if my king is not in check after potential move is made
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap.insert({pieces[i], move.first});
+                    newMap.emplace_back(pieces[i], move.first);
                 }
 
                 // put board back into original state
@@ -74,7 +75,7 @@ int Level1::pickMove() {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> randompick(0, size-1); //picks random index in newMap
-    std::map<Piece *, Box> iterator item = newMap.begin();                //iterator points to {Piece*:Box}
+    std::vector<std::pair<Piece *, Box>>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
     std::advance( item, randompick(rng) );
     
     Piece *p = item->first;         //might have to change to item.first
@@ -82,14 +83,14 @@ int Level1::pickMove() {
     int bX = b.getX();
     int bY = b.getY();
 
-    p->move(p, (*(gameBoard->getBoard()))[bX][bY], bX, bY);
+    p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
     // check for pawn promotion
     int aX = p->getX();
     int aY = p->getY();
     if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
         (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
-        promotePawn(subject, pieceArray, ((*(subject->getBoard()))[aX][aY]));
+        promotePawn(((*(subject->getBoard()))[aX][aY]));
     }
 
     return 1;

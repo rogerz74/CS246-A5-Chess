@@ -34,13 +34,13 @@ std::map<Box, int> Bishop::updateLegalMoves() {
         // if there exists a piece on box (break) and it is capturable add to possible moves
         if (((*(this->getBoard()))[x - i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
 
         // location is empty
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = 1; x + i  < 8 && y - i >= 0; ++i) {
@@ -48,12 +48,12 @@ std::map<Box, int> Bishop::updateLegalMoves() {
         Box move1(x + i, y - i);
         if (((*(this->getBoard()))[x + i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
 
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = 1; x - i  >= 0 && y - i >= 0; ++i) {
@@ -61,12 +61,12 @@ std::map<Box, int> Bishop::updateLegalMoves() {
         Box move1(x - i, y - i);
         if (((*(this->getBoard()))[x - i][y - i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
         
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     for (int i = 1; x + i  < 8 && y + i < 8; ++i) {
@@ -74,12 +74,12 @@ std::map<Box, int> Bishop::updateLegalMoves() {
         Box move1(x + i, y + i);
         if (((*(this->getBoard()))[x + i][y + i])) {
             if(isLegal(move1)) {
-                legalMoves[move1] = 1;
+                legalMoves.insert({move1, 1});
             }
             break;
         }
         
-        legalMoves[move1] = 0;
+        legalMoves.insert({move1, 0});
     }
 
     return legalMoves;

@@ -45,24 +45,32 @@ bool Human::promotePawn(Piece * p, std::string promoName) {
     if (p->getName() == "P") {
         if (promoName == "R") {
             pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};  
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());
         } else if (promoName == "Q") {
             pawnPromoPiece = new Queen {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());
         } else if (promoName == "N") {
-            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};               
+            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());               
         } else if (promoName == "B") {
-            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};          
+            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());          
         } else {
             return 0;
         }
     } else {
         if (promoName == "r") {
-            pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};  
+            pawnPromoPiece = new Rook {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());  
         } else if (promoName == "q") {
             pawnPromoPiece = new Queen {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());
         } else if (promoName == "n") {
-            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};               
+            pawnPromoPiece = new Knight {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());               
         } else if (promoName == "b") {
-            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};          
+            pawnPromoPiece = new Bishop {promoName, subject->getBoard(), p->checkWhitePlayer(), p->getX(), p->getY()};
+            pawnPromoPiece->setLegalMoves(pawnPromoPiece->updateLegalMoves());          
         } else {
             return 0;
         }
@@ -80,20 +88,26 @@ bool Human::promotePawn(Piece * p, std::string promoName) {
 }
 
 int Human::pickMove() {
+    
     std::string comm;
     while (std::cin >> comm) {
         if (comm == "move") {
             std::string a;
             std::string b;
             std::string promotionP;
-            std::cin >> a >> b >> promotionP;
+            std::cin >> a >> b;
+
+            if (!(std::cin >> promotionP)) {
+                promotionP = " ";
+            }
+
             std::cout << std::endl;
             int aX = stringToCoord(a[1]);
             int aY = stringToCoord(a[0]);
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
             std::map<Piece *, Box> filteredMap;
-            std::map<Box, int> currLegalMoves = (*((*(subject->getBoard()))[aX][aY])->getLegalMoves());
+            std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->getLegalMoves());
         
             // loop through the piece's legal moves
             for (auto &move: currLegalMoves) { 
@@ -116,6 +130,7 @@ int Human::pickMove() {
                 } else {
                     tempPiece = new Bishop {currPiece->getName(), subject->getBoard(), currPiece->checkWhitePlayer(), currPiece->getX(), currPiece->getY()};          
                 }
+                tempPiece->setLegalMoves(tempPiece->updateLegalMoves());
 
                 // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
                 if ((*(subject->getBoard()))[move.first.getX()][move.first.getY()]) {
@@ -127,7 +142,7 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            filteredMap[currPiece] = move.first;
+                            filteredMap.insert({currPiece, move.first});
                     }
 
                     // put board back into original state
@@ -142,7 +157,7 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            filteredMap[currPiece] = move.first;
+                            filteredMap.insert({currPiece, move.first});
                     }
 
                     // put board back into original state
@@ -185,6 +200,7 @@ int Human::pickMove() {
             std::cout << "Invalid command! Please try again: ";
         }
     }
+    return -9999; // return if user decides to Cmd D on their turn, resulting in an incomplete game
 }
 
 
@@ -197,15 +213,17 @@ void Human::notify() {
             } else {
                 // we will NEED TO ADD A print() function to Box Class to print either a piece, a Black tile (_) or a white tile ( )
                 if ((*(subject->getBoard()))[a][b-1]) {
-                    (*(subject->getBoard()))[a][b-1]->print();
+                    std::cout << (*(subject->getBoard()))[a][b-1]->getName();
                 } else { // printing black or white
                     int val1 = a % 2;
                     int val2 = b % 2;
 
                     if (!val1 && !val2) {
-                        std::cout << " ";
-                    } else {
                         std::cout << "_";
+                    } else if (val1 == 1 && val2 == 1) {
+                        std::cout << "_";
+                    } else {
+                        std::cout << " ";
                     }
                 }
 

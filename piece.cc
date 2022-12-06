@@ -22,9 +22,6 @@ bool Piece::checkWhitePlayer() {
     return whitePlayer;
 }
 
-void Piece::print() {
-    std::cout << name;
-}
 
 void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
 
@@ -40,7 +37,7 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
     */
 
     std::map<Box, int> tempLegalMovesMap = updateLegalMoves();
-    legalMovesMap = &tempLegalMovesMap;
+    legalMovesMap = tempLegalMovesMap;
 
     const Box targetBox(newX, newY);
 
@@ -53,10 +50,10 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
     }
 
     // check if move was a King castling move
-    if (targetTile->getName() == "K" && (*legalMovesMap)[targetBox] == 2) {
+    if (targetTile->getName() == "K" && (legalMovesMap)[targetBox] == 2) {
         // to find which rook we are moving towards
         if (yCoord - newY > 0) {
-            for (auto &pair: (*((*board)[7][0]->getLegalMoves()))) {
+            for (auto &pair: (((*board)[7][0]->getLegalMoves()))) {
                 if (pair.second == 2) {
                     std::swap((*board)[7][0], (*board)[pair.first.getX()][pair.first.getY()]);
                     (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
@@ -64,7 +61,7 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
                 }
             }
         } else {
-            for (auto &pair: (*((*board)[7][7]->getLegalMoves()))) {
+            for (auto &pair: (((*board)[7][7]->getLegalMoves()))) {
                 if (pair.second == 2) {
                     std::swap((*board)[7][7], (*board)[pair.first.getX()][pair.first.getY()]);
                     (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
@@ -73,10 +70,10 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
             }
         }
 
-    } else if (targetTile->getName() == "k" && (*legalMovesMap)[targetBox] == 2) {
+    } else if (targetTile->getName() == "k" && (legalMovesMap)[targetBox] == 2) {
         // to find which rook we are moving towards
         if (yCoord - newY > 0) {
-            for (auto &pair: (*((*board)[0][0]->getLegalMoves()))) {
+            for (auto &pair: (((*board)[0][0]->getLegalMoves()))) {
                 if (pair.second == 2) {
                     std::swap((*board)[0][0], (*board)[pair.first.getX()][pair.first.getY()]);
                     (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
@@ -84,7 +81,7 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
                 }
             }
         } else {
-            for (auto &pair: (*((*board)[0][7]->getLegalMoves()))) {
+            for (auto &pair: (((*board)[0][7]->getLegalMoves()))) {
                 if (pair.second == 2) {
                     std::swap((*board)[0][7], (*board)[pair.first.getX()][pair.first.getY()]);
                     (*board)[pair.first.getX()][pair.first.getY()]->xCoord = pair.first.getX();
@@ -101,11 +98,11 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
     if (targetTile->getName() == "P" || targetTile->getName() == "p") {
             
         // check there is an en passant move in legalMovesMap
-        for (auto &pair: (*legalMovesMap)) {
+        for (auto &pair: (legalMovesMap)) {
             if (pair.second == -1) {
                 // en passant move (-1) was found
                 // delete en passant move from legalMovesArr and legalMoveStates
-                legalMovesMap->erase(pair.first);
+                legalMovesMap.erase(pair.first);
             }
         }
     }
@@ -117,7 +114,7 @@ void Piece::move(Piece *currentTile, Piece *targetTile, int newX, int newY) {
     }
 
     std::map<Box, int> tempLegalMovesMap2 = updateLegalMoves();
-    legalMovesMap = &tempLegalMovesMap2;
+    legalMovesMap = tempLegalMovesMap2;
 
 }
 
