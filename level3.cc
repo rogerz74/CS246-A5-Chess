@@ -183,10 +183,10 @@ int Level3::pickMove() {
     }
 
     //opponent's pieces
-    std::vector<Piece *> oppPieces = *opponentArray;
+    std::vector<Piece *> oppPieces = *oppArray;
     int oppArraySize = oppPieces.size();
     for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
-        (oppPieces[i])->setLegalMoves((oppPieces[i])->updateLegalMoves());
+        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
     }
 
     return 1;
