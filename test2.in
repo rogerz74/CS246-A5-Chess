@@ -1,0 +1,8 @@
+setup
++ K e1
++ k e8
+done
+game human computer[1]
+move e1 e2
+move e2 d2
+
