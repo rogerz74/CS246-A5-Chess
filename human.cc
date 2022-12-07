@@ -11,9 +11,8 @@
 #include "knight.h"
 #include "bishop.h"
 
-Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray): subject{subject}, name{name}, pieceArray{pieceArray} {
-    subject->attach(this);
-}
+Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *opponentArray):
+                subject{subject}, name{name}, pieceArray{pieceArray}, opponentArray{opponentArray} { subject->attach(this); }
 
 Human::~Human() {
     subject->detach(this);
@@ -198,6 +197,19 @@ int Human::pickMove() {
                 if (filteredMap.find(moveBox) != filteredMap.end()) { // need to find if the moveBox is possible or not
                     // move
                     (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
+                    
+                    //own pieces
+                    std::vector<Piece *> pieces = *pieceArray;
+                    int arraySize = pieces.size();
+                    for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
+                        (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
+                    }
+                    //opponent's pieces
+                    std::vector<Piece *> oppPieces = *opponentArray;
+                    int oppArraySize = oppPieces.size();
+                    for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
+                        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
+                    }
 
                     // check for pawn promotion
                     if ((((*(subject->getBoard()))[bX][bY])->getName() == "P" && ((*(subject->getBoard()))[bX][bY])->getX() == 0) || 

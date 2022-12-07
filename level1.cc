@@ -85,6 +85,21 @@ int Level1::pickMove() {
 
     p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
 
+    //at this point, a move has certainly been made with elements of newMap.
+    //we need to update every piece's legal moves.
+
+    //the color's own pieces
+    for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
+        (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
+    }
+
+    //opponent's pieces
+    std::vector<Piece *> oppPieces = *opponentArray;
+    int oppArraySize = oppPieces.size();
+    for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
+        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
+    }
+
     // check for pawn promotion
     int aX = p->getX();
     int aY = p->getY();
