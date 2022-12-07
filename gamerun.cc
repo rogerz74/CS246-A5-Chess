@@ -22,9 +22,10 @@ int gameRun(Observer *white, Observer *black, ChessGame *gameBoard) {
                 if (gameBoard->isWhiteKingChecked() == 1) {
                     toReturn = -1;              //no legal moves remaining + checked
                     cout << "No move available due to Checkmate!" << endl;
+                    return -1;
                 } else {
                     toReturn = 0;               //no legal moves remaining
-                    cout << "No move available due to Stalemate!" << endl;
+                    return 0;
                 }
             } else if (status == 1) {                            //status is just 1
                 white->notify();
