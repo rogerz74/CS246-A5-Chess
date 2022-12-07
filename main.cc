@@ -87,7 +87,7 @@ bool gameInstance(scoreBoard & tracker) {
 
 
             if (wPlayer == "human") {
-                Human * humanPlayer = new Human {&game, "human", &whitePieces, &blackPieces};
+                Human * humanPlayer = new Human {&game, "human", &whitePieces};
                 observerArr.emplace_back(humanPlayer);
             } else if (wPlayer == "computer[1]") {
                 Computer * level1Player = new Computer {&game, "level1", &whitePieces, &blackPieces};
