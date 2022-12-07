@@ -11,8 +11,8 @@
 #include "knight.h"
 #include "bishop.h"
 
-Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *opponentArray):
-                subject{subject}, name{name}, pieceArray{pieceArray}, opponentArray{opponentArray} { subject->attach(this); }
+Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray):
+                subject{subject}, name{name}, pieceArray{pieceArray} { subject->attach(this); }
 
 Human::~Human() {
     subject->detach(this);
@@ -118,13 +118,11 @@ int Human::pickMove() {
             std::map<Box, Piece *> filteredMap;
             std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->updateLegalMoves());
         
-            std::cout << "size of legal moves for piece: " << currLegalMoves.size() <<std::endl;
+
 
             // loop through the piece's legal moves
             for (auto &move: currLegalMoves) { 
 
-                std::cout << "move XCoords (vertical) " << 8 - move.first.getX() <<std::endl;
-                std::cout << "move YCoords (horizontal) " << 1 + move.first.getY() <<std::endl;
                 // if move does not put player's King in check, add to filteredMap
                 // temp so we do not loose the current piece we are trying to move
                 Piece *currPiece = (*(subject->getBoard()))[aX][aY];
@@ -191,8 +189,6 @@ int Human::pickMove() {
                 return 0;
             } else {
                 bool state = false;
-                int moveX;
-                int moveY;
                 int legalMoveValuation; //the int value associated with the particular legal move
                 for (auto i: filteredMap) {
                     if (i.first.getX() == bX && i.first.getY() == bY) {
@@ -214,6 +210,17 @@ int Human::pickMove() {
                     // move the piece
                     (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
                     
+                    if (legalMoveValuation == 2 && aX == 7 && bY == aY + 2) { // White Castling to the Right, Move Rook
+                        (*(subject->getBoard()))[7][7]->move((*(subject->getBoard()))[7][7], (*(subject->getBoard()))[ bX ][ bY-1], bX, bY - 1);
+                    } else if (legalMoveValuation == 2 && aX == 7 && bY == aY - 2) {
+                        (*(subject->getBoard()))[7][0]->move((*(subject->getBoard()))[7][0], (*(subject->getBoard()))[ bX ][ bY+1], bX, bY + 1);
+                    } else if (legalMoveValuation == 2 && aX == 0 && bY == aY + 2) {
+                        (*(subject->getBoard()))[0][7]->move((*(subject->getBoard()))[0][7], (*(subject->getBoard()))[ bX ][ bY-1], bX, bY - 1);
+                    } else if (legalMoveValuation == 2 && aX == 0 && bY == aY - 2) {
+                        (*(subject->getBoard()))[0][0]->move((*(subject->getBoard()))[0][0], (*(subject->getBoard()))[ bX ][ bY+1], bX, bY + 1);
+                    }
+
+                    
                     //own pieces
                     std::vector<Piece *> pieces = *pieceArray;
                     int arraySize = pieces.size();
@@ -227,7 +234,6 @@ int Human::pickMove() {
                         (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
                     }
 
-                    if (legalMoveValuation)
 
 
                     // check for pawn promotion
