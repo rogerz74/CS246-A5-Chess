@@ -117,7 +117,7 @@ int Human::pickMove() {
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
             std::map<Box, Piece *> filteredMap;
-            std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->getLegalMoves());
+            std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->updateLegalMoves());
         
             std::cout << "size of legal moves for piece: " << currLegalMoves.size() <<std::endl;
 
@@ -166,7 +166,6 @@ int Human::pickMove() {
 
                 } else { // move is NOT A CAPTURE
 
-                    std::cout << "move is not a capture" << std::endl;
                     (*(subject->getBoard()))[move.first.getX()][move.first.getY()] = tempPiece;
                     (*(subject->getBoard()))[aX][aY] = nullptr;
                     subject->checkingForKingCheck();
@@ -174,7 +173,6 @@ int Human::pickMove() {
                     // if my king is not in check after potential move is made -> add to filteredMap
                     if ((currPiece->checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                         (!(currPiece->checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                            std::cout << "new move (not capture) is inserted!!" << std::endl;
                             filteredMap.insert({move.first, currPiece});
                     }
 
@@ -193,11 +191,32 @@ int Human::pickMove() {
             if (filteredMap.size() == 0) {
                 return 0;
             } else {
+                bool state = false;
+                int moveX;
+                int moveY;
+                int legalMoveValuation; //the int value associated with the particular legal move
+                for (auto i: filteredMap) {
+                    if (i.first.getX() == bX && i.first.getY() == bY) {
+                        state = true;
+
+                        for (auto m: currLegalMoves) { //finding the int value associated with the particular legal move
+                            if (m.first.getX() == bX && m.first.getY() == bY ) {
+                                legalMoveValuation = m.second;
+                                break;
+                            }
+                        }
+                         
+                        break;
+                    }
+                }
+
                 // check if move given by user is in filteredMap
-                Box moveBox(bX, bY);
-                if (filteredMap.find(moveBox) != filteredMap.end()) { // need to find if the moveBox is possible or not
-                    // move
+                if (state) { // need to find if the moveBox is possible or not
+                    // move the piece
                     (*(subject->getBoard()))[aX][aY]->move((*(subject->getBoard()))[aX][aY], (*(subject->getBoard()))[bX][bY], bX, bY);
+
+                    if (legalMoveValuation)
+
 
                     // check for pawn promotion
                     if ((((*(subject->getBoard()))[bX][bY])->getName() == "P" && ((*(subject->getBoard()))[bX][bY])->getX() == 0) || 

@@ -20,12 +20,12 @@ bool Box::operator== (const Box & b1) const {
 }
 
  bool Box::operator< (const Box & b1) const {
-    if (xCoord < b1.getX()) {
-        return true;
-    } else if (yCoord < b1.getY()) {
+
+    if (xCoord >= b1.getX() && yCoord >= b1.getY()) {
+        return false;
+    } else {
         return true;
     }
-    return false;
  }
 
 Box::~Box() {}

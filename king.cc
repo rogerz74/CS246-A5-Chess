@@ -51,18 +51,16 @@ std::map<Box, int> King::updateLegalMoves() {
 
                 // check current position is check
                 if (!(checkGame1.isWhiteKingChecked())) {
-                    King tempKing1("K", this->getBoard(), checkWhitePlayer(), x, y - 1);
-                    tempKing1.setLegalMoves(tempKing1.updateLegalMoves());
-                    (*(this->getBoard()))[x][y - 1] = &tempKing1;
-                    (*(this->getBoard()))[x][y] = nullptr;
+                    Piece * tmp = (*(this->getBoard()))[x][y];
+                    (*(checkGame1.getBoard()))[x][y - 1] = tmp;
+                    (*(checkGame1.getBoard()))[x][y] = nullptr;
                     checkGame1.checkingForKingCheck();
 
                     // check between position is check
                     if (!(checkGame1.isWhiteKingChecked())) {
-                        King tempKing2("K", this->getBoard(), checkWhitePlayer(), x, y - 2);
-                        tempKing2.setLegalMoves(tempKing2.updateLegalMoves());
-                        (*(this->getBoard()))[x][y - 2] = &tempKing2;
-                        (*(this->getBoard()))[x][y - 1] = nullptr;
+                        Piece * tmp2 = (*(this->getBoard()))[x][y-1];
+                        (*(checkGame1.getBoard()))[x][y - 2] = tmp2;
+                        (*(checkGame1.getBoard()))[x][y-1] = nullptr;
                         checkGame1.checkingForKingCheck();
                     
                         // check final position is check
@@ -86,51 +84,54 @@ std::map<Box, int> King::updateLegalMoves() {
 
     // castling
     // checks if king is white, on it's first move, rook is at it's necessary position,and on it's first move
+
     if (checkWhitePlayer() && isFirstMove && ((*(this->getBoard()))[7][7]) &&
         ((*(this->getBoard()))[7][7])->getName() == "R" && ((*(this->getBoard()))[7][7])->getIsFirstMove()) {
             bool isPiece = false;
             // checks if there are Pieces between the King and Rook used
-            for (int i = 1; y + i < 8 && !isPiece; ++i) {
+            for (int i = 1; y + i < 7 && !isPiece; ++i) {
                 if ((*(this->getBoard()))[x][y + i]) {
                     isPiece = true;
                     break;
                 }
             }
-            
+
             if (!isPiece) {
                 // checks if king is in check in current position, final position, and position in between 
                 // (x, y), (x, y + 1), (x, y + 2)
-
+                std::cout << "inside checking loop" <<std::endl;
                 // current position
                 ChessGame checkGame2(this->getBoard());
                 checkGame2.checkingForKingCheck();
 
                 // check current position is check
                 if (!(checkGame2.isWhiteKingChecked())) {
-                    King tempKing3("K", this->getBoard(), checkWhitePlayer(), x, y + 1);
-                    tempKing3.setLegalMoves(tempKing3.updateLegalMoves());
-                    (*(this->getBoard()))[x][y + 1] = &tempKing3;
-                    (*(this->getBoard()))[x][y] = nullptr;
+
+                    Piece * tmp = (*(this->getBoard()))[x][y];
+                    (*(checkGame2.getBoard()))[x][y + 1] = tmp;
+                    (*(checkGame2.getBoard()))[x][y] = nullptr;
                     checkGame2.checkingForKingCheck();
 
                     // check between position is check
                     if (!(checkGame2.isWhiteKingChecked())) {
-                        King tempKing4("K", this->getBoard(), checkWhitePlayer(), x, y + 2);
-                        tempKing4.setLegalMoves(tempKing4.updateLegalMoves());
-                        (*(this->getBoard()))[x][y + 2] = &tempKing4;
-                        (*(this->getBoard()))[x][y + 1] = nullptr;
+
+                        Piece * tmp2 = (*(this->getBoard()))[x][y+1];
+                        (*(checkGame2.getBoard()))[x][y + 2] = tmp2;
+                        (*(checkGame2.getBoard()))[x][y+1] = nullptr;
                         checkGame2.checkingForKingCheck();
                     
                         // check final position is check
                         if (!(checkGame2.isWhiteKingChecked())) {
-                            // put board back into original state
+
                             (*(this->getBoard()))[x][y + 2] = nullptr;
                             (*(this->getBoard()))[x][y] = this;
 
                             // add castling move to King
                             Box castlingKingMove(x, y + 2);
+                            std::cout << "Inserted right castling" << std::endl;
+                            std::cout << legalMoves.size() << std::endl;
                             legalMoves.insert({castlingKingMove, 2});
-
+                            std::cout << legalMoves.size() << std::endl;
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
                             ((((*(this->getBoard()))[7][7])->getLegalMoves())).insert({castlingRookMove, 2});
@@ -163,18 +164,18 @@ std::map<Box, int> King::updateLegalMoves() {
 
                 // check current position is check
                 if (!(checkGame3.isBlackKingChecked())) {
-                    King tempKing5("k", this->getBoard(), checkWhitePlayer(), x, y - 1);
-                    tempKing5.setLegalMoves(tempKing5.updateLegalMoves());
-                    (*(this->getBoard()))[x][y - 1] = &tempKing5;
-                    (*(this->getBoard()))[x][y] = nullptr;
+
+                    Piece * tmp = (*(this->getBoard()))[x][y];
+                    (*(checkGame3.getBoard()))[x][y - 1] = tmp;
+                    (*(checkGame3.getBoard()))[x][y] = nullptr;
                     checkGame3.checkingForKingCheck();
 
                     // check between position is check
                     if (!(checkGame3.isBlackKingChecked())) {
-                        King tempKing6("k", this->getBoard(), checkWhitePlayer(), x, y - 2);
-                        tempKing6.setLegalMoves(tempKing6.updateLegalMoves());
-                        (*(this->getBoard()))[x][y - 2] = &tempKing6;
-                        (*(this->getBoard()))[x][y - 1] = nullptr;
+
+                        Piece * tmp2 = (*(this->getBoard()))[x][y-1];
+                        (*(checkGame3.getBoard()))[x][y - 2] = tmp2;
+                        (*(checkGame3.getBoard()))[x][y-1] = nullptr;
                         checkGame3.checkingForKingCheck();
                     
                         // check final position is check
@@ -202,7 +203,7 @@ std::map<Box, int> King::updateLegalMoves() {
         ((*(this->getBoard()))[0][7])->getName() == "r" && ((*(this->getBoard()))[0][7])->getIsFirstMove()) {
             bool isPiece = false;
             // checks if there are Pieces between the King and Rook used
-            for (int i = 1; y + i < 8 && !isPiece; ++i) {
+            for (int i = 1; y + i < 7 && !isPiece; ++i) {
                 if ((*(this->getBoard()))[x][y + i]) {
                     isPiece = true;
                     break;
@@ -219,18 +220,17 @@ std::map<Box, int> King::updateLegalMoves() {
 
                 // check current position is check
                 if (!(checkGame4.isBlackKingChecked())) {
-                    King tempKing7("k", this->getBoard(), checkWhitePlayer(), x, y + 1);
-                    tempKing7.setLegalMoves(tempKing7.updateLegalMoves());
-                    (*(this->getBoard()))[x][y + 1] = &tempKing7;
-                    (*(this->getBoard()))[x][y] = nullptr;
+                    Piece * tmp = (*(this->getBoard()))[x][y];
+                    (*(checkGame4.getBoard()))[x][y + 1] = tmp;
+                    (*(checkGame4.getBoard()))[x][y] = nullptr;
                     checkGame4.checkingForKingCheck();
 
                     // check between position is check
                     if (!(checkGame4.isBlackKingChecked())) {
-                        King tempKing8("k", this->getBoard(), checkWhitePlayer(), x, y + 2);
-                        tempKing8.setLegalMoves(tempKing8.updateLegalMoves());
-                        (*(this->getBoard()))[x][y + 2] = &tempKing8;
-                        (*(this->getBoard()))[x][y + 1] = nullptr;
+
+                        Piece * tmp2 = (*(this->getBoard()))[x][y+1];
+                        (*(checkGame4.getBoard()))[x][y + 2] = tmp2;
+                        (*(checkGame4.getBoard()))[x][y+1] = nullptr;
                         checkGame4.checkingForKingCheck();
                     
                         // check final position is check
@@ -324,6 +324,6 @@ std::map<Box, int> King::updateLegalMoves() {
             legalMoves.insert({move8, 0});
         }
     }
-
+    std::cout << legalMoves.size() << std::endl;
     return legalMoves;
 }
