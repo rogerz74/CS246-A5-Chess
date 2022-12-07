@@ -19,7 +19,6 @@ board field seems weird. Hence, it has been RENAMED!!!
 
 class ChessGame: public Subject {
     std::vector< std::vector < Piece* >> * board; // a 2D array of piece pointers
-    std::vector <Record> history;
     bool whiteKingChecked = false;
     bool blackKingChecked = false;
     bool blackKingPresent = false;
