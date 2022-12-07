@@ -47,30 +47,6 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
     } 
 }
 
-/*
-Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *&pieceSet, std::vector<Piece *> *&oppPiecesArr) {
-
-    if (player == "human") {
-        Human * humanPlayer = new Human {theGame, "human", pieceSet, oppPiecesArr};
-        return humanPlayer; 
-    } else if (player == "computer[1]") {
-        Level1 * level1Player = new Level1 {theGame, "level1", pieceSet, oppPiecesArr};
-        Computer * observerPtr = level1Player;
-        return observerPtr;
-    } else if (player == "computer[2]") {
-        Level2 * level2Player = new Level2 {theGame, "level2", pieceSet, oppPiecesArr};
-        Computer * observerPtr = level2Player;
-        return observerPtr;
-    } else if (player == "computer[3]") {
-        Level3 * level3Player = new Level3 {theGame, "level3", pieceSet, oppPiecesArr};
-        Computer * observerPtr = level3Player;
-        return observerPtr;
-    }else {
-        std::cout << "Invalid Player Given!" << std::endl;      //make it ask again?
-        return nullptr;
-    }
-}*/
-
 
 void gameInstance(scoreBoard & tracker) {
 
@@ -112,7 +88,6 @@ void gameInstance(scoreBoard & tracker) {
                 defaultSetup(&game, whitePieces, blackPieces);
             }
 
-            //std::cout << whitePieces.size() << ", " << blackPieces.size() <<std::endl;
 
             if (wPlayer == "human") {
                 Human * humanPlayer = new Human {&game, "human", &whitePieces, &blackPieces};

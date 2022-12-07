@@ -27,7 +27,6 @@ int Computer::pickMove() {
         std::vector<Piece *> pieces = *pieceArray;
         int arraySize = pieces.size();
 
-        std::cout << arraySize << std::endl;
 
         for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
             std::map<Box, int> lm = ((pieces[i])->updateLegalMoves());
@@ -52,13 +51,9 @@ int Computer::pickMove() {
                     }
 
                     // put board back into original state
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]->move(
-                        (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()], 
-                        (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()], 
-                        (*(pieces[i])).getX(), 
-                        (*(pieces[i])).getY());
-
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
                     (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = temp;
+
 
                 } else {
 
@@ -103,11 +98,16 @@ int Computer::pickMove() {
         int bX = b.getX();
         int bY = b.getY();
         bool status = true;
+
+        Piece * movedPiece;
+
         for (int a = 0; a < 8 && status == true; a++) {
             for (int b = 0; b < 8 && status == true; b ++) {
                 if ((*(subject->getBoard()))[a][b]) {
                     if ((*(subject->getBoard()))[a][b]->getX() == p->getX() && (*(subject->getBoard()))[a][b]->getY() == p->getY()) {
-                        (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY );
+                        (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY);
+                        movedPiece = (*(subject->getBoard()))[bX][bY];
+                        status = false;
                     }  
                 }
 
@@ -117,22 +117,20 @@ int Computer::pickMove() {
         //at this point, a move has certainly been made with elements of newMap.
         //we need to update every piece's legal moves.
 
-        //the color's own pieces
-        for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-            (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
+        for (int a = 0; a < 8; a++) {
+            for (int b = 0; b < 8; b ++) {
+                if ((*(subject->getBoard()))[a][b]) {
+                    (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                }
+
+            }
         }
 
-        //opponent's pieces
-        std::vector<Piece *> oppPieces = *oppArray;
-        int oppArraySize = oppPieces.size();
-        for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
-            (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
-        }
 
         // check for pawn promotion
-        if (p) {
-            int aX = p->getX();
-            int aY = p->getY();
+        if (movedPiece) {
+            int aX = movedPiece->getX();
+            int aY = movedPiece->getY();
             if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
                 (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
                 promotePawn(((*(subject->getBoard()))[aX][aY]));
@@ -156,27 +154,14 @@ int Computer::pickMove() {
 
             for (auto &move: lm) {                     //looping through all legal moves
 
-                Piece *tempPiece;
-                if ((pieces[i])->getName() == "p" || (pieces[i])->getName() == "P") {
-                    tempPiece = new Pawn {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
-                } else if ((pieces[i])->getName() == "r" || (pieces[i])->getName() == "R") {
-                    tempPiece = new Rook {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
-                } else if ((pieces[i])->getName() == "q" || (pieces[i])->getName() == "Q") {
-                    tempPiece = new Queen {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
-                } else if ((pieces[i])->getName() == "k" || (pieces[i])->getName() == "K") {
-                    tempPiece = new King {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
-                } else if ((pieces[i])->getName() == "n" || (pieces[i])->getName() == "N") {
-                    tempPiece = new Knight {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
-                } else {
-                    tempPiece = new Bishop {(pieces[i])->getName(), subject->getBoard(), (pieces[i])->checkWhitePlayer(), (pieces[i])->getX(), (pieces[i])->getY()};
-                }
-                tempPiece->setLegalMoves(tempPiece->updateLegalMoves());
-
                 // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
                 if ((*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]) {       //move is an iterator
-                    Piece *temp = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = tempPiece;
-                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = nullptr;
+                    //current piece on the board at the location wanting to move to
+                    Piece *temp = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]; 
+
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()];
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = temp;
+
                     subject->checkingForKingCheck();
 
                     // if my king is not in check after potential move is made -> add to newMap
@@ -193,12 +178,13 @@ int Computer::pickMove() {
                     }
 
                     // put board back into original state
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = temp;
-                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = pieces[i];
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = temp;
 
                 } else {
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = tempPiece;
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()];
                     (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = nullptr;
+
                     subject->checkingForKingCheck();
 
                     // if my king is not in check after potential move is made -> add to according filtered map
@@ -215,13 +201,12 @@ int Computer::pickMove() {
                     }
 
                     // put board back into original state
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = nullptr;
-                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = pieces[i];
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = nullptr;
                 }
 
                 // put back isBlackKingChecked() and isWhiteKingChecked() to original state
                 subject->checkingForKingCheck();                    
-                delete tempPiece;
 
             }
         }
@@ -242,11 +227,49 @@ int Computer::pickMove() {
             std::vector<std::pair<Piece *, Box>>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
             std::advance( item, randompick(rng) );
             
-            p = item->first;
-            Box b = item->second;
+            p = item->first;         //might have to change to item.first
+            Box b = item->second;           //might have to change to item.second
             int bX = b.getX();
             int bY = b.getY();
-            p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+            bool status = true;
+
+            Piece * movedPiece;
+
+            for (int a = 0; a < 8 && status == true; a++) {
+                for (int b = 0; b < 8 && status == true; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        if ((*(subject->getBoard()))[a][b]->getX() == p->getX() && (*(subject->getBoard()))[a][b]->getY() == p->getY()) {
+                            (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY);
+                            movedPiece = (*(subject->getBoard()))[bX][bY];
+                            status = false;
+                        }  
+                    }
+
+                }
+            }
+
+            //at this point, a move has certainly been made with elements of newMap.
+            //we need to update every piece's legal moves.
+
+            for (int a = 0; a < 8; a++) {
+                for (int b = 0; b < 8; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                    }
+
+                }
+            }
+
+
+            // check for pawn promotion
+            if (movedPiece) {
+                int aX = movedPiece->getX();
+                int aY = movedPiece->getY();
+                if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                    (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                    promotePawn(((*(subject->getBoard()))[aX][aY]));
+                }  
+            }
 
         } else {                                                //selecting random element from filteredMap
 
@@ -256,37 +279,53 @@ int Computer::pickMove() {
             std::vector<std::pair<Piece *, Box>>::iterator item = filteredMap.begin();                //iterator points to {Piece*:Box}
             std::advance( item, randompick(rng) );
             
-            p = item->first;
-            Box b = item->second;   
+            p = item->first;         //might have to change to item.first
+            Box b = item->second;           //might have to change to item.second
             int bX = b.getX();
             int bY = b.getY();
-            p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+            bool status = true;
+
+            Piece * movedPiece;
+
+            for (int a = 0; a < 8 && status == true; a++) {
+                for (int b = 0; b < 8 && status == true; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        if ((*(subject->getBoard()))[a][b]->getX() == p->getX() && (*(subject->getBoard()))[a][b]->getY() == p->getY()) {
+                            (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY);
+                            movedPiece = (*(subject->getBoard()))[bX][bY];
+                            status = false;
+                        }  
+                    }
+
+                }
+            }
+
+            //at this point, a move has certainly been made with elements of newMap.
+            //we need to update every piece's legal moves.
+
+            for (int a = 0; a < 8; a++) {
+                for (int b = 0; b < 8; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                    }
+
+                }
+            }
+
+
+            // check for pawn promotion
+            if (movedPiece) {
+                int aX = movedPiece->getX();
+                int aY = movedPiece->getY();
+                if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                    (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                    promotePawn(((*(subject->getBoard()))[aX][aY]));
+                }  
+            }
 
         }
-    
-        //at this point, a move has certainly been made, either with elements of newMap or filteredMap.
-        //we need to update every piece's legal moves.
 
-        //the color's own pieces
-        //the color's own pieces
-        for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-            (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
-        }
 
-        //opponent's pieces
-        std::vector<Piece *> oppPieces = *oppArray;
-        int oppArraySize = oppPieces.size();
-        for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
-            (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
-        }
-        
-        // check for pawn promotion
-        int aX = p->getX();
-        int aY = p->getY();
-        if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
-            (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
-            promotePawn(((*(subject->getBoard()))[aX][aY]));
-        }
         return 1;
 
 
@@ -322,28 +361,13 @@ int Computer::pickMove() {
             std::map<Box, int> potentialMoves = (((*(pieces[i])).getLegalMoves()));
             for (auto &move: potentialMoves) { 
 
-                // create temporary pieces that will be moved around and then deleted
-                Piece *tempPiece;
-                if (((*pieces[i])).getName() == "p" || (*(pieces[i])).getName() == "P") {
-                    tempPiece = new Pawn {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};
-                } else if ((*(pieces[i])).getName() == "r" || (*(pieces[i])).getName() == "R") {
-                    tempPiece = new Rook {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};  
-                } else if ((*(pieces[i])).getName() == "q" || (*(pieces[i])).getName() == "Q") {
-                    tempPiece = new Queen {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};
-                } else if ((*(pieces[i])).getName() == "k" || (*(pieces[i])).getName() == "K") {
-                    tempPiece = new King {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};             
-                } else if ((*(pieces[i])).getName() == "n" || (*(pieces[i])).getName() == "N") {
-                    tempPiece = new Knight {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};               
-                } else {
-                    tempPiece = new Bishop {(*(pieces[i])).getName(), subject->getBoard(), (*(pieces[i])).checkWhitePlayer(), (*(pieces[i])).getX(), (*(pieces[i])).getY()};          
-                }
-                tempPiece->setLegalMoves(tempPiece->updateLegalMoves());
-
                 // if the current move is a capture we need to not loose the piece it will capture and bring it back after checking for king check
                 if ((*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]) {
-                    Piece *temp = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = tempPiece;
-                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = nullptr;
+                    Piece *temp = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()]; 
+
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()];
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = temp;
+
                     subject->checkingForKingCheck();
 
                     // if my king is not in check after potential move is made -> add to respective maps
@@ -365,12 +389,13 @@ int Computer::pickMove() {
                     }
 
                     // put board back into original state
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = temp;
-                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = &(*(pieces[i]));
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = temp;
 
                 } else {
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = tempPiece;
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()];
                     (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = nullptr;
+
                     subject->checkingForKingCheck();
 
                     // if my king is not in check after potential move is made -> add to according filtered map
@@ -392,14 +417,13 @@ int Computer::pickMove() {
                     }
                     
                     // put board back into original state
-                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getX()] = nullptr;
-                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = &(*(pieces[i]));
+                    (*(subject->getBoard()))[(*(pieces[i])).getX()][(*(pieces[i])).getY()] = (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()];
+                    (*(subject->getBoard()))[(move.first).getX()][(move.first).getY()] = nullptr;
                 }
 
                 // put back isBlackKingChecked() and isWhiteKingChecked() to original state
                 subject->checkingForKingCheck();                    
                         
-                delete tempPiece;
         }
     }
 
@@ -413,16 +437,50 @@ int Computer::pickMove() {
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, size - 1); //picks random index in filteredMap
         auto item = filteredMap.begin();                //iterator points to {Piece*:Box}
         std::advance(item, randompick(rng));
-        Piece *p = item->first;
-        Box b = item->second;   
-        int bX = b.getX();
-        int bY = b.getY();
+            Piece * p = item->first;         //might have to change to item.first
+            Box b = item->second;           //might have to change to item.second
+            int bX = b.getX();
+            int bY = b.getY();
+            bool status = true;
 
-        p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+            Piece * movedPiece;
 
-        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(p);
-        }
+            for (int a = 0; a < 8 && status == true; a++) {
+                for (int b = 0; b < 8 && status == true; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        if ((*(subject->getBoard()))[a][b]->getX() == p->getX() && (*(subject->getBoard()))[a][b]->getY() == p->getY()) {
+                            (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY);
+                            movedPiece = (*(subject->getBoard()))[bX][bY];
+                            status = false;
+                        }  
+                    }
+
+                }
+            }
+
+            //at this point, a move has certainly been made with elements of newMap.
+            //we need to update every piece's legal moves.
+
+            for (int a = 0; a < 8; a++) {
+                for (int b = 0; b < 8; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                    }
+
+                }
+            }
+
+
+            // check for pawn promotion
+            if (movedPiece) {
+                int aX = movedPiece->getX();
+                int aY = movedPiece->getY();
+                if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                    (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                    promotePawn(((*(subject->getBoard()))[aX][aY]));
+                }  
+            }
+
 
     } else if (filteredMap2.size() > 0) {
         // there are no moves to avoid caputre so we randomly pick a capture or check
@@ -431,16 +489,49 @@ int Computer::pickMove() {
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, size - 1); //picks random index in filteredMap
         auto item = filteredMap2.begin();                //iterator points to {Piece*:Box}
         std::advance(item, randompick(rng));
-        Piece *p = item->first;
-        Box b = item->second;   
-        int bX = b.getX();
-        int bY = b.getY();
+            Piece * p = item->first;         //might have to change to item.first
+            Box b = item->second;           //might have to change to item.second
+            int bX = b.getX();
+            int bY = b.getY();
+            bool status = true;
 
-        p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+            Piece * movedPiece;
 
-        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(p);
-        }
+            for (int a = 0; a < 8 && status == true; a++) {
+                for (int b = 0; b < 8 && status == true; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        if ((*(subject->getBoard()))[a][b]->getX() == p->getX() && (*(subject->getBoard()))[a][b]->getY() == p->getY()) {
+                            (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY);
+                            movedPiece = (*(subject->getBoard()))[bX][bY];
+                            status = false;
+                        }  
+                    }
+
+                }
+            }
+
+            //at this point, a move has certainly been made with elements of newMap.
+            //we need to update every piece's legal moves.
+
+            for (int a = 0; a < 8; a++) {
+                for (int b = 0; b < 8; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                    }
+
+                }
+            }
+
+
+            // check for pawn promotion
+            if (movedPiece) {
+                int aX = movedPiece->getX();
+                int aY = movedPiece->getY();
+                if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                    (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                    promotePawn(((*(subject->getBoard()))[aX][aY]));
+                }  
+            }
         
     } else if (regularMap.size() > 0) {
         // there are no moves to avoid caputre, capture, or check - so we randomly pick a regular move
@@ -449,33 +540,54 @@ int Computer::pickMove() {
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, size - 1); //picks random index in filteredMap
         auto item = regularMap.begin();                //iterator points to {Piece*:Box}
         std::advance(item, randompick(rng));
-        Piece *p = item->first;
-        Box b = item->second;   
-        int bX = b.getX();
-        int bY = b.getY();
+            Piece * p = item->first;         //might have to change to item.first
+            Box b = item->second;           //might have to change to item.second
+            int bX = b.getX();
+            int bY = b.getY();
+            bool status = true;
 
-        p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+            Piece * movedPiece;
 
-        if ((p->getName() == "P" && p->getX() == 0) || (p->getName() == "p" && p->getX() == 7)) {
-            promotePawn(p);
-        }
+            for (int a = 0; a < 8 && status == true; a++) {
+                for (int b = 0; b < 8 && status == true; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        if ((*(subject->getBoard()))[a][b]->getX() == p->getX() && (*(subject->getBoard()))[a][b]->getY() == p->getY()) {
+                            (*(subject->getBoard()))[a][b]->move((*(subject->getBoard()))[a][b], (*(subject->getBoard()))[bX][bY], bX, bY);
+                            movedPiece = (*(subject->getBoard()))[bX][bY];
+                            status = false;
+                        }  
+                    }
+
+                }
+            }
+
+            //at this point, a move has certainly been made with elements of newMap.
+            //we need to update every piece's legal moves.
+
+            for (int a = 0; a < 8; a++) {
+                for (int b = 0; b < 8; b ++) {
+                    if ((*(subject->getBoard()))[a][b]) {
+                        (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                    }
+
+                }
+            }
+
+
+            // check for pawn promotion
+            if (movedPiece) {
+                int aX = movedPiece->getX();
+                int aY = movedPiece->getY();
+                if ((((*(subject->getBoard()))[aX][aY])->getName() == "P" && ((*(subject->getBoard()))[aX][aY])->getX() == 0) || 
+                    (((*(subject->getBoard()))[aX][aY])->getName() == "p" && ((*(subject->getBoard()))[aX][aY])->getX() == 7)) {
+                    promotePawn(((*(subject->getBoard()))[aX][aY]));
+                }  
+            }
 
     } else {
         // no legal moves
         // stalemate or checkmate
         return 0;
-    }
-
-    //the color's own pieces
-    for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-        (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
-    }
-
-    //opponent's pieces
-    std::vector<Piece *> oppPieces = *oppArray;
-    int oppArraySize = oppPieces.size();
-    for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
-        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
     }
 
     return 1;
@@ -513,7 +625,8 @@ void Computer::notify() {
     }
     std::cout << std::endl;
     std::cout << "  abcdefgh" << std::endl; // printing the bottom a-h column value
-
+    std::cout << std::endl;
+    
 }
 
 void Computer::promotePawn(Piece * p) {

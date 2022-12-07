@@ -114,10 +114,7 @@ int Human::pickMove() {
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
             std::map<Box, Piece *> filteredMap;
-            (((*(subject->getBoard()))[aX][aY])->setLegalMoves( (((*(subject->getBoard()))[aX][aY])->updateLegalMoves())  ));
             std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->updateLegalMoves());
-        
-
 
             // loop through the piece's legal moves
             for (auto &move: currLegalMoves) { 
@@ -219,21 +216,14 @@ int Human::pickMove() {
                         (*(subject->getBoard()))[0][0]->move((*(subject->getBoard()))[0][0], (*(subject->getBoard()))[ bX ][ bY+1], bX, bY + 1);
                     }
 
-                    
-                    //own pieces
-                    std::vector<Piece *> pieces = *pieceArray;
-                    int arraySize = pieces.size();
-                    for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-                        (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
-                    }
-                    //opponent's pieces
-                    std::vector<Piece *> oppPieces = *opponentArray;
-                    int oppArraySize = oppPieces.size();
-                    for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
-                        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
-                    }
+                    for (int a = 0; a < 8; a++) {
+                        for (int b = 0; b < 8; b ++) {
+                            if ((*(subject->getBoard()))[a][b]) {
+                                (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                            }
 
-
+                        }
+                    }
 
                     // check for pawn promotion
                     if ((((*(subject->getBoard()))[bX][bY])->getName() == "P" && ((*(subject->getBoard()))[bX][bY])->getX() == 0) || 
@@ -244,10 +234,17 @@ int Human::pickMove() {
                                 return 1;
                             }
                     } else {
-                        std::cout << "1 returned for pickMove" << std::endl;
                         return 1;
                     }
                 } else {
+                    for (int a = 0; a < 8; a++) {
+                        for (int b = 0; b < 8; b ++) {
+                            if ((*(subject->getBoard()))[a][b]) {
+                                (*(subject->getBoard()))[a][b]->setLegalMoves(((*(subject->getBoard()))[a][b])->updateLegalMoves());
+                            }
+
+                        }
+                    }
                     std::cout << "Invalid move! Please try again: ";
                 }
             }
@@ -291,5 +288,6 @@ void Human::notify() {
     }
     std::cout << std::endl;
     std::cout << "  abcdefgh" << std::endl; // printing the bottom a-h column value
+    std::cout << std::endl;
 
 }
