@@ -11,8 +11,8 @@
 #include "knight.h"
 #include "bishop.h"
 
-Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *oppArray):
-                subject{subject}, name{name}, pieceArray{pieceArray}, opponentArray{oppArray} { subject->attach(this); }
+Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *opponentArray):
+                subject{subject}, name{name}, pieceArray{pieceArray}, opponentArray{opponentArray} { subject->attach(this); }
 
 Human::~Human() {
     subject->detach(this);
@@ -205,7 +205,7 @@ int Human::pickMove() {
                         (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
                     }
                     //opponent's pieces
-                    std::vector<Piece *> oppPieces = *oppArray;
+                    std::vector<Piece *> oppPieces = *opponentArray;
                     int oppArraySize = oppPieces.size();
                     for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
                         (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
