@@ -10,7 +10,7 @@ class Human: public Observer {
     std::vector<Piece*> * opponentArray;
 
     public:
-        Human(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray);
+        Human(ChessGame *subject, std::string name, std::vector<Piece*> * pieceArray, std::vector<Piece*> * opponentArray);
         int pickMove();
         void notify(); // will print out the board;
         bool promotePawn(Piece * p, std::string promoName);

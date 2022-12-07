@@ -11,8 +11,8 @@
 #include "knight.h"
 #include "bishop.h"
 
-Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray):
-                subject{subject}, name{name}, pieceArray{pieceArray} { subject->attach(this); }
+Human::Human(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> * opponentArray):
+                subject{subject}, name{name}, pieceArray{pieceArray}, opponentArray{opponentArray} { subject->attach(this); }
 
 Human::~Human() {
     subject->detach(this);
