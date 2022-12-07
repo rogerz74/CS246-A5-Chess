@@ -48,7 +48,7 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
 }
 
 
-void gameInstance(scoreBoard & tracker) {
+bool gameInstance(scoreBoard & tracker) {
 
     //iterate over vector of vectors and build base board - possibility of keeping in main
 
@@ -138,6 +138,23 @@ void gameInstance(scoreBoard & tracker) {
                 tracker.blackPoints += 0.5;
             } else {
                 std::cout << "Game left unfinished!" << std::endl;      //if whoWon = -9999, then the game is incomplete
+
+                // these 3 loops free up all the heap-allocate memory for the piece vectors and observers
+                for (std::size_t i = 0; i < whitePieces.size(); ++i) {
+                    Piece * tmp = whitePieces[i];
+                    delete tmp;
+                }  
+
+                for (std::size_t i = 0; i < blackPieces.size(); ++i) {
+                    Piece * tmp = blackPieces[i];
+                    delete tmp;
+                }  
+
+                for (std::size_t i = 0; i < observerArr.size(); ++i) {
+                    Observer * tmp = observerArr[i];
+                    delete tmp;
+                }
+                return false;
             }
             gameRunFlag = 1;
         } else {
@@ -161,12 +178,15 @@ void gameInstance(scoreBoard & tracker) {
         delete tmp;
     }
 
+    return true;
+
 }
 
 int main() {
     scoreBoard tracker{0,0};
 
-    // just running gameInstance Once FOR NOW
-    gameInstance(tracker);
+    while (gameInstance(tracker)) {
+
+    }
     tracker.print();
 }
