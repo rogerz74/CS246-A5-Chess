@@ -28,7 +28,7 @@ class Computer: public Observer {
     
     public:
         Computer(ChessGame *subject, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray);
-        void notify();
+        void notify() override;
         std::string getName();
         int pickMove() override;
         void promotePawn(Piece * p);
