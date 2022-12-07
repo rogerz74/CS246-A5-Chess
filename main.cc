@@ -51,7 +51,7 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
 Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *pieceSet, std::vector<Piece *> *oppPiecesArr) {
 
     if (player == "human") {
-        Human * humanPlayer = new Human {theGame, "human", pieceSet};
+        Human * humanPlayer = new Human {theGame, "human", pieceSet, oppPiecesArr};
         return humanPlayer; 
     } else if (player == "computer[1]") {
         Level1 * level1Player = new Level1 {theGame, "level1", pieceSet, oppPiecesArr};

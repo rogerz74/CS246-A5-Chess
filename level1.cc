@@ -5,7 +5,7 @@ Level1::Level1(ChessGame *subject, std::string name, std::vector<Piece *> *piece
 
 int Level1::pickMove() {
     std::cout << "Level 1 Computer makes its move." << std::endl;
-    std::map<Piece *, Box> newMap;
+    std::vector<std::pair<Piece *, Box>> newMap;
     std::vector<Piece *> pieces = *pieceArray;
     int arraySize = pieces.size();
 
@@ -38,7 +38,7 @@ int Level1::pickMove() {
                 // if my king is not in check after potential move is made -> add to newMap
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap.insert({pieces[i], move.first});
+                    newMap.emplace_back(pieces[i], move.first);
                 }
 
                 // put board back into original state
@@ -53,7 +53,7 @@ int Level1::pickMove() {
                 // if my king is not in check after potential move is made
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap.insert({pieces[i], move.first});
+                    newMap.emplace_back(pieces[i], move.first);
                 }
 
                 // put board back into original state
@@ -75,7 +75,7 @@ int Level1::pickMove() {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> randompick(0, size-1); //picks random index in newMap
-    std::map<Piece *, Box>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
+    std::vector<std::pair<Piece *, Box>>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
     std::advance( item, randompick(rng) );
     
     Piece *p = item->first;         //might have to change to item.first
@@ -84,6 +84,21 @@ int Level1::pickMove() {
     int bY = b.getY();
 
     p->move(p, (*(subject->getBoard()))[bX][bY], bX, bY);
+
+    //at this point, a move has certainly been made with elements of newMap.
+    //we need to update every piece's legal moves.
+
+    //the color's own pieces
+    for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
+        (pieces[i])->setLegalMoves((pieces[i])->updateLegalMoves());
+    }
+
+    //opponent's pieces
+    std::vector<Piece *> oppPieces = *opponentArray;
+    int oppArraySize = oppPieces.size();
+    for (int j = 0; j < oppArraySize; j++) {       //looping through all the pieces
+        (oppPieces[j])->setLegalMoves((oppPieces[j])->updateLegalMoves());
+    }
 
     // check for pawn promotion
     int aX = p->getX();
