@@ -95,7 +95,6 @@ std::map<Box, int> Pawn::updateLegalMoves() {
                 Box opponentPawnMove1(x - 1, y);
                 // adding en passient move
                 ((((*(this->getBoard()))[x - 2][y - 1])->getLegalMoves())).insert({opponentPawnMove1, -1});
-                
             }
         }
 
