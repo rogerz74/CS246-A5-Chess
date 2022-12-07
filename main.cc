@@ -18,9 +18,6 @@
 #include "setup.h"
 #include "gamerun.h"
 #include "human.h"
-#include "level1.h"
-#include "level2.h"
-#include "level3.h"
 
 using namespace std;
 
