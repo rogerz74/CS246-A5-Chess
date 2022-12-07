@@ -6,8 +6,8 @@ Level2::Level2(ChessGame *subject, std::string name, std::vector<Piece *> *piece
 
 int Level2::pickMove() {
     std::cout << "Level 2 Computer makes its move." << std::endl;
-    std::map<Piece *, Box> newMap;
-    std::map<Piece *, Box> filteredMap;
+    std::vector<std::pair<Piece *, Box>> newMap;
+    std::vector<std::pair<Piece *, Box>> filteredMap;
     std::vector<Piece *> pieces = *pieceArray;
     int arraySize = pieces.size();
 
@@ -42,13 +42,13 @@ int Level2::pickMove() {
                 // if my king is not in check after potential move is made -> add to newMap
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap.insert({pieces[i], move.first});
+                    newMap.emplace_back(pieces[i], move.first);
                     if (move.second == 1 ||
                         ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                         (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                         // move is a captures opposing piece or checks opposing king
                         // need to put these in one check or else it may add the move twice
-                        filteredMap.insert({pieces[i], move.first});
+                        filteredMap.emplace_back(pieces[i], move.first);
                     }
                 }
 
@@ -64,13 +64,13 @@ int Level2::pickMove() {
                 // if my king is not in check after potential move is made -> add to according filtered map
                 if (((*(pieces[i])).checkWhitePlayer() && !(subject->isWhiteKingChecked())) || 
                     (!((*(pieces[i])).checkWhitePlayer()) && !(subject->isBlackKingChecked()))) {
-                    newMap.insert({pieces[i], move.first});
+                    newMap.emplace_back(pieces[i], move.first);
                     if (move.second == 1 ||
                         ((*(pieces[i])).checkWhitePlayer() && subject->isBlackKingChecked()) ||
                         (!((*(pieces[i])).checkWhitePlayer()) && subject->isWhiteKingChecked())) {
                         // move is a captures opposing piece or checks opposing king
                         // need to put these in one check or else it may add the move twice
-                        filteredMap.insert({pieces[i], move.first});
+                        filteredMap.emplace_back(pieces[i], move.first);
                     }
                 }
 
@@ -99,7 +99,7 @@ int Level2::pickMove() {
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, newSize-1); //picks random index in newMap
-        std::map<Piece *, Box>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
+        std::vector<std::pair<Piece *, Box>>::iterator item = newMap.begin();                //iterator points to {Piece*:Box}
         std::advance( item, randompick(rng) );
         
         p = item->first;
@@ -113,7 +113,7 @@ int Level2::pickMove() {
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> randompick(0, filterSize-1); //picks random index in filteredMap
-        std::map<Piece *, Box>::iterator item = filteredMap.begin();                //iterator points to {Piece*:Box}
+        std::vector<std::pair<Piece *, Box>>::iterator item = filteredMap.begin();                //iterator points to {Piece*:Box}
         std::advance( item, randompick(rng) );
         
         p = item->first;
