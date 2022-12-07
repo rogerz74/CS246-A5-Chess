@@ -1,5 +1,5 @@
 #include "level2.h"
-
+/*
 Level2::Level2(ChessGame *subject, std::string name, std::vector<Piece *> *pieceArray, std::vector<Piece *> *opponentArray):
                 Computer{subject, name, pieceArray, opponentArray} {}
 
@@ -149,3 +149,4 @@ int Level2::pickMove() {
     }
     return 1;
 }
+*/

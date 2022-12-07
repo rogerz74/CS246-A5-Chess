@@ -109,13 +109,12 @@ int Human::pickMove() {
                 break;
             }
 
-
-            std::cout << std::endl;
             int aX = stringToCoord(a[1]);
             int aY = stringToCoord(a[0]);
             int bX = stringToCoord(b[1]);
             int bY = stringToCoord(b[0]);
             std::map<Box, Piece *> filteredMap;
+            (((*(subject->getBoard()))[aX][aY])->setLegalMoves( (((*(subject->getBoard()))[aX][aY])->updateLegalMoves())  ));
             std::map<Box, int> currLegalMoves = (((*(subject->getBoard()))[aX][aY])->updateLegalMoves());
         
 

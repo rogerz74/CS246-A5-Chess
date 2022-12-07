@@ -99,7 +99,6 @@ std::map<Box, int> King::updateLegalMoves() {
             if (!isPiece) {
                 // checks if king is in check in current position, final position, and position in between 
                 // (x, y), (x, y + 1), (x, y + 2)
-                std::cout << "inside checking loop" <<std::endl;
                 // current position
                 ChessGame checkGame2(this->getBoard());
                 checkGame2.checkingForKingCheck();
@@ -128,10 +127,7 @@ std::map<Box, int> King::updateLegalMoves() {
 
                             // add castling move to King
                             Box castlingKingMove(x, y + 2);
-                            std::cout << "Inserted right castling" << std::endl;
-                            std::cout << legalMoves.size() << std::endl;
                             legalMoves.insert({castlingKingMove, 2});
-                            std::cout << legalMoves.size() << std::endl;
                             // add castling move to Rook
                             Box castlingRookMove(x, y + 1);
                             ((((*(this->getBoard()))[7][7])->getLegalMoves())).insert({castlingRookMove, 2});
@@ -324,6 +320,5 @@ std::map<Box, int> King::updateLegalMoves() {
             legalMoves.insert({move8, 0});
         }
     }
-    std::cout << legalMoves.size() << std::endl;
     return legalMoves;
 }

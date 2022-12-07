@@ -1,16 +1,17 @@
 #include "level1.h"
-
-Level1::Level1(ChessGame *subject, std::string name, std::vector<Piece *> *pieceArray, std::vector<Piece *> *opponentArray):
-                Computer{subject, name, pieceArray, opponentArray} {}
+/*
+Level1::Level1(ChessGame *subject, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray):
+                subject{subject}, name{name}, pieceArray{pieceArray}, oppArray{oppArray} {}
 
 int Level1::pickMove() {
+
     std::cout << "Level 1 Computer makes its move." << std::endl;
     std::vector<std::pair<Piece *, Box>> newMap;
     std::vector<Piece *> pieces = *pieceArray;
     int arraySize = pieces.size();
 
     for (int i = 0; i < arraySize; i++) {       //looping through all the pieces
-        std::map<Box, int> lm = ((pieces[i])->getLegalMoves());
+        std::map<Box, int> lm = ((pieces[i])->updateLegalMoves());
         for (auto &move: lm) {                     //looping through all legal moves
             Piece *tempPiece;
             if ((pieces[i])->getName() == "p" || (pieces[i])->getName() == "P") {
@@ -110,3 +111,4 @@ int Level1::pickMove() {
 
     return 1;
 }
+*/

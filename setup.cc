@@ -31,7 +31,6 @@ int strToCoord(char c) {
 
 void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &bPieces) {       //void because it makes changes to the ChessGame itself
 
-    std::cout << "UserSetup is Reached" << std::endl;
     bool condFlag = 0;
 
     string command = "";
@@ -42,7 +41,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
         cin >> command;
 
         if (command == "+") {
-            std::cout << "+ is reached, adding new piece" << std::endl;
+
             cin >> piece >> place;
             char row = place[1];
             if ((piece == "p" || piece == "P") && (row == '1' || row == '8')) {
@@ -59,7 +58,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
 
                 // setting up each individual piece
                 if (piece == "p" || piece == "P") {
-                    std::cout << "adding pawn!!!!" << std::endl;
+
                     Pawn * p = new Pawn {piece, setupGame->getBoard(), wp, strToCoord(place[1]), strToCoord(place[0])};
                     //p->setLegalMoves(p->updateLegalMoves());
 
@@ -145,6 +144,7 @@ void userSetup(ChessGame *setupGame, vector<Piece *> &wPieces, vector<Piece *> &
         
         else if (command == "-") {
             cin >> place;
+            // setup - needs fixing
             Piece * p = (*(setupGame->getBoard()))[strToCoord(place[1])][strToCoord(place[0])];
             if (p) {
                 if (p->checkWhitePlayer()) {

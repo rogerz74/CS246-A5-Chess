@@ -21,11 +21,10 @@ bool Box::operator== (const Box & b1) const {
 
  bool Box::operator< (const Box & b1) const {
 
-    if (xCoord >= b1.getX() && yCoord >= b1.getY()) {
-        return false;
-    } else {
-        return true;
+    if (xCoord < b1.getX() && yCoord < b1.getY()) {
+            return true;
     }
+    return false;
  }
 
 Box::~Box() {}

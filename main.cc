@@ -47,8 +47,8 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
     } 
 }
 
-
-Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *pieceSet, std::vector<Piece *> *oppPiecesArr) {
+/*
+Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *&pieceSet, std::vector<Piece *> *&oppPiecesArr) {
 
     if (player == "human") {
         Human * humanPlayer = new Human {theGame, "human", pieceSet, oppPiecesArr};
@@ -69,7 +69,7 @@ Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<P
         std::cout << "Invalid Player Given!" << std::endl;      //make it ask again?
         return nullptr;
     }
-}
+}*/
 
 
 void gameInstance(scoreBoard & tracker) {
@@ -99,10 +99,7 @@ void gameInstance(scoreBoard & tracker) {
                 buildBoard(ChessBoard);
                 game.setBoard(&ChessBoard);    //create method to take in pointer to the board and change board in class
             }
-            std::cout << "game is acc being set up here" << std::endl;
             userSetup(&game, whitePieces, blackPieces);     //takes references to the vectors and changes them
-
-            std::cout << "Game is finished Setup!!!" << std::endl;
 
             setupFlag = 1;
         } else if (comm == "game") {
@@ -115,12 +112,48 @@ void gameInstance(scoreBoard & tracker) {
                 defaultSetup(&game, whitePieces, blackPieces);
             }
 
-            Observer * whitePlayer = constructPlayer(&game, wPlayer, &whitePieces, &blackPieces);
-            observerArr.emplace_back(whitePlayer);
-            Observer * blackPlayer = constructPlayer(&game, bPlayer, &blackPieces, &whitePieces);
-            observerArr.emplace_back(blackPlayer);
+            //std::cout << whitePieces.size() << ", " << blackPieces.size() <<std::endl;
 
-            int whoWon = gameRun(whitePlayer, blackPlayer, &game);
+            if (wPlayer == "human") {
+                Human * humanPlayer = new Human {&game, "human", &whitePieces, &blackPieces};
+                observerArr.emplace_back(humanPlayer);
+            } else if (wPlayer == "computer[1]") {
+                Computer * level1Player = new Computer {&game, "level1", &whitePieces, &blackPieces};
+                observerArr.emplace_back(level1Player);
+            } else if (wPlayer == "computer[2]") {
+                Computer * level2Player = new Computer {&game, "level2", &whitePieces, &blackPieces};
+                observerArr.emplace_back(level2Player);
+            } else if (wPlayer == "computer[3]") {
+                Computer * level3Player = new Computer {&game, "level3", &whitePieces, &blackPieces};
+                observerArr.emplace_back(level3Player);
+            }else {
+                std::cout << "Invalid Player Given!" << std::endl;
+            }
+
+            if (bPlayer == "human") {
+                Human * humanPlayer = new Human {&game, "human", &blackPieces, &whitePieces};
+                observerArr.emplace_back(humanPlayer);
+            } else if (bPlayer == "computer[1]") {
+                Computer * level1Player = new Computer {&game, "level1", &blackPieces, &whitePieces};
+                observerArr.emplace_back(level1Player);
+            } else if (bPlayer == "computer[2]") {
+                Computer * level2Player = new Computer {&game, "level2", &blackPieces, &whitePieces};
+                observerArr.emplace_back(level2Player);
+            } else if (bPlayer == "computer[3]") {
+                Computer * level3Player = new Computer {&game, "level3", &blackPieces, &whitePieces};
+                observerArr.emplace_back(level3Player);
+            }else {
+                std::cout << "Invalid Player Given!" << std::endl;      
+            }
+
+            /*
+            Observer * whitePlayer = constructPlayer(&game, wPlayer, whtPtr, blkPtr);
+            observerArr.emplace_back(whitePlayer);
+            Observer * blackPlayer = constructPlayer(&game, bPlayer, blkPtr, whtPtr);
+            observerArr.emplace_back(blackPlayer);
+            */
+
+            int whoWon = gameRun(observerArr[0], observerArr[1], &game);
             if (whoWon == 1) {
                 tracker.whitePoints += 1;
             } else if (whoWon == -1) {
