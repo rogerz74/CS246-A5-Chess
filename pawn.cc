@@ -109,7 +109,7 @@ std::map<Box, int> Pawn::updateLegalMoves() {
         }
     }
 
-    if (!checkWhitePlayer() && (x == 1) && !((*(this->getBoard()))[x - 2][y])) {
+    if (!checkWhitePlayer() && (x == 1) && !((*(this->getBoard()))[x + 2][y])) {
         Box initialMove2(x + 2, y);
         legalMoves.insert({initialMove2, 0});
 
