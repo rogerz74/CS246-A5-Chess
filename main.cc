@@ -48,31 +48,7 @@ void buildBoard(std::vector<std::vector<Piece *>> &board) {
 }
 
 
-Observer * constructPlayer(ChessGame *theGame, std::string player, std::vector<Piece *> *pieceSet, std::vector<Piece *> *oppPiecesArr) {
-
-    if (player == "human") {
-        Human * humanPlayer = new Human {theGame, "human", pieceSet, oppPiecesArr};
-        return humanPlayer; 
-    } else if (player == "computer[1]") {
-        Level1 * level1Player = new Level1 {theGame, "level1", pieceSet, oppPiecesArr};
-        Computer * observerPtr = level1Player;
-        return observerPtr;
-    } else if (player == "computer[2]") {
-        Level2 * level2Player = new Level2 {theGame, "level2", pieceSet, oppPiecesArr};
-        Computer * observerPtr = level2Player;
-        return observerPtr;
-    } else if (player == "computer[3]") {
-        Level3 * level3Player = new Level3 {theGame, "level3", pieceSet, oppPiecesArr};
-        Computer * observerPtr = level3Player;
-        return observerPtr;
-    }else {
-        std::cout << "Invalid Player Given!" << std::endl;      //make it ask again?
-        return nullptr;
-    }
-}
-
-
-void gameInstance(scoreBoard & tracker) {
+bool gameInstance(scoreBoard & tracker) {
 
     //iterate over vector of vectors and build base board - possibility of keeping in main
 
@@ -99,10 +75,7 @@ void gameInstance(scoreBoard & tracker) {
                 buildBoard(ChessBoard);
                 game.setBoard(&ChessBoard);    //create method to take in pointer to the board and change board in class
             }
-            std::cout << "game is acc being set up here" << std::endl;
             userSetup(&game, whitePieces, blackPieces);     //takes references to the vectors and changes them
-
-            std::cout << "Game is finished Setup!!!" << std::endl;
 
             setupFlag = 1;
         } else if (comm == "game") {
@@ -115,12 +88,47 @@ void gameInstance(scoreBoard & tracker) {
                 defaultSetup(&game, whitePieces, blackPieces);
             }
 
-            Observer * whitePlayer = constructPlayer(&game, wPlayer, &whitePieces, &blackPieces);
-            observerArr.emplace_back(whitePlayer);
-            Observer * blackPlayer = constructPlayer(&game, bPlayer, &blackPieces, &whitePieces);
-            observerArr.emplace_back(blackPlayer);
 
-            int whoWon = gameRun(whitePlayer, blackPlayer, &game);
+            if (wPlayer == "human") {
+                Human * humanPlayer = new Human {&game, "human", &whitePieces, &blackPieces};
+                observerArr.emplace_back(humanPlayer);
+            } else if (wPlayer == "computer[1]") {
+                Computer * level1Player = new Computer {&game, "level1", &whitePieces, &blackPieces};
+                observerArr.emplace_back(level1Player);
+            } else if (wPlayer == "computer[2]") {
+                Computer * level2Player = new Computer {&game, "level2", &whitePieces, &blackPieces};
+                observerArr.emplace_back(level2Player);
+            } else if (wPlayer == "computer[3]") {
+                Computer * level3Player = new Computer {&game, "level3", &whitePieces, &blackPieces};
+                observerArr.emplace_back(level3Player);
+            }else {
+                std::cout << "Invalid Player Given!" << std::endl;
+            }
+
+            if (bPlayer == "human") {
+                Human * humanPlayer = new Human {&game, "human", &blackPieces, &whitePieces};
+                observerArr.emplace_back(humanPlayer);
+            } else if (bPlayer == "computer[1]") {
+                Computer * level1Player = new Computer {&game, "level1", &blackPieces, &whitePieces};
+                observerArr.emplace_back(level1Player);
+            } else if (bPlayer == "computer[2]") {
+                Computer * level2Player = new Computer {&game, "level2", &blackPieces, &whitePieces};
+                observerArr.emplace_back(level2Player);
+            } else if (bPlayer == "computer[3]") {
+                Computer * level3Player = new Computer {&game, "level3", &blackPieces, &whitePieces};
+                observerArr.emplace_back(level3Player);
+            }else {
+                std::cout << "Invalid Player Given!" << std::endl;      
+            }
+
+            /*
+            Observer * whitePlayer = constructPlayer(&game, wPlayer, whtPtr, blkPtr);
+            observerArr.emplace_back(whitePlayer);
+            Observer * blackPlayer = constructPlayer(&game, bPlayer, blkPtr, whtPtr);
+            observerArr.emplace_back(blackPlayer);
+            */
+
+            int whoWon = gameRun(observerArr[0], observerArr[1], &game);
             if (whoWon == 1) {
                 tracker.whitePoints += 1;
             } else if (whoWon == -1) {
@@ -130,6 +138,23 @@ void gameInstance(scoreBoard & tracker) {
                 tracker.blackPoints += 0.5;
             } else {
                 std::cout << "Game left unfinished!" << std::endl;      //if whoWon = -9999, then the game is incomplete
+
+                // these 3 loops free up all the heap-allocate memory for the piece vectors and observers
+                for (std::size_t i = 0; i < whitePieces.size(); ++i) {
+                    Piece * tmp = whitePieces[i];
+                    delete tmp;
+                }  
+
+                for (std::size_t i = 0; i < blackPieces.size(); ++i) {
+                    Piece * tmp = blackPieces[i];
+                    delete tmp;
+                }  
+
+                for (std::size_t i = 0; i < observerArr.size(); ++i) {
+                    Observer * tmp = observerArr[i];
+                    delete tmp;
+                }
+                return false;
             }
             gameRunFlag = 1;
         } else {
@@ -153,12 +178,15 @@ void gameInstance(scoreBoard & tracker) {
         delete tmp;
     }
 
+    return true;
+
 }
 
 int main() {
     scoreBoard tracker{0,0};
 
-    // just running gameInstance Once FOR NOW
-    gameInstance(tracker);
+    while (gameInstance(tracker)) {
+
+    }
     tracker.print();
 }

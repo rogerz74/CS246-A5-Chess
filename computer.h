@@ -5,6 +5,20 @@
 #include "piece.h"
 #include "queen.h"
 #include <algorithm>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <iostream>
+#include <random>
+#include <iterator>
+#include "computer.h"
+#include "box.h"
+#include "pawn.h"
+#include "rook.h"
+#include "king.h"
+#include "knight.h"
+#include "bishop.h"
 
 class Computer: public Observer {
     ChessGame *subject;
@@ -13,9 +27,10 @@ class Computer: public Observer {
     std::vector<Piece*> * oppArray; //opponent pieces array
     
     public:
-        Computer(ChessGame *chessGame, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray);
+        Computer(ChessGame *subject, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray);
         void notify();
-        virtual int pickMove() = 0;
+        std::string getName();
+        int pickMove() override;
         void promotePawn(Piece * p);
         ~Computer();
 };

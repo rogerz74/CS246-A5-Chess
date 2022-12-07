@@ -1,4 +1,4 @@
-#include "level3.h"
+#include "level3.h"/*
 
 Level3::Level3(ChessGame *subject, std::string name, std::vector<Piece*> *pieceArray, std::vector<Piece*> *oppArray):
                 Computer{subject, name, pieceArray, oppArray} {}
@@ -191,3 +191,4 @@ int Level3::pickMove() {
 
     return 1;
 }
+*/

@@ -21,13 +21,9 @@
 #include "bishop.h"
 
 class Level1: public Computer {
-    ChessGame *subject;
-    std::string name;
-    std::vector<Piece *> *pieceArray;
-    std::vector<Piece *> *opponentArray;
 
     public:
-        Level1(ChessGame *subject, std::string name, std::vector<Piece *> *pieceArray, std::vector<Piece *> *opponentArray);
+        Level1(ChessGame *subject, std::string name, std::vector <Piece*> * pieceArray, std::vector<Piece*> * oppArray);
         int pickMove();    
 };
 #endif

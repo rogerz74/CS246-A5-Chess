@@ -4,7 +4,6 @@
 #include <string>
 #include "subject.h"
 #include <vector>
-#include "record.h"
 #include "box.h"
 #include "piece.h"
 
@@ -32,11 +31,6 @@ class ChessGame: public Subject {
         explicit ChessGame(std::vector< std::vector <Piece*>> * board): board{board} {};
 
         void setBoard(std::vector< std::vector <Piece*>> * targetBoard); // if we want to change the board
-
-        // the function that sets the board in the right configuration?? not sure exactly what this function referred to
-        void draw(); 
-        // question: how are we going to check if there's stalemate again? is it when we find a possible AND legal move?
-        bool isStalemate(); 
 
         // function that checks if the white king is checked;
         bool isWhiteKingChecked() {

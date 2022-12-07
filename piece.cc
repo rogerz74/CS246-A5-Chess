@@ -51,7 +51,7 @@ void Piece::move(Piece *&currentTile, Piece *&targetTile, int newX, int newY) {
     }
 
     // check if move was a King castling move
-    if (targetTile->getName() == "K" && (legalMovesMap)[targetBox] == 2) {
+    if (targetTile && targetTile->getName() == "K" && (legalMovesMap)[targetBox] == 2) {
         // to find which rook we are moving towards
         if (yCoord - newY > 0) {
             for (auto &pair: (((*board)[7][0]->getLegalMoves()))) {
@@ -71,7 +71,7 @@ void Piece::move(Piece *&currentTile, Piece *&targetTile, int newX, int newY) {
             }
         }
 
-    } else if (targetTile->getName() == "k" && (legalMovesMap)[targetBox] == 2) {
+    } else if ( targetTile && targetTile->getName() == "k" && (legalMovesMap)[targetBox] == 2) {
         // to find which rook we are moving towards
         if (yCoord - newY > 0) {
             for (auto &pair: (((*board)[0][0]->getLegalMoves()))) {
